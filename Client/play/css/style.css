@@ -1,0 +1,305 @@
+*{
+	margin:0;
+}
+
+/*HEIGHT MANAGEMENT*/
+.height100perc{
+	height:100%;
+}
+.height75perc{
+	height:75%;
+}
+.height50perc{
+	height:50%;
+}
+.height25perc{
+	height:25%;
+}
+.height10perc{
+	height:10%;
+}
+.height50{
+	height:50px;
+}
+.height100{
+	height:100px;
+}
+.height125{
+	height:125px;
+}
+.height150{
+	height:150px;
+}
+.height200{
+	height:200px;
+}
+.height500{
+	height:500px;
+}
+.height600{
+	height:600px;
+}
+/*end HEIGHT MANAGEMENT*/
+
+/*PADDING and MARGIN MANAGEMENT*/
+.pad0b{
+	padding-bottom: 0px !important;
+}
+.pad2b{
+	padding-bottom: 2px;
+}
+.pad3l{
+	padding-left: 3px;
+}
+.pad5t{
+	padding-top: 5px;
+}
+.pad5r{
+	padding-right: 5px;
+}
+
+
+
+.pad10t{
+	padding-top: 10px;
+}
+.pad10b{
+	padding-bottom: 10px !important;
+}
+.pad10l{
+	padding-left: 10px;
+}
+.pad10r{
+	padding-right: 10px;
+}
+
+.pad20r{
+	padding-right: 50px;
+}
+
+.pad20l{
+	padding-left: 20px;
+}
+
+.pad50b{
+	padding-bottom: 50px !important;
+}
+
+.mrg0b{
+	margin-bottom: 0px !important;
+}
+
+.mrg5t{
+	margin-top: 5px;
+}
+.mrg5r{
+	margin-right: 5px;
+}
+
+.mrg10t{
+	margin-top: 10px;
+}
+.mrg10b{
+	margin-bottom: 10px !important;
+}
+.mrg10l{
+	margin-left: 10px;
+}
+.mrg10r{
+	margin-right: 10px;
+}
+
+.mrg20r{
+	margin-right: 50px;
+}
+
+.mrg20l{
+	margin-left: 20px;
+}
+.mrg20t{
+	margin-top: 20px;
+}
+.mrg50t{
+	margin-top: 50px !important;
+}
+.mrg50b{
+	margin-bottom: 50px !important;
+}
+/*end PADDING MANAGEMENT*/
+
+/*SIZE MANAGEMENT*/
+.size-12 { font-size: 12px; }
+
+.size-14 { font-size: 14px; }
+
+.size-16 { font-size: 16px; }
+
+.size-18 { font-size: 18px; }
+
+.size-21 { font-size: 21px; }
+
+.size-24 { font-size: 24px; }
+
+.size-36 { font-size: 36px; }
+
+.size-48 { font-size: 48px; }
+
+.size-60 { font-size: 60px; }
+
+.size-72 { font-size: 72px; }
+
+.size-90 { font-size: 90px; }
+
+.size-128 { font-size: 128px; }
+/*end SIZE MANAGEMENT*/
+
+/*COLORS MANAGEMENT*/
+.blue-grey{
+	color: #37474F;
+}
+/*end COLORS MANAGEMENT*/
+
+/*SCROLL BAR MANAGEMENT*/
+::-webkit-scrollbar {  
+    width: 12px;  
+}  
+::-webkit-scrollbar-track {  
+    background-color: rgba(255, 158, 128, 0.4);
+}  
+::-webkit-scrollbar-thumb {  
+    background-color: #FF6E40;  
+}  
+::-webkit-scrollbar-thumb:hover {  
+    background-color: #FF3D00; 
+}
+
+.overflowScroll{
+	overflow-y:scroll;
+}
+
+/*end SCROLL BAR MANAGEMENT*/
+
+/*OTHER STUFF MANAGEMENT*/
+.fixed{
+	position:fixed;
+	top:5px;
+	left:340px;
+}
+
+
+.clickable{
+	cursor:pointer;
+}
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    color: inherit;
+}
+
+.circleBase {
+    border-radius: 50%;
+}
+.borderWhite{
+	border:4px solid #FFFFFF;
+}
+
+.shadowed{
+	text-shadow: -1px 1px 1px #444444;
+}
+
+a.decoNone, a.decoNone:active{
+    text-decoration:none !important;
+}
+
+a{
+	color:rgba(255, 255, 255, 0.7);
+}
+
+a:hover{
+	color:rgba(255, 255, 255, 1);
+}
+
+md-grid-tile:hover{
+	box-shadow: 2px 2px 2px #444444;
+	color: #ffffff;
+}
+
+md-grid-tile:hover md-grid-tile-footer h3{
+	color: #ffffff;
+}
+
+.hideScrollbar{
+	overflow:hidden !important;
+}
+
+.list-avatar{
+background-color:#FF6E40;
+height:2.5em;
+width: 2.5em;
+text-align:center;
+}
+/*end OTHER STUFF MANAGEMENT*/
+
+#imgProfile{
+	height:72px;
+	width: 72px;
+	overflow:hidden;
+}
+
+.imgBoardgame{
+    max-height: 20em;
+}
+
+/*OVERRIDES*/
+md-grid-list md-grid-tile md-grid-tile-header{
+	background-color:transparent;
+}
+md-grid-tile{
+	cursor:pointer;
+}
+
+.animate-repeat {
+  line-height:30px;
+  list-style:none;
+  box-sizing:border-box;
+}
+
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter,
+.animate-repeat.ng-leave {
+  transition:all linear 0.5s;
+}
+
+.animate-repeat.ng-leave.ng-leave-active,
+.animate-repeat.ng-move,
+.animate-repeat.ng-enter {
+  opacity:0;
+  max-height:0;
+}
+
+.animate-repeat.ng-leave,
+.animate-repeat.ng-move.ng-move-active,
+.animate-repeat.ng-enter.ng-enter-active {
+  opacity:1;
+  max-height:30px;
+}
+
+.star-container{
+  position:absolute;
+  top:9px;
+  left:40px;
+  width:152px;
+  color:#FF3D00;
+}
+.star-content{
+  width:152px;
+}
+.relative{
+	position:relative;
+}
+
+md-tabs-wrapper{
+	display: none !important;
+}
+.md-toast-content{
+	background-color: rgb(255,61,0) !important;
+}

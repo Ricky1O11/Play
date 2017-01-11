@@ -1,0 +1,39 @@
+<div class="container-fluid" layout-padding layout="column">
+	<div layout="row">
+		<div layout="column" flex="100">
+			<div layout="row" class="height50">
+				<div layout="column" flex="100">
+					<h3 class="blue-grey">Favourite games ({{fCtrl.favourites.length}})</h3>
+				</div>
+			</div>
+			<div layout="row" class="height600">
+				<div layout="column" flex="100">
+					<md-grid-list
+						md-cols-xs="1" md-cols-sm="3" md-cols-md="4" md-cols-gt-md="4"
+						md-row-height-gt-md="1:1" md-row-height="2:2"
+						md-gutter="120px" md-gutter-gt-sm="10px" 
+						>
+
+						<md-grid-tile md-colors="{background: 'myTheme-accent'}">
+							<div layout="column">
+								<div layout="row" layout-align="center center"><i class="size-72 fi-plus"></i></div>
+								<div layout="row">Add favorite</div>
+							</div>
+						</md-grid-tile>	
+						
+						<md-grid-tile ng-click="goTo(boardgame.pk)" ng-repeat="boardgame in fCtrl.favourites" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
+							<md-grid-tile-header layout-align="end center" class="pad5r">
+							<i class="fa fa-heart shadowed fa-2x" md-colors="{color:'myTheme-accent'}"></i>
+						  </md-grid-tile-header>
+						  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
+							<h3>{{boardgame.title}}</h3>
+						  </md-grid-tile-footer>
+						</md-grid-tile>
+						
+					.
+					</md-grid-list>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
