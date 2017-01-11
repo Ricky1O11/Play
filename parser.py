@@ -1,4 +1,4 @@
-#[DEV_MODE-v1]Must be controlled before use
+#[Master]Must be controlled before use
 
 from __future__ import division
 import xml.etree.cElementTree as ElementTree
