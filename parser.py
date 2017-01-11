@@ -1,4 +1,4 @@
-#[superChangesRicky]Must be controlled before use
+#[myChanges]Must be controlled before use
 
 from __future__ import division
 import xml.etree.cElementTree as ElementTree
