@@ -1,4 +1,4 @@
-#Must be controlled before reuse
+#Must be controlled before re-use
 
 from __future__ import division
 import xml.etree.cElementTree as ElementTree
