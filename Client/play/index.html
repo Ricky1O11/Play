@@ -37,115 +37,117 @@
 	</head>
 	
 	<body ng-app="play" layout="column" flex ng-cloak>
-		<div layout="row" flex id="container" ng-controller="sidebarController as sCtrl">
+		<div layout="row" id="container" ng-controller="sidebarController as sCtrl">
 			<md-sidenav
 				md-colors="{background: 'myTheme-primary'}"
 				class="md-sidenav-left md-whiteframe-z2"
 				md-is-locked-open="$mdMedia('gt-sm')"
 				id="sidebar"				
 				>
-				<div layout="row"  class="height150">
-					<div layout="column" flex="100"  layout-padding >
-						<div layout="row" class="height100">	
-							<div layout="column" flex="50" layout-align="center start">
-								<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
-									<img ng-src="{{sCtrl.img}}" alt="profileImage" ng-if="sCtrl.checkImg()" class="size-90" />
-									<i ng-if="!sCtrl.checkImg()" class="size-90 fi-torso"></i>
+				<div layout-wrap>
+					<div layout="row"  class="height150">
+						<div layout="column" flex="100"  layout-padding >
+							<div layout="row" class="height100">	
+								<div layout="column" flex="50" layout-align="center start">
+									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
+										<img ng-src="{{sCtrl.img}}" alt="profileImage" ng-if="sCtrl.checkImg()" class="size-90" />
+										<i ng-if="!sCtrl.checkImg()" class="size-90 fi-torso"></i>
+									</div>
+								</div>						
+									
+								<div layout="column" id="username" class="size-18" flex="50" layout-align="center start">
+												{{sCtrl.username}}											
 								</div>
-							</div>						
-								
-							<div layout="column" id="username" class="size-18" flex="50" layout-align="center start">
-											{{sCtrl.username}}											
+							</div>
+							
+							<div layout="row">
+								<div layout="column" flex="60">
+									<div layout="row">
+										<div layout="column" layout-align="end start" flex="100">
+											<a href="#/" class="size-24 fi-home decoNone"></a>										
+										</div>
+									</div>
+								</div>
+								<div layout="column" flex="20">
+									<div layout="row">
+										<div layout="column" layout-align="start center" flex="50">
+											<i class="size-24 fi-puzzle"></i>
+										</div>
+										<div layout="column" layout-align="end start" flex="50" class="size-18">{{sCtrl.match_played}}</div>
+									</div>
+								</div>
+								<div layout="column" flex="20">
+									<div layout="row">
+										<div layout="column" layout-align="center end" flex="50">
+											<i class="size-24 fi-trophy"></i>
+										</div>
+										<div layout="column" layout-align="end center" flex="50" class="size-18">{{sCtrl.match_won}}</div>
+									</div>
+								</div>
 							</div>
 						</div>
-						
-						<div layout="row">
-							<div layout="column" flex="60">
-								<div layout="row">
-									<div layout="column" layout-align="end start" flex="100">
-										<a href="#/" class="size-24 fi-home decoNone"></a>										
-									</div>
-								</div>
-							</div>
-							<div layout="column" flex="20">
-								<div layout="row">
-									<div layout="column" layout-align="start center" flex="50">
-										<i class="size-24 fi-puzzle"></i>
-									</div>
-									<div layout="column" layout-align="end start" flex="50" class="size-18">{{sCtrl.match_played}}</div>
-								</div>
-							</div>
-							<div layout="column"flex="20">
-								<div layout="row">
-									<div layout="column" layout-align="center end" flex="50">
-										<i class="size-24 fi-trophy"></i>
-									</div>
-									<div layout="column" layout-align="end center" flex="50" class="size-18">{{sCtrl.match_won}}</div>
+					</div>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row" class="height125">
+						<div layout="column" flex="100"  class="pad10l pad5t">
+							<div layout="row"><h5>BORDGAMES</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad5t decoNone" href="#/boardgames">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="size-18 fi-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">List</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone" href="#/favourites">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="fa fa-heart"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Favourites</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone" href="#/recents">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="size-18 fi-clock"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Recents</div>
+									</a>
 								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<md-divider ></md-divider> <!--md-inset-->
-				<div layout="row" class="height125">
-					<div layout="column" flex="100"  class="pad10l pad5t">
-						<div layout="row" flex="20"><h5>BORDGAMES</h5></div>
-						<div layout="row" flex="80">
-							<div layout="column" flex="100" >
-								<a layout="row"  class="pad5t decoNone" href="#/boardgames">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="size-18 fi-list-bullet"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">List</div>
-								</a>
-								<a layout="row"  class="pad10t decoNone" href="#/favourites">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="fa fa-heart"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">Favourites</div>
-								</a>
-								<a layout="row"  class="pad10t decoNone" href="#/recents">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="size-18 fi-clock"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">Recents</div>
-								</a>
+					<md-divider></md-divider>
+					<div layout="row" class="height125">
+						<div layout="column" flex="100"  class="pad10l pad5t">
+							<div layout="row" ><h5>MATCHES</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad5t decoNone" href="#/matches">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="size-18 fi-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">List</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone clickable" ng-click="matchesPopup($event)">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="fa fa-plus"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">New Match</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone" href="#/todo">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="size-18 fi-clock"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">to do</div>
+									</a>
+								</div>
 							</div>
 						</div>
 					</div>
-				</div>
-				<md-divider></md-divider>
-				<div layout="row" class="height125">
-					<div layout="column" flex="100"  class="pad10l pad5t">
-						<div layout="row" flex="20"><h5>MATCHES</h5></div>
-						<div layout="row" flex="80">
-							<div layout="column" flex="100" >
-								<a layout="row"  class="pad5t decoNone" href="#/matches">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="size-18 fi-list-bullet"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">List</div>
-								</a>
-								<a layout="row"  class="pad10t decoNone clickable" ng-click="matchesPopup($event)">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="fa fa-plus"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">New Match</div>
-								</a>
-								<a layout="row"  class="pad10t decoNone" href="#/todo">
-									<div layout="column" flex="15" layout-align="center center">
-										<i class="size-18 fi-clock"></i>
-									</div>
-									<div layout="column" flex="85" layout-align="center start">to do</div>
-								</a>
-							</div>
-						</div>
-					</div>
-				</div>
-				<md-divider></md-divider>
-				<div layout="row" class="height125">ee</div>
-				<md-divider></md-divider>
-				<div layout="row" class="height125">ee</div>
+					<md-divider></md-divider>
+					<div layout="row" class="height100">ee</div>
+					<md-divider></md-divider>
+					<div layout="row" class="height100">ee</div>
+				</div> 
 			</md-sidenav>
 			<md-content layout="column" flex ng-view></md-content>
 		</div>
