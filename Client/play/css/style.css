@@ -33,6 +33,19 @@
 .height200{
 	height:200px;
 }
+.height250{
+	height:250px;
+}
+.height275{
+	height:275px;
+}
+.height300{
+	height:300px;
+}
+
+.height350{
+	height:350px;
+}
 .height500{
 	height:500px;
 }
@@ -118,6 +131,9 @@
 }
 .mrg20t{
 	margin-top: 20px;
+}
+.mrg20b{
+	margin-bottom: 20px;
 }
 .mrg50t{
 	margin-top: 50px !important;
@@ -246,7 +262,7 @@ text-align:center;
 }
 
 .imgBoardgame{
-    max-height: 20em;
+    max-height: 18em;
 }
 
 /*OVERRIDES*/
