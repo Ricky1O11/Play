@@ -26,14 +26,14 @@
 						</md-not-found>
 					  </md-autocomplete>
 					<div layout="row" class="mrg50t">					
-						<div layout="column" flex="50">  
-						  <md-input-container class="md-block" flex-gt-sm>
+						<div layout-xs="row" layout-gt-xs="column" flex-xs="none" felx-gt-xs="50">  
+						  <md-input-container>
 							<label>Where?</label>
 							<input ng-model="mdCtrl.selectedValues.location">
 						  </md-input-container>
 						</div>
 
-						<div layout="column" flex="50">  
+						<div layout-xs="row" layout-gt-xs="column" flex-xs="none" felx-gt-xs="50">  
 						  <md-input-container>
 							<label>When?</label>
 							<md-datepicker flex ng-model="mdCtrl.selectedValues.time"></md-datepicker>

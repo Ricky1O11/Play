@@ -1,15 +1,15 @@
 <div class="container-fluid" layout-padding layout="column">
 	<div layout="row" flex="none" class="mrg20b">
-		<div layout="column" flex="100" >
+		<div layout="column" flex="noshrink" >
 			<div layout="row" class="height30" flex="none">
 				<div layout="column" flex="100">
 					<a href="#/favourites"><h3 class="blue-grey">Favourite games</h3></a>
 				</div>
 			</div>
-			<div layout="row" class="height250" flex="none">
+			<div layout="row" flex="noshrink">
 				<md-grid-list 
-					md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-					md-row-height-gt-sm="fit" md-row-height-sm="fit"
+					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+					md-row-height="1:1"
 					md-gutter="12px" md-gutter-gt-sm="10px" flex
 					>
 
@@ -34,17 +34,17 @@
 			</div>
 		</div>
 	</div>
-	<div layout="row" flex="none">
+	<div layout="row">
 		<div layout="column" flex="100">
 			<div layout="row" class="height30" flex="none">
 				<div layout="column" flex="100">
 					<a href="#/recents"><h3 class="blue-grey">Recent matches</h3></a>
 				</div>
 			</div>
-			<div layout="row" class="height250" flex="none">
+			<div layout="row" flex="noshrink">
 				<md-grid-list 
-					md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-					md-row-height-gt-sm="fit" md-row-height="fit"
+					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+					md-row-height="1:1"
 					md-gutter="10px" md-gutter-gt-sm="10px" flex
 					>
 

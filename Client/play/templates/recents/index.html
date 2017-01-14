@@ -1,32 +1,27 @@
 <div class="container-fluid" layout-padding layout="column">
 	<div layout="row">
-		<div layout="column" flex="100">
-			<div layout="row" class="height50">
+		<div layout="column" flex="noshrink">
+			<div layout="row" class="height30" flex="none">
 				<div layout="column" flex="100">
 					<h3 class="blue-grey">Recent games ({{rCtrl.recents.length}})</h3>
 				</div>
 			</div>
-			<div layout="row" class="height600">
-				<div layout="column" flex="100">
-					<md-grid-list
-						md-cols-xs="1" md-cols-sm="3" md-cols-md="4" md-cols-gt-md="4"
-						md-row-height-gt-md="1:1" md-row-height="2:2"
-						md-gutter="120px" md-gutter-gt-sm="10px" 
-						>
-						
-						<md-grid-tile ng-click="goTo(boardgame.pk)" ng-repeat="boardgame in rCtrl.recents" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
-							<md-grid-tile-header layout-align="end center" class="pad5r">
-							<i ng-if="rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
-							<i ng-if="!rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
-						  </md-grid-tile-header>
-						  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
-							<h3>{{boardgame.title}}</h3>
-						  </md-grid-tile-footer>
-						</md-grid-tile>
-						
-					.
-					</md-grid-list>
-				</div>
+			<div layout="row" flex="noshrink">
+				<md-grid-list 
+				md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+				md-row-height="1:1"
+				md-gutter="12px" md-gutter-gt-sm="10px" flex
+				>
+					<md-grid-tile ng-click="goTo(boardgame.pk)" ng-repeat="boardgame in rCtrl.recents" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
+						<md-grid-tile-header layout-align="end center" class="pad5r">
+						<i ng-if="rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
+						<i ng-if="!rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
+					  </md-grid-tile-header>
+					  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
+						<h3>{{boardgame.title}}</h3>
+					  </md-grid-tile-footer>
+					</md-grid-tile>
+				</md-grid-list>
 			</div>
 		</div>
 	</div>
