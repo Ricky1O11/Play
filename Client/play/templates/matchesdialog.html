@@ -11,29 +11,41 @@
           <md-content class="md-padding">
             	<div class="md-dialog-content">
             	
-					<md-autocomplete
-					  md-selected-item="mdCtrl.selectedValues.boardgame"
-					  md-search-text="mdCtrl.searchText"
-					  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.searchText) | orderBy:'display'"
-					  md-item-text="boardgame.display"
-					  md-min-length="0"
-					  placeholder="What did you play?">
-					<md-item-template>
-					  <span md-highlight-text="mdCtrl.searchText" md-highlight-flags="^i">{{boardgame.display}}</span>
-					</md-item-template>
-					<md-not-found>
-					  No boardgame matching "{{mdCtrl.searchText}}" were found.
-					</md-not-found>
-				  </md-autocomplete>
-				  
-				  <md-input-container class="mrg50t">
-					<label>When?</label>
-					<md-datepicker ng-model="mdCtrl.selectedValues.time"></md-datepicker>
-				  </md-input-container>
-				  <md-input-container class="md-block" flex-gt-sm>
-					<label>Where?</label>
-					<input ng-model="mdCtrl.selectedValues.location">
-				  </md-input-container>
+						<md-autocomplete
+						  md-selected-item="mdCtrl.selectedValues.boardgame"
+						  md-search-text="mdCtrl.searchText"
+						  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.searchText) | orderBy:'display'"
+						  md-item-text="boardgame.display"
+						  md-min-length="0"
+						  placeholder="What did you play?">
+						<md-item-template>
+						  <span md-highlight-text="mdCtrl.searchText" md-highlight-flags="^i">{{boardgame.display}}</span>
+						</md-item-template>
+						<md-not-found>
+						  No boardgame matching "{{mdCtrl.searchText}}" were found.
+						</md-not-found>
+					  </md-autocomplete>
+					<div layout="row" class="mrg50t">					
+						<div layout="column" flex="50">  
+						  <md-input-container class="md-block" flex-gt-sm>
+							<label>Where?</label>
+							<input ng-model="mdCtrl.selectedValues.location">
+						  </md-input-container>
+						</div>
+
+						<div layout="column" flex="50">  
+						  <md-input-container>
+							<label>When?</label>
+							<md-datepicker flex ng-model="mdCtrl.selectedValues.time"></md-datepicker>
+						  </md-input-container>
+						</div>
+					</div>
+
+					<div layout="row">
+						<md-checkbox ng-model="TODO" aria-label="Lower score wins?">
+			           		 Lowest score wins?
+			            </md-checkbox>
+				 	</div>
 				 </div>
 				 
 				<div layout="column" flex>

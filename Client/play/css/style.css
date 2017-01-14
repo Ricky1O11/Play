@@ -267,7 +267,9 @@ text-align:center;
 }
 
 .imgBoardgame{
-    max-height: 18em;
+    height: 18em;
+    width: 18em;
+    overflow:hidden;
 }
 
 /*OVERRIDES*/

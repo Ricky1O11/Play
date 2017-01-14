@@ -31,7 +31,11 @@ angular.module('play')
 		controller: 'boardgamesController',
 		controllerAs: 'bCtrl'
 	})
-	
+	.when('/matches/:id', {
+		templateUrl: 'templates/match/index.html',
+		controller: 'matchController',
+		controllerAs: 'mCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})
