@@ -13,7 +13,7 @@
 					md-gutter="12px" md-gutter-gt-sm="10px" flex
 					>
 
-					<md-grid-tile ng-repeat="f in hCtrl.favourites" ng-click="goTo(f.pk)" alt="{{f.title}}" back-img="{{f.img}}">
+					<md-grid-tile ng-repeat="f in hCtrl.favourites| limitTo:4" ng-click="goTo(f.pk)" alt="{{f.title}}" back-img="{{f.img}}">
 					  <md-grid-tile-header layout-align="end center" class="pad5r">
 						<i class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
 					  </md-grid-tile-header>
@@ -48,7 +48,7 @@
 					md-gutter="10px" md-gutter-gt-sm="10px" flex
 					>
 
-					<md-grid-tile ng-repeat="r in hCtrl.recents" ng-click="goTo(r.pk)" alt="{{r.title}}" back-img="{{r.img}}">
+					<md-grid-tile ng-repeat="r in hCtrl.recents | limitTo:4" ng-click="goTo(r.pk)" alt="{{r.title}}" back-img="{{r.img}}">
 					  <md-grid-tile-header layout-align="end center" class="pad5r">
 						<i ng-if="hCtrl.inFavourites(r.title)" class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
 						<i ng-if="!hCtrl.inFavourites(r.title)" class="fa fa-heart-o fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
