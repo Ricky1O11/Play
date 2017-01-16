@@ -22,13 +22,13 @@ angular.module('play')
 		controllerAs: 'rCtrl'
 	})
 	.when('/boardgames', {
-		templateUrl: 'templates/list/index.html',
-		controller: 'listController',
-		controllerAs: 'lCtrl'
-	})
-	.when('/boardgames/:id', {
 		templateUrl: 'templates/boardgames/index.html',
 		controller: 'boardgamesController',
+		controllerAs: 'bsCtrl'
+	})
+	.when('/boardgames/:id', {
+		templateUrl: 'templates/boardgame/index.html',
+		controller: 'boardgameController',
 		controllerAs: 'bCtrl'
 	})
 	.when('/matches/:id', {

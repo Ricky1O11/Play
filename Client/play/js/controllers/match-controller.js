@@ -1,13 +1,16 @@
+//controller for the single match page
 angular.module("play").controller('matchController', function(Api, $routeParams) {
+	//read the requested match'id
 	this.params=$routeParams;
 	this.match={};
 	controller=this;
+
+	//api call to get the single match's details
 	Api.match(controller.params.id).success(function(data){
 		controller.match=data;
-		console.log(controller.match);
 	});
 
-	
+	//randomly color the avatars of players without a profile picture
 	this.getRandomColor = function(){
 		rnd = Math.floor(Math.random()*5);
 		switch (rnd){

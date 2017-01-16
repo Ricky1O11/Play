@@ -23,11 +23,11 @@ angular.module('play')
 						r = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/recents/?user_id='+user_id});
 						return r;
 					},
-		list:		function(){
+		boadgames:		function(){
 						l = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/?user_id='+user_id});
 						return l;
 					},
-		boardgames:	function(id){
+		boardgame:	function(id){
 						b = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/'+id+'/?include=matches&user_id='+user_id});
 						return b;
 					},		

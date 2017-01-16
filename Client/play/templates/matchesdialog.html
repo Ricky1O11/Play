@@ -25,15 +25,15 @@
 						  No boardgame matching "{{mdCtrl.searchText}}" were found.
 						</md-not-found>
 					  </md-autocomplete>
-					<div layout="row" class="mrg50t">					
-						<div layout-xs="row" layout-gt-xs="column" flex-xs="none" felx-gt-xs="50">  
+					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
+						<div layout="column" flex-gt-sm="50">  
 						  <md-input-container>
 							<label>Where?</label>
 							<input ng-model="mdCtrl.selectedValues.location">
 						  </md-input-container>
 						</div>
 
-						<div layout-xs="row" layout-gt-xs="column" flex-xs="none" felx-gt-xs="50">  
+						<div layout="column" flex-gt-sm="50">  
 						  <md-input-container>
 							<label>When?</label>
 							<md-datepicker flex ng-model="mdCtrl.selectedValues.time"></md-datepicker>
