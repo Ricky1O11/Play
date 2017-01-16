@@ -12,7 +12,7 @@
 				md-row-height="1:1"
 				md-gutter="12px" md-gutter-gt-sm="10px" flex
 				>
-					<md-grid-tile ng-click="goTo(boardgame.pk)" ng-repeat="boardgame in rCtrl.recents" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
+					<md-grid-tile ng-click="goTo('boardgames/'+boardgame.pk)" ng-repeat="boardgame in rCtrl.recents" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
 						<md-grid-tile-header layout-align="end center" class="pad5r">
 						<i ng-if="rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
 						<i ng-if="!rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o fa-2x" md-colors="{color: 'myTheme-accent'}"></i>

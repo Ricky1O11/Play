@@ -19,7 +19,7 @@
 						</div>
 					</md-grid-tile>	
 					
-					<md-grid-tile ng-click="goTo(boardgame.pk)" ng-repeat="boardgame in fCtrl.favourites" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
+					<md-grid-tile ng-click="goTo('boardgames/'+boardgame.pk)" ng-repeat="boardgame in fCtrl.favourites" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
 						<md-grid-tile-header layout-align="end center" class="pad5r">
 						<i class="fa fa-heart shadowed fa-2x" md-colors="{color:'myTheme-accent'}"></i>
 					  </md-grid-tile-header>

@@ -15,8 +15,8 @@
             });
   })
   .run(function($rootScope, $location, $mdDialog) {
-        $rootScope.goTo = function(pk) {
-            $location.path("boardgames/"+pk);
+        $rootScope.goTo = function(url) {
+            $location.path(url);
         };
 		
 		$rootScope.matchesPopup = function(ev) {

@@ -24,6 +24,7 @@
 					<md-list flex>
 						<md-list-item
 						class=" md-3-line animate-repeat" 
+						ng-href="#/matches/{{match.pk}}"
 						ng-repeat="match in bCtrl.boardgame.matches | filter:{location:query}" ng-click="null">
 							<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.title}}" />
 							<div layout="column">
