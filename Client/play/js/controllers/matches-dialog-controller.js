@@ -1,25 +1,28 @@
+//controller for the popup dialog used to insert a new match
 angular.module("play").controller('matchesDialogController', function(Api, $mdDialog, $mdToast) {
 
 	// list of `state` value/display objects
 	self=this;
 	
-	self.currentTab=0
-	self.title=self.currentTab==0?"Add Match":"Add Players";
+	self.currentTab=0 //holds the current tab id
+	self.title=self.currentTab==0?"Add Match":"Add Players"; //sets the tab title according to its id
 	
-	self.selectedValues={};
-	self.selectedValues.players=[];
-	self.selectedValues.matchId = 0;
+	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
+	self.selectedValues.players=[]; //list that holds the list of player playing the inserted match
+	self.selectedValues.matchId = 0; //will contain the id of the inserted match
 	
-	self.postValues={};
+	self.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
 	self.postValues.match={};
 	self.postValues.plays=[];
     
 	
-	self.boardgames=[];
+	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	
-	self.users=[];
-	self.nplayers=1;
-	self.searchText=[];
+	self.users=[];  //list of users to display in the dropdown menu
+	self.nplayers=1; //holds the selected amount of players
+
+	self.searchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+
 	self.range = function(min, max, step) {
 		step = step || 1;
 		var input = [];
@@ -29,33 +32,27 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 		return input;
 	};
 	
-	
-	Api.list().success(function(data){
+	//api call to the list of boardgames
+	Api.boadgames().success(function(data){
 		for (i=0; i<data.length; i++){
 			self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk}
 		}
 	});
 	
+	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
 			self.users[i]={display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk}
 		}
 	});
 
-    // ******************************
-    // Internal methods
-    // ******************************
-
-    /**
-     * Search for boardagames
-     */
+    
+    //Search for boardagames
     self.querySearchBoardgames = function (query) {
       var results = query ? self.boardgames.filter( createFilterFor(query) ) : self.boardgames;
         return results;
     }
-	/**
-     * Search for players
-     */
+	//Search for users
 	self.querySearchPlayers = function (query) {
       var results = query ? self.users.filter( createFilterFor(query) ) : self.users;
         return results;
@@ -101,7 +98,6 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 			Api.matchpost(self.postValues.match).then(
 					function(response){
 						self.selectedValues.matchId = response.data.pk;
-
 							for (i=0; i<self.selectedValues.players.length; i++){
 								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
 								self.postValues.plays.push(row);

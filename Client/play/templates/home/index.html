@@ -1,74 +1,71 @@
 <div class="container-fluid" layout-padding layout="column">
-	<div layout="row" flex-gt-sm="50" flex-sm="none">
-		<div layout="column" flex="100" >
-			<div layout="row"  flex-gt-sm="10" flex-sm="10">
+	<div layout="row" flex="none" class="mrg20b">
+		<div layout="column" flex="noshrink" >
+			<div layout="row" class="height30" flex="none">
 				<div layout="column" flex="100">
 					<a href="#/favourites"><h3 class="blue-grey">Favourite games</h3></a>
 				</div>
 			</div>
-	
-			<md-grid-list 
-				layout="row" 
-				flex-gt-sm="80"
-				flex-sm="90"
-				md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-				md-row-height-gt-sm="fit" md-row-height-sm="fit"
-				md-gutter="12px" md-gutter-gt-sm="10px" 
-				>
+			<div layout="row" flex="noshrink">
+				<md-grid-list 
+					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+					md-row-height="1:1"
+					md-gutter="12px" md-gutter-gt-sm="10px" flex
+					>
 
-				<md-grid-tile ng-repeat="f in hCtrl.favourites" ng-click="goTo(f.pk)" alt="{{f.title}}" back-img="{{f.img}}">
-				  <md-grid-tile-header layout-align="end center" class="pad5r">
-					<i class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
-				  </md-grid-tile-header>
-				  
-				  <md-grid-tile-footer  md-colors="{background: 'myTheme-primary'}">
-					<h3>{{f.title}}</h3>
-				  
-				  </md-grid-tile-footer>
-				</md-grid-tile>
-				
-				<md-grid-tile ng-if="hCtrl.lessThenFour('favourites')" md-colors="{background: 'myTheme-accent'}">
-					<div layout="column">
-						<div layout="row" layout-align="center center"><i class="size-72 fi-plus"></i></div>
-						<div layout="row">Add favorite</div>
-					</div>
-				</md-grid-tile>				
-			</md-grid-list>
+					<md-grid-tile ng-repeat="f in hCtrl.favourites| limitTo:4" ng-click="goTo('boardgames/'+f.pk)" alt="{{f.title}}" back-img="{{f.img}}">
+					  <md-grid-tile-header layout-align="end center" class="pad5r">
+						<i class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+					  </md-grid-tile-header>
+					  
+					  <md-grid-tile-footer  md-colors="{background: 'myTheme-primary'}">
+						<h3>{{f.title}}</h3>
+					  
+					  </md-grid-tile-footer>
+					</md-grid-tile>
+					
+					<md-grid-tile ng-if="hCtrl.lessThenFour('favourites')" md-colors="{background: 'myTheme-accent'}">
+						<div layout="column">
+							<div layout="row" layout-align="center center"><i class="size-72 fi-plus"></i></div>
+							<div layout="row">Add favorite</div>
+						</div>
+					</md-grid-tile>				
+				</md-grid-list>
+			</div>
 		</div>
 	</div>
-	<div layout="row" flex-gt-sm="50" flex-sm="none">
+	<div layout="row">
 		<div layout="column" flex="100">
-			<div layout="row" flex-gt-sm="10" flex-sm="10">
+			<div layout="row" class="height30" flex="none">
 				<div layout="column" flex="100">
 					<a href="#/recents"><h3 class="blue-grey">Recent matches</h3></a>
 				</div>
 			</div>
-	
-			<md-grid-list 
-				layout="row" 
-				flex-gt-sm="80" flex-sm="90"
-				md-cols-xs="1" md-cols-sm="2" md-cols-md="3" md-cols-gt-md="4"
-				md-row-height-gt-sm="fit" md-row-height="fit"
-				md-gutter="10px" md-gutter-gt-sm="10px" 
-				>
+			<div layout="row" flex="noshrink">
+				<md-grid-list 
+					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+					md-row-height="1:1"
+					md-gutter="10px" md-gutter-gt-sm="10px" flex
+					>
 
-				<md-grid-tile ng-repeat="r in hCtrl.recents" ng-click="goTo(r.pk)" alt="{{r.title}}" back-img="{{r.img}}">
-				  <md-grid-tile-header layout-align="end center" class="pad5r">
-					<i ng-if="hCtrl.inFavourites(r.title)" class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
-					<i ng-if="!hCtrl.inFavourites(r.title)" class="fa fa-heart-o fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
-				  </md-grid-tile-header>
-				  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
-					<h3>{{r.title}}</h3>
-				  </md-grid-tile-footer>
-				</md-grid-tile>
-				
-				<md-grid-tile ng-if="hCtrl.lessThenFour('recents')" md-colors="{background: 'myTheme-accent'}" ng-click="matchesPopup($event)">
-						<div layout="column">
-							<div layout="row" layout-align="center center"><i class="size-72 fi-plus"></i></div>
-							<div layout="row">Play new game</div>
-						</div>
-				</md-grid-tile>	
-			</md-grid-list>
+					<md-grid-tile ng-repeat="r in hCtrl.recents | limitTo:4" ng-click="goTo('boardgames/'+r.pk)" alt="{{r.title}}" back-img="{{r.img}}">
+					  <md-grid-tile-header layout-align="end center" class="pad5r">
+						<i ng-if="hCtrl.inFavourites(r.title)" class="fa fa-heart fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+						<i ng-if="!hCtrl.inFavourites(r.title)" class="fa fa-heart-o fa-2x shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+					  </md-grid-tile-header>
+					  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
+						<h3>{{r.title}}</h3>
+					  </md-grid-tile-footer>
+					</md-grid-tile>
+					
+					<md-grid-tile ng-if="hCtrl.lessThenFour('recents')" md-colors="{background: 'myTheme-accent'}" ng-click="matchesPopup($event)">
+							<div layout="column">
+								<div layout="row" layout-align="center center"><i class="size-72 fi-plus"></i></div>
+								<div layout="row">Play new game</div>
+							</div>
+					</md-grid-tile>	
+				</md-grid-list>
+			</div>
 		</div>
 	</div>
 </div>
