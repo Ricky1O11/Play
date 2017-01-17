@@ -98,7 +98,6 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 			Api.matchpost(self.postValues.match).then(
 					function(response){
 						self.selectedValues.matchId = response.data.pk;
-
 							for (i=0; i<self.selectedValues.players.length; i++){
 								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
 								self.postValues.plays.push(row);
