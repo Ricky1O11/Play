@@ -36,7 +36,7 @@
 	height:150px;
 }
 .height200{
-	height:200px;
+	height:200px !important;
 }
 .height250{
 	height:250px;
@@ -90,9 +90,11 @@
 .pad10r{
 	padding-right: 10px;
 }
-
+.pad20t{
+	padding-top: 20px;
+}
 .pad20r{
-	padding-right: 50px;
+	padding-right: 20px;
 }
 
 .pad20l{
@@ -118,7 +120,7 @@
 	margin-top: 10px;
 }
 .mrg10b{
-	margin-bottom: 10px !important;
+	margin-bottom: 10px;
 }
 .mrg10l{
 	margin-left: 10px;
@@ -139,6 +141,9 @@
 }
 .mrg20b{
 	margin-bottom: 20px;
+}
+.mrg30b{
+	margin-bottom: 30px;
 }
 .mrg50t{
 	margin-top: 50px !important;
@@ -195,7 +200,7 @@
 }
 
 .overflowScroll{
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 
 /*end SCROLL BAR MANAGEMENT*/
@@ -257,6 +262,20 @@ background-color:#FF6E40;
 height:2.5em;
 width: 2.5em;
 text-align:center;
+}
+
+.blur {
+    -webkit-filter: blur(8px);
+    -moz-filter: blur(8px);
+    -ms-filter: blur(8px);
+    -o-filter: blur(8px);
+    filter: blur(8px);
+}
+
+.blackOverlay{
+	background-color:rgba(0,0,0,0.5); 
+	height:100%;
+	width:100%;
 }
 /*end OTHER STUFF MANAGEMENT*/
 

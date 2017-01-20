@@ -1,0 +1,70 @@
+<div class="container-fluid" layout-padding layout="column">
+	<div layout="row">
+		<div layout="column" flex="100">
+			<div layout="row" class="height50">
+				<div layout="column" flex="100">
+					<h3 class="blue-grey">Matches ({{msCtrl.matches.length}})</h3>
+					
+				</div>
+			</div>
+			
+			<div layout="row" class="height100" >
+				<div layout="column" flex="90" >
+					<md-input-container class="md-block md-accent">
+					  <label>Search</label>
+					  <input ng-model="query">
+					</md-input-container>
+				</div>
+				<div layout="column" flex="10" layout-align="center center">
+					<md-menu>
+						<md-button class="md-fab md-mini" ng-click="$mdOpenMenu(ev)">
+							<i class="fa fa-sort-amount-desc"></i>
+						</md-button>
+						<md-menu-content width="4">
+							<md-menu-item>
+								<md-button ng-click="bsCtrl.setOrderingField(['pk', 'location'])">
+									<i class="fa fa-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
+									Alphabetical order
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="bsCtrl.setOrderingField(['location', 'pk'])">
+									<i class="fa fa-star-o" md-colors="{color: 'myTheme-accent'}"></i>
+									Average order
+								</md-button>
+							</md-menu-item>
+							<md-menu-item>
+								<md-button ng-click="bsCtrl.setOrderingField(['pk', 'pk'])">
+									<i class="fa fa-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
+									Favourite order
+								</md-button>
+							</md-menu-item>
+						</md-menu-content>
+					</md-menu>
+				</div>
+			</div>
+			
+			<div layout="row" class="overflowScroll">
+				<div layout="column" flex="100">
+					<md-list flex>
+					 	<md-subheader class="md-no-sticky">CIAO</md-subheader>
+						<md-list-item
+						class=" md-3-line animate-repeat" 
+						ng-href="#/matches/{{match.pk}}"
+						ng-repeat="match in msCtrl.matches | filter:{location:query} | orderBy:msCtrl.getOrderingField()" ng-click="null">
+							<img ng-src="{{match.boardgame_thumbnail}}" class="md-avatar" alt="match {{match.pk}}" />
+							<div layout="column">
+								<div layout="row">
+									<h3>Match {{match.pk}}</h3>
+								</div>
+								<div layout="row" class="size-14">
+									<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
+								</div>
+							</div>
+						</md-list-item>
+				  </md-list>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

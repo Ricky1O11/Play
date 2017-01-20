@@ -8,11 +8,16 @@ angular.module("play").controller('matchController', function(Api, $routeParams)
 	//api call to get the single match's details
 	Api.match(controller.params.id).success(function(data){
 		controller.match=data;
+		console.log(controller.match);
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			if (controller.match.plays_set[i].points == 999999){
 				controller.match.plays_set[i].points = "N.A";
 			}
 		}
+
+/*TODO*/		Api.boardgame(controller.match.boardgame).success(function(data){
+			controller.match.boardgame_title=data[0].title;
+		});
 	});
 
 	//randomly color the avatars of players without a profile picture

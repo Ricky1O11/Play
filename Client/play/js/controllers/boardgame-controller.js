@@ -9,7 +9,6 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
 	//api call to get the single boardgame's details
 	Api.boardgame(controller.params.id).success(function(data){
 		controller.boardgame=data[0];
-		console.log(controller.boardgame);
 	});
 	
 });

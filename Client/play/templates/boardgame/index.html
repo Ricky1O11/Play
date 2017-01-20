@@ -1,16 +1,34 @@
-<div class="container-fluid" layout-padding layout="column">
+<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
 	<div layout="row" flex="none" class="height300 mrg20b">
-		<div layout="column" flex="30">
-			<div>
-				<div class="circleBase imgBoardgame" layout-align="center center">
-					<img src="{{bCtrl.boardgame.img}}"/>
+		<div layout="column" flex="none">
+			<div class="circleBase imgBoardgame hideScrollbar">
+				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
+					<div class="circleBase" style="font-size:50px;"></div>
 				</div>
 			</div>
 		</div>
-		<div layout="column" flex="70" layout-align="top center"  class="blue-grey">
-			<h2 layout="row" > {{bCtrl.boardgame.title}}
-			</h2>
+		<div layout="column" class="blue-grey pad20l" flex="100">
 			<div layout="row">
+				<h1> {{bCtrl.boardgame.title}}</h1>
+			</div>
+			<div layout="row" id="info_container" class="mrg30b">
+				<div layout="column" flex="50">
+					<div layout="row" class="size-14">
+						<div layout="column" flex="50">YEAR: {{bCtrl.boardgame.yearpublished}}</div>
+						<div layout="column" flex="50">DURATION: {{bCtrl.boardgame.playingtime}}</div>
+					</div>
+				</div>
+			</div>
+			<div layout="row" class="size-14">
+				<div layout="column" flex="100">
+					<div layout="row" class="size-14">
+						<div layout="column" class="mrg10b" flex="100">OVERVIEW</div>
+					</div>
+					<div layout="row" class="size-14 height200 overflowScroll">
+						<div layout="column" flex="100">{{bCtrl.boardgame.description}}</div>
+					</div>
+
+				</div>
 			</div>
 		</div>
 	</div>
@@ -32,7 +50,7 @@
 									<h3>Match {{$index+1}}</h3>
 								</div>
 								<div layout="row" class="size-14">
-									<i>{{match.time}} {{match.location}}</i>
+									<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
 								</div>
 							</div>
 							
