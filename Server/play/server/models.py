@@ -42,6 +42,7 @@ class Users(models.Model):
 class Matches(models.Model):
     #match_id = models.AutoField(primary_key=True)
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    name = models.CharField(default="", max_length=256)
     time = models.DateTimeField()
     location = models.CharField(max_length=100)
     duration = models.IntegerField(default=0)

@@ -3,6 +3,11 @@ from rest_framework import serializers
 from .models import *
 from django.db.models import Count, Max
 
+class SimpleBoardgamesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Boardgames
+        fields = ('pk', 'title', 'thumbnail')
+
 
 # Json representation of users and statistics
 class UsersSerializers(serializers.ModelSerializer):
@@ -108,9 +113,29 @@ class PlaysSerializers(serializers.ModelSerializer):
 # Json representation of single matches
 class MatchesSerializers(serializers.ModelSerializer):
     plays_set = PlaysSerializers(many=True, read_only=True)
+    boardgame =SimpleBoardgamesSerializers(read_only=True)
+
+    def __init__(self, *args, **kwargs):
+        super(MatchesSerializers, self).__init__(*args, **kwargs)
+        # Allowed params: "include"
+        includes = self.context['request'].query_params.get('include')
+        if includes:
+            fields = includes.split(',')
+            allowed = set(fields)
+
+            # Allowed values: "matches", "users", "friends", "favourite"
+            if "boardgame" not in allowed:
+                self.fields.pop("boardgame")
+
+    #def get_boardgame_info(self, match):
+    #    boardgame = Boardgames.objects.filter(matches_set=match)
+    #    serializer = BoardgamesSerializers(boardgame, many=True,
+    #                                  context={'request': self.context['request']})
+    #    return serializer.data
+
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'time', 'location', 'duration', 'plays_set',)
+        fields = ('pk', 'boardgame', 'name','time', 'location', 'duration', 'plays_set',)
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):
@@ -145,7 +170,7 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     def get_matches(self, boardgame):
         user_id = self.context['request'].query_params.get('user_id')
         if user_id:
-            matches = Matches.objects.filter(boardgame=boardgame, plays__user=user_id)
+            matches = Matches.objects.filter(boardgame=boardgame, plrays__use=user_id)
         else:
             matches = Matches.objects.filter(boardgame=boardgame)
 
@@ -180,7 +205,7 @@ class BoardgamesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Boardgames
-        fields = ('pk', 'title', 'description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
+        fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
 
 # Json representation of favourites boardgames by an user
 class FriendsSerializers(serializers.ModelSerializer):
