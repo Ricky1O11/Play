@@ -127,9 +127,13 @@ class UserDetail(APIView):
 # Match list
 class MatchesList(APIView):
     def get(self, request):
-        match = Matches.objects.all()
-        matchesSerializers = MatchesSerializers(match, many=True, context={'request': request})
-        return Response(matchesSerializers.data)
+        user_id = self.request.query_params.get('user_id', None)
+        if (user_id is not None):
+            matchwithuser = Matches.objects.filter(plays__user=user_id)
+            matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
+            return Response(matchesSerializers.data)
+        else:
+            return Response("error: insert user_id")
 
     def post(self, request):
         match = MatchesSerializers(data=request.data)
@@ -141,9 +145,11 @@ class MatchesList(APIView):
 # Match detail
 class MatchDetail(APIView):
     def get(self, request, pk):
-        match = get_object_or_404(Matches, pk=pk)
-        matchSerializers= MatchesSerializers(match, context={'request': request})
-        return Response(matchSerializers.data)
+        user_id = self.request.query_params.get('user_id', None)
+        if (user_id is not None):
+            matchwithuser = Matches.objects.filter(plays__user=user_id, pk=pk).distinct()
+            matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
+            return Response(matchesSerializers.data)
 
     def get_object(self, pk):
         try:

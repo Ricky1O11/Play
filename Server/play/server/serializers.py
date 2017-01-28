@@ -170,7 +170,7 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     def get_matches(self, boardgame):
         user_id = self.context['request'].query_params.get('user_id')
         if user_id:
-            matches = Matches.objects.filter(boardgame=boardgame, plrays__use=user_id)
+            matches = Matches.objects.filter(boardgame=boardgame, plays__user=user_id)
         else:
             matches = Matches.objects.filter(boardgame=boardgame)
 
@@ -207,12 +207,13 @@ class BoardgamesSerializers(serializers.ModelSerializer):
         model = Boardgames
         fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
 
-# Json representation of favourites boardgames by an user
+# Json representation of friends
 class FriendsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Friends
         fields = ('pk', 'user1','user2')
 
+# Json representation of favourites boardgames by an user
 class FavouritesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Favourites
