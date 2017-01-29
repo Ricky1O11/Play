@@ -58,9 +58,9 @@
 							</div>
 							<i class="md-secondary">{{boardgame.matches.length}} matches</i>
 						</md-list-item>
-						<md-list-item
-						ng-show="boardgame.visible"
-						class=" md-3-line animate-repeat mrg50l animate-show-hide" ng-cloak						
+						<md-list-item 
+						ng-if="boardgame.visible"
+						class=" md-3-line mrg50l"
 						ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:msCtrl.getOrderingField()"
 						ng-href="#/matches/{{match.pk}}"
 						>
