@@ -6,7 +6,7 @@ from django.db.models import Count, Max
 class SimpleBoardgamesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Boardgames
-        fields = ('pk', 'title', 'thumbnail')
+        fields = ('pk', 'title', 'thumbnail', 'img',)
 
 
 # Json representation of users and statistics

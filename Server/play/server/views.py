@@ -75,6 +75,8 @@ class BoardgamesListFiltered(APIView):
             else:
                 return Response("error: insert user_id")
 
+
+
 # Single boardgame details
 class BoardgameDetail(APIView):
 
