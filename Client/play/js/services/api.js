@@ -32,11 +32,11 @@ angular.module('play')
 						return b;
 					},		
 		match:		function(id){
-						m = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/matches/'+id+'/?include=user_stats'});
+						m = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/matches/'+id+'/?user_id='+user_id});
 						return m;
 					},	
-		matches:	function(){/*TODO*/
-						ms = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/matches/?user_id='+user_id});
+		matches:	function(){
+						ms = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/recents/?user_id='+user_id+'&include=matches'});
 						return ms;
 					},	
 		matchpost:	function(match){

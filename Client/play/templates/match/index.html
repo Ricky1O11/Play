@@ -2,21 +2,21 @@
 	<div layout="row" flex="none" class="height300 mrg20b">
 		<div layout="column" flex="none">
 			<div class="circleBase imgBoardgame hideScrollbar">
-				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
+				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame.img}}">
 					<div class="circleBase" style="font-size:50px;"></div>
 				</div>
 			</div>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex="100">
 			<div layout="row" class="mrg20b">
-				<h1 layout="row" > Match {{mCtrl.match.pk}}</h1>
+				<h1 layout="row" > Match {{mCtrl.match.name}}</h1>
 			</div>
 			<div layout="row" id="info_container" class="mrg20b">
 				<div layout="column" flex="50">
 					<div layout="row" class="size-14 mrg10b">
 						<div layout="column" flex="100">
 							<div layout="row">GAME </div>
-							<div layout="row"><h2>{{mCtrl.match.boardgame_title}}</h2> </div>
+							<div layout="row"><h2>{{mCtrl.match.boardgame.title}}</h2> </div>
 						</div>
 					</div>
 
