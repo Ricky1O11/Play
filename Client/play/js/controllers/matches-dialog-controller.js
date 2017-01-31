@@ -76,6 +76,7 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 				self.postValues.match.time=self.selectedValues.time;
 				if(self.selectedValues.location!=null && self.selectedValues.location.replace(/\s/g, '').length){
 					self.postValues.match.location=self.selectedValues.location;
+					self.postValues.match.name=self.selectedValues.name;
 					self.searchText=[];
 					self.currentTab=1;
 				}

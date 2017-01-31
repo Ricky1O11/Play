@@ -113,7 +113,7 @@ class PlaysSerializers(serializers.ModelSerializer):
 # Json representation of single matches
 class MatchesSerializers(serializers.ModelSerializer):
     plays_set = PlaysSerializers(many=True, read_only=True)
-    boardgame =SimpleBoardgamesSerializers(read_only=True)
+    boardgame_details = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
         super(MatchesSerializers, self).__init__(*args, **kwargs)
@@ -127,6 +127,11 @@ class MatchesSerializers(serializers.ModelSerializer):
             if "boardgame" not in allowed:
                 self.fields.pop("boardgame")
 
+    def get_boardgame_details(self, match):
+        boardgame = Boardgames.objects.get(matches=match)
+        serializer = SimpleBoardgamesSerializers(boardgame)
+        return serializer.data
+
     #def get_boardgame_info(self, match):
     #    boardgame = Boardgames.objects.filter(matches_set=match)
     #    serializer = BoardgamesSerializers(boardgame, many=True,
@@ -135,7 +140,7 @@ class MatchesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'name','time', 'location', 'duration', 'plays_set',)
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'boardgame_details', 'duration', 'plays_set',)
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):

@@ -47,7 +47,7 @@
 				<div layout="column" flex="100">
 					<md-list flex>
 						<md-list-item
-						class=" md-3-line animate-repeat"						
+						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
 						ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField()"
 						ng-click="msCtrl.setVisible($index)">
 							<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
@@ -60,7 +60,7 @@
 						</md-list-item>
 						<md-list-item 
 						ng-if="boardgame.visible"
-						class=" md-3-line mrg50l"
+						class=" md-3-line mrg50l whiteBg mrg5b mrg5r shadowed-box" ng-cloak						
 						ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:msCtrl.getOrderingField()"
 						ng-href="#/matches/{{match.pk}}"
 						>

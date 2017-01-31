@@ -138,7 +138,7 @@ class MatchesList(APIView):
             return Response("error: insert user_id")
 
     def post(self, request):
-        match = MatchesSerializers(data=request.data)
+        match = MatchesSerializers(data=request.data, context={'request': request})
         if match.is_valid():
             match.save()
             return Response(match.data, status=status.HTTP_201_CREATED)
