@@ -5,7 +5,7 @@ angular.module("play")
         attrs.$observe('backImg', function(url) {
             element.css({
                 'background-image': 'url(' + url +')',
-    			'background-color': 'black',
+    			'background-color': 'white',
     			'background-repeat' : 'no-repeat',
                 'background-size' : 'cover',
     			'background-position' : 'center',

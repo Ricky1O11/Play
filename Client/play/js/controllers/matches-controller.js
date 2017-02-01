@@ -2,7 +2,7 @@
 angular.module("play").controller('matchesController', function(Api) {
 	this.matches=[]; //container of the list of boardgames
 	this.orderingField="-location"; //ordering field, selectable by the user
-	this.loaded=false;
+	this.loaded=false; //ordering field, selectable by the user
 	controller=this;
 
 	//api call to the list of boardgames
@@ -11,7 +11,7 @@ angular.module("play").controller('matchesController', function(Api) {
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
 		}
-		controller.loaded=true;
+		controller.loaded = true;
 	});
 
 
