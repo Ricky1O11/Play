@@ -16,15 +16,15 @@ class Boardgames(models.Model):
     img = models.CharField(max_length=1000)
     thumbnail = models.CharField(max_length=1000)
     bggid = models.IntegerField(db_column='bggId', unique=True, default=0)  # Field name made lowercase.
-    minage=models.IntegerField(max_length=3, default=0)
+    minage=models.IntegerField(default=0)
     playingtime=models.IntegerField(default=0)
-    minplayers=models.IntegerField(max_length=2, default=0)
-    maxplayers=models.IntegerField(max_length=3, default=0)
-    yearpublished=models.IntegerField(max_length=4, default=0)
+    minplayers=models.IntegerField(default=0)
+    maxplayers=models.IntegerField(default=0)
+    yearpublished=models.IntegerField(default=0)
     maxplaytime=models.IntegerField(default=0)
     minplaytime=models.IntegerField(default=0)
     average=models.FloatField(default=0)
-    usersrated=models.IntegerField(max_length=2, default=0)
+    usersrated=models.IntegerField(default=0)
 
     def __unicode__(self):
         return str(self.id) +" - "+self.title

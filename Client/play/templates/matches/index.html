@@ -45,7 +45,8 @@
 			</div>
 			<div layout="row" class="overflowScroll">
 				<div layout="column" flex="100">
-					<md-list flex>
+					<md-list flex ng-show="msCtrl.loaded"
+					ng-init=$scope>
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
 						ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField():true"

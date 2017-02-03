@@ -7,18 +7,24 @@
 				</div>
 			</div>
 			<div layout="row" flex="noshrink">
+				<div layout="row" flex="noshrink">
 				<md-grid-list 
-				md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
-				md-row-height="1:1"
-				md-gutter="12px" md-gutter-gt-sm="10px" flex
-				>
-					<md-grid-tile ng-click="goTo('boardgames/'+boardgame.pk)" ng-repeat="boardgame in rCtrl.recents" alt="{{boardgame.title}}" back-img="{{boardgame.img}}">
-						<md-grid-tile-header layout-align="end center" class="pad5r">
-						<i ng-if="rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
-						<i ng-if="!rCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o fa-2x" md-colors="{color: 'myTheme-accent'}"></i>
-					  </md-grid-tile-header>
-					  <md-grid-tile-footer md-colors="{background: 'myTheme-primary'}">
-						<h3>{{boardgame.title}}</h3>
+					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
+					md-row-height="1:1"
+					md-gutter="10px" md-gutter-gt-sm="10px" flex
+					>
+
+					<md-grid-tile ng-repeat="r in rCtrl.recents" ng-click="goTo('boardgames/'+r.pk)" alt="{{r.title}}" back-img="{{r.img}}" class="shadowed-box">
+					  <md-grid-tile-footer class="whiteBg blue-grey">
+					  	<div layout="row"  class="height100perc">
+					  		<div layout="column" class="height100perc" flex="80"  layout-align="center start">
+								<h3>{{r.title}}</h3>
+							</div>
+					  		<div layout="column" class="height100perc" flex="20" layout-align="center start">
+								<i ng-if="rCtrl.isFavourite(r.favourite)" class="icon-heart size-24" md-colors="{color: 'myTheme-accent'}"></i>
+								<i ng-if="!rCtrl.isFavourite(r.favourite)" class="icon-heart-o size-24" md-colors="{color: 'myTheme-accent'}"></i>
+							</div>
+						</div>
 					  </md-grid-tile-footer>
 					</md-grid-tile>
 				</md-grid-list>
