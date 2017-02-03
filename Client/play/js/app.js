@@ -1,5 +1,5 @@
 (function(){
-  angular.module('play',["ngMaterial", "ngRoute", "ngSanitize"])
+  angular.module('play',["ngMaterial", "ngRoute", ]) //"ngSanitize"
   .config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
     $mdThemingProvider.theme('myTheme')
@@ -31,5 +31,5 @@
 			})	
 		}
 		
-    });
+    })
 })();

@@ -1,7 +1,7 @@
 //controller for the list of boardgames
 angular.module("play").controller('matchesController', function(Api) {
 	this.matches=[]; //container of the list of boardgames
-	this.orderingField="-location"; //ordering field, selectable by the user
+	this.orderingField="title"; //ordering field, selectable by the user
 	this.loaded=false; //ordering field, selectable by the user
 	controller=this;
 
@@ -10,6 +10,7 @@ angular.module("play").controller('matchesController', function(Api) {
 		controller.games=data;
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
+			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
 		}
 		controller.loaded = true;
 	});
@@ -42,7 +43,25 @@ angular.module("play").controller('matchesController', function(Api) {
 		return controller.orderingField;
 	}
 
-	this.setVisible = function(id){
-		controller.games[id].visible = !controller.games[id].visible;
+	this.setVisible = function(pk){
+		for(i = 0; i<controller.games.length; i++){
+			if(controller.games[i].pk == pk){
+				controller.games[i].visible = !controller.games[i].visible;
+			}
+		}
+	}
+
+	this.matchesSum = function(){
+		sum = 0;
+		for(i = 0; i<controller.games.length; i++){
+			sum += controller.games[i].matches.length;
+		}
+		return sum;
+	}
+
+	//is the boardgame a favourite for the user?
+	this.isFavourite = function(favourite){
+		if (favourite == 1) return true;
+		else return false;
 	}
 });

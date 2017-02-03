@@ -3,7 +3,7 @@
 		<div layout="column" flex="100">
 			<div layout="row" class="height50">
 				<div layout="column" flex="100">
-					<h3 class="blue-grey">Matches ({{msCtrl.matches.length}})</h3>
+					<h3 class="blue-grey">Matches ({{msCtrl.matchesSum()}})</h3>
 					
 				</div>
 			</div>
@@ -22,19 +22,19 @@
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['pk', 'location'])">
+								<md-button ng-click="msCtrl.setOrderingField(['title', 'location'])">
 									<i class="fa fa-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
 									Alphabetical order
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['location', 'pk'])">
+								<md-button ng-click="msCtrl.setOrderingField('lastMatchTime')">
 									<i class="fa fa-star-o" md-colors="{color: 'myTheme-accent'}"></i>
-									Average order
+									Last played
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['pk', 'pk'])">
+								<md-button ng-click="msCtrl.setOrderingField(['pk', 'pk'])">
 									<i class="fa fa-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Favourite order
 								</md-button>
@@ -48,20 +48,24 @@
 					<md-list flex>
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-						ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField()"
-						ng-click="msCtrl.setVisible($index)">
+						ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField():true"
+						ng-click="msCtrl.setVisible(boardgame.pk)">
 							<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
 							<div layout="column">
 								<div layout="row">
 									<h3> {{boardgame.title}}</h3>
 								</div>
+								<div layout="row">
+									<i>{{boardgame.matches.length}} matches</i>
+								</div>
 							</div>
-							<i class="md-secondary">{{boardgame.matches.length}} matches</i>
+							<i ng-if="msCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
+							<i ng-if="!msCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
 						</md-list-item>
 						<md-list-item 
 						ng-if="boardgame.visible"
 						class=" md-3-line mrg50l whiteBg mrg5b mrg5r shadowed-box" ng-cloak						
-						ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:msCtrl.getOrderingField()"
+						ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:'-time'"
 						ng-href="#/matches/{{match.pk}}"
 						>
 

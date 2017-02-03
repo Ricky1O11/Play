@@ -42,7 +42,7 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
-			self.users[i]={display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk}
+			self.users[i]={display:data[i].username, value:data[i].username, id:data[i].pk}
 		}
 	});
 
@@ -50,8 +50,10 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
     //Search for boardagames
     self.querySearchBoardgames = function (query) {
       var results = query ? self.boardgames.filter( createFilterFor(query) ) : self.boardgames;
+      console.log("res:"+results);
         return results;
     }
+
 	//Search for users
 	self.querySearchPlayers = function (query) {
       var results = query ? self.users.filter( createFilterFor(query) ) : self.users;
@@ -105,6 +107,7 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 							}
 							Api.playpost(self.postValues.plays).then(
 								function(response){
+									console.log(response);
 									self.showToast("Match succesfully registered!");
 									$mdDialog.hide();
 								},function errorCallback(response){
