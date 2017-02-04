@@ -1,7 +1,7 @@
 angular.module('play')
 .factory('Api', function ApiFactory($http){
 	user_id=2;
-	var u,us,f,r,l,b,m,mp,pp,ms;
+	var u,us,f,r,l,b,m,mp,pp,ms,t;
 	return{
 		user:		function(){
 						//if(typeof u === "undefined"){
@@ -48,6 +48,10 @@ angular.module('play')
 						pp = $http({method: 'POST', url: 'http://127.0.0.1:8000/server/plays/', data:plays});
 						return pp;
 					},
+		template:	function(boardgame){
+						t = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/templates/'+boardgame+'/'});
+						return t;
+					},	
 		
 	}
 });

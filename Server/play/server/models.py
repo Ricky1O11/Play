@@ -71,3 +71,27 @@ class Plays(models.Model):
 
     def __unicode__(self):
         return str(self.match).decode('utf8') + " and User id " + str(self.user)
+
+class Dictionary(models.Model):
+    word = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, default="", blank=True)
+
+    def __unicode__(self):
+        return str(self.word).decode('utf8') + ": " + str(self.description)
+
+class Templates(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    word = models.ForeignKey(Dictionary, on_delete=models.CASCADE)
+    bonus = models.IntegerField(default=1)
+
+    def __unicode__(self):
+        return str(self.word).decode('utf8') + ": " + str(self.boardgame)
+
+class DetailedPoints(models.Model):
+    template = models.ForeignKey(Templates, on_delete=models.CASCADE)
+    play = models.ForeignKey(Plays, on_delete=models.CASCADE)
+    detailed_points = models.IntegerField(default=999999)
+    notes = models.CharField(max_length=100, default="", blank=True)
+
+    def __unicode__(self):
+        return str(self.template).decode('utf8') + ": " + str(self.play)

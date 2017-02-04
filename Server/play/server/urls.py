@@ -14,8 +14,14 @@ urlpatterns = [
     url(r'^friends/$', views.FriendsList.as_view(), name='friends'), #friends list
     url(r'^friends/(?P<pk>[0-9]+)/$', views.FriendDetail.as_view(), name='friendDetail'), #friends' detail
     url(r'^favourites/$', views.FavouritesList.as_view(), name='favourites'), #favourites list
-    url(r'^favourites/(?P<pk>[0-9]+)/$', views.FavouriteDetail.as_view(), name='favouriteDetail'), #favourites's detail
+    url(r'^favourites/(?P<pk>[0-9]+)/$', views.FavouriteDetail.as_view(), name='favouriteDetail'), #favourites detail
     url(r'^plays/$', views.PlaysList.as_view(), name='plays'), #plays detail
+    url(r'^templates/$', views.TemplatesList.as_view(), name='templates'), #templates list
+    url(r'^templates/(?P<boardgame>[0-9]+)/$', views.TemplateDetail.as_view(), name='templateDetail'), #templates detail
+    url(r'^dictionary/$', views.DictionaryList.as_view(), name='dictionary'), #dictionary
+    url(r'^dictionary/(?P<pk>[0-9]+)/$', views.DictionaryDetail.as_view(), name='dictionaryDetail'), #dictionary detail
+    url(r'^points/$', views.DetailedPointsList.as_view(), name='detailed_points'), #detailed points list
+    url(r'^points/(?P<pk>[0-9]+)/$', views.DetailedPointsDetail.as_view(), name='pdetailed_pointsDetail'), #detailed point detail
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

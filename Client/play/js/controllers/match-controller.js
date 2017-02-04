@@ -14,7 +14,14 @@ angular.module("play").controller('matchController', function(Api, $routeParams)
 				controller.match.plays_set[i].points = "N.A";
 			}
 		}
+		console.log(controller.match.plays_set[0].detailedPoints);
 	});
+
+
+
+
+
+
 
 	//randomly color the avatars of players without a profile picture
 	this.getRandomColor = function(){
