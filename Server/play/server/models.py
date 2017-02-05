@@ -34,7 +34,7 @@ class Users(models.Model):
     email = models.CharField(unique=True, max_length=100)
     username = models.CharField(unique=True, max_length=25)
     password = models.CharField(max_length=256)
-    img = models.CharField(max_length=256)
+    img = models.CharField(max_length=256, default="img/profile-default.png", blank=True)
 
     def __unicode__(self):
         return self.username
