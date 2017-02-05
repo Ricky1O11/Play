@@ -2,7 +2,7 @@ angular.module('play')
 .factory('Api', function ApiFactory($http){
 	user_id=2;
 	var u,us,f,r,l,b,m,mp,pp,ms,t;
-	var BASE_URL = "localhost/server"
+	var BASE_URL = "http://127.0.0.1:8000/server"
 	return{
 		user:		function(){
 						//if(typeof u === "undefined"){
