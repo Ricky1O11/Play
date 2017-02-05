@@ -1,27 +1,90 @@
-<div class="container-fluid" layout-padding layout="column">
-	<div layout="row" flex="none" class="height300 mrg20b">
-		<div layout="column" flex="30">
-			<div class="circleBase imgBoardgame" layout-align="center center">
-				<img src="{{mCtrl.boardgame.img}}"/>
+<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
+	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
+		<div layout="column" flex="none">
+			<div class="circleBase imgBoardgame hideScrollbar shadowed-box">
+				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
+					<div class="circleBase" style="font-size:50px;"></div>
+				</div>
 			</div>
 		</div>
-		<div layout="column" flex="70" layout-align="center end"  class="blue-grey">
-			<h2 layout="row" > Match {{mCtrl.match.pk}}</h2>
+		<div layout="column" class="blue-grey pad20l" flex="100">
 			<div layout="row">
+				<div layout="column" flex="100"  class="shadowed-box whiteBg pad20l mrg10b height60" layout-align="center start">
+					<h1 ng-if="mCtrl.match.name.length == 0"> Match {{mCtrl.match.pk}}</h1>
+					<h1 ng-if="mCtrl.match.name.length > 0">{{mCtrl.match.name}}</h1>
+				</div>
+			</div>
+			<div layout="row" id="info_container">
+				<div layout="column" flex="100">
+					<div layout="row" class="size-14 mrg10b">
+						<div 
+							layout="column" 
+							flex="50" 
+							class="shadowed-box whiteBg pad10l height60 clickable" 
+							ng-click="goTo('boardgames/'+mCtrl.match.boardgame)">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-18 icon-puzzle-piece"></i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{mCtrl.match.boardgame_details.title}}</h2>
+								</div>
+							</div>
+						</div>
+
+						<div layout="column" 
+							flex="50" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-18 icon-hourglass"></i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{mCtrl.match.duration}} min</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div layout="row" class="size-14 mrg10b">
+						<div layout="column" 
+							flex="50" 
+							class="shadowed-box whiteBg pad10l height60 clickable">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-18 icon-calendar"></i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{mCtrl.match.time | date: "short"}}</h2>
+								</div>
+							</div>
+						</div>
+						<div layout="column" 
+							flex="50" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-18 icon-pin"></i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{mCtrl.match.location}}</h2>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
 	<div layout="row" flex="none">
 		<div layout="column" flex="100">
-			<div layout="row" flex-sm="none" class="pad10b">
+			<div layout="row" flex-sm="none">
 				<h3 class="blue-grey">Leaderboard ({{mCtrl.match.plays_set.length}})</h3>
 			</div>	
-			
-			<div layout="row" class="overflowScroll height260">			
+			<div layout="row" class="overflowScroll height270">			
 					<md-list flex>
 						<md-list-item
-						class=" md-3-line animate-repeat" 
-						ng-repeat="play in mCtrl.match.plays_set | orderBy:'-points' " ng-click="null">
+						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' " ng-click="null">
 							<img ng-src="{{play.user_details.img}}" class="md-avatar" ng-style="mCtrl.randomColor" alt="{{play.user_details.username}}"/>
 							<div layout="column">
 								<div layout="row">
@@ -31,6 +94,10 @@
 							<div class="md-secondary">{{play.points}}
 							</div>
 							
+						</md-list-item>
+						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints"
+						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box"  >
+									{{dp.template_details.word_details.word}}
 						</md-list-item>
 				  </md-list>
 				</div>

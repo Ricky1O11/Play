@@ -1,7 +1,7 @@
 angular.module('play')
 .factory('Api', function ApiFactory($http){
 	user_id=2;
-	var u,us,f,r,l,b,m,mp,pp;
+	var u,us,f,r,l,b,m,mp,pp,ms,t;
 	return{
 		user:		function(){
 						//if(typeof u === "undefined"){
@@ -24,7 +24,7 @@ angular.module('play')
 						return r;
 					},
 		boadgames:		function(){
-						l = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/?user_id='+user_id});
+						l = $http({method: 'GET', url: 'http://chrissj2.pythonanywhere.com/server/boardgames/?user_id='+user_id});
 						return l;
 					},
 		boardgame:	function(id){
@@ -32,8 +32,12 @@ angular.module('play')
 						return b;
 					},		
 		match:		function(id){
-						m = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/matches/'+id+'/?include=user_stats'});
+						m = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/matches/'+id+'/?user_id='+user_id});
 						return m;
+					},	
+		matches:	function(){
+						ms = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/recents/?user_id='+user_id+'&include=matches'});
+						return ms;
 					},	
 		matchpost:	function(match){
 						mp = $http({method: 'POST', url: 'http://127.0.0.1:8000/server/matches/', data:match});
@@ -44,6 +48,10 @@ angular.module('play')
 						pp = $http({method: 'POST', url: 'http://127.0.0.1:8000/server/plays/', data:plays});
 						return pp;
 					},
+		template:	function(boardgame){
+						t = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/templates/'+boardgame+'/'});
+						return t;
+					},	
 		
 	}
 });

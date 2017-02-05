@@ -2,6 +2,14 @@
 	margin:0;
 }
 
+#container md-content.md-myTheme-theme{
+	background-color:rgb(220,220,220);
+}
+
+[ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
+  display: none !important;
+}
+
 /*HEIGHT MANAGEMENT*/
 .height100perc{
 	height:100%;
@@ -26,6 +34,9 @@
 .height50{
 	height:50px;
 }
+.height60{
+	height:60px;
+}
 .height100{
 	height:100px;
 }
@@ -36,13 +47,13 @@
 	height:150px;
 }
 .height200{
-	height:200px;
+	height:200px !important;
 }
 .height250{
 	height:250px;
 }
-.height260{
-	height:260px;
+.height270{
+	height:280px;
 }
 .height300{
 	height:300px;
@@ -57,7 +68,17 @@
 .height600{
 	height:600px;
 }
+
+.maxHeight150{
+	max-height: 150px;
+}
 /*end HEIGHT MANAGEMENT*/
+
+/*BACKGROUND MANAGEMENT*/
+.whiteBg{
+	background-color:#ffffff !important;
+}
+/*end BACKGROUND MANAGEMENT*/
 
 /*PADDING and MARGIN MANAGEMENT*/
 .pad0b{
@@ -69,6 +90,9 @@
 .pad3l{
 	padding-left: 3px;
 }
+.pad5{
+	padding: 5px;
+}
 .pad5t{
 	padding-top: 5px;
 }
@@ -76,7 +100,9 @@
 	padding-right: 5px;
 }
 
-
+.pad10{
+	padding: 10px;
+}
 
 .pad10t{
 	padding-top: 10px;
@@ -90,9 +116,11 @@
 .pad10r{
 	padding-right: 10px;
 }
-
+.pad20t{
+	padding-top: 20px;
+}
 .pad20r{
-	padding-right: 50px;
+	padding-right: 20px;
 }
 
 .pad20l{
@@ -107,18 +135,27 @@
 	margin-bottom: 0px !important;
 }
 
+.mrg5{
+	margin: 5px;
+}
 .mrg5t{
 	margin-top: 5px;
 }
+.mrg5b{
+	margin-bottom: 5px;
+}
 .mrg5r{
 	margin-right: 5px;
+}
+.mrg5l{
+	margin-left: 5px;
 }
 
 .mrg10t{
 	margin-top: 10px;
 }
 .mrg10b{
-	margin-bottom: 10px !important;
+	margin-bottom: 10px;
 }
 .mrg10l{
 	margin-left: 10px;
@@ -140,11 +177,17 @@
 .mrg20b{
 	margin-bottom: 20px;
 }
+.mrg30b{
+	margin-bottom: 30px;
+}
 .mrg50t{
 	margin-top: 50px !important;
 }
 .mrg50b{
 	margin-bottom: 50px !important;
+}
+.mrg50l{
+	margin-left: 50px;
 }
 /*end PADDING MANAGEMENT*/
 
@@ -155,11 +198,11 @@
 
 .size-16 { font-size: 16px; }
 
-.size-18 { font-size: 18px; }
+.size-18 { font-size: 18px !important; }
 
 .size-21 { font-size: 21px; }
 
-.size-24 { font-size: 24px; }
+.size-24 { font-size: 24px;}
 
 .size-36 { font-size: 36px; }
 
@@ -195,7 +238,7 @@
 }
 
 .overflowScroll{
-	overflow-y:scroll;
+	overflow-y:auto;
 }
 
 /*end SCROLL BAR MANAGEMENT*/
@@ -227,7 +270,11 @@
 	text-shadow: -1px 1px 1px #444444;
 }
 
-a.decoNone, a.decoNone:active{
+.shadowed-box{
+	box-shadow: 2px 2px 2px #888888;
+}
+
+a.decoNone, .decoNone:active{
     text-decoration:none !important;
 }
 
@@ -241,11 +288,9 @@ a:hover{
 
 md-grid-tile:hover{
 	box-shadow: 2px 2px 2px #444444;
-	color: #ffffff;
 }
 
 md-grid-tile:hover md-grid-tile-footer h3{
-	color: #ffffff;
 }
 
 .hideScrollbar{
@@ -257,6 +302,20 @@ background-color:#FF6E40;
 height:2.5em;
 width: 2.5em;
 text-align:center;
+}
+
+.blur {
+    -webkit-filter: blur(8px);
+    -moz-filter: blur(8px);
+    -ms-filter: blur(8px);
+    -o-filter: blur(8px);
+    filter: blur(8px);
+}
+
+.blackOverlay{
+	background-color:rgba(0,0,0,0.5); 
+	height:100%;
+	width:100%;
 }
 /*end OTHER STUFF MANAGEMENT*/
 
@@ -278,6 +337,11 @@ md-grid-list md-grid-tile md-grid-tile-header{
 }
 md-grid-tile{
 	cursor:pointer;
+}
+
+figcaption{
+	width:100%;
+	height:100%;
 }
 
 .animate-repeat {
@@ -325,4 +389,18 @@ md-tabs-wrapper{
 }
 .md-toast-content{
 	background-color: rgb(255,61,0) !important;
+}
+
+.animate-if.ng-enter, .animate-if.ng-leave {
+  transition:all cubic-bezier(0.250, 0.460, 0.450, 0.940) 0.5s;
+}
+
+.animate-if.ng-enter,
+.animate-if.ng-leave.ng-leave-active {
+  opacity:0;
+}
+
+.animate-if.ng-leave,
+.animate-if.ng-enter.ng-enter-active {
+  opacity:1;
 }

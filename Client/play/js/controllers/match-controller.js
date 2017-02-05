@@ -7,13 +7,21 @@ angular.module("play").controller('matchController', function(Api, $routeParams)
 
 	//api call to get the single match's details
 	Api.match(controller.params.id).success(function(data){
-		controller.match=data;
+		controller.match=data[0];
+		console.log(controller.match);
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			if (controller.match.plays_set[i].points == 999999){
 				controller.match.plays_set[i].points = "N.A";
 			}
 		}
+		console.log(controller.match.plays_set[0].detailedPoints);
 	});
+
+
+
+
+
+
 
 	//randomly color the avatars of players without a profile picture
 	this.getRandomColor = function(){

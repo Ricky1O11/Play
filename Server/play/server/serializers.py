@@ -3,6 +3,17 @@ from rest_framework import serializers
 from .models import *
 from django.db.models import Count, Max
 
+# Json representation of the dictionary
+class DictionarySerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Dictionary
+        fields = ('pk', 'word', 'description')
+
+class SimpleBoardgamesSerializers(serializers.ModelSerializer):
+    class Meta:
+        model = Boardgames
+        fields = ('pk', 'title', 'thumbnail', 'img',)
+
 
 # Json representation of users and statistics
 class UsersSerializers(serializers.ModelSerializer):
@@ -92,25 +103,75 @@ class UsersSerializers(serializers.ModelSerializer):
         model = Users
         fields = ('pk', 'email', 'username', 'match_played', 'most_played_game', 'match_won', 'img', )
 
+# Json representation of the template of a boardgames
+class TemplatesSerializers(serializers.ModelSerializer):
+    word_details = serializers.SerializerMethodField()
+
+    def get_word_details(self, template):
+        word = Dictionary.objects.get(templates=template)
+        serializer = DictionarySerializers(word)
+        return serializer.data
+
+    class Meta:
+        model = Templates
+        fields = ('boardgame', 'word', 'word_details')
+
+class DetailedPointsSerializers(serializers.ModelSerializer):
+    template_details = serializers.SerializerMethodField()
+    
+    def get_template_details(self, dtPoints):
+        template = Templates.objects.get(detailedpoints=dtPoints)
+        serializer = TemplatesSerializers(template)
+        return serializer.data
+
+    class Meta:
+        model = DetailedPoints
+        fields = ('template', 'play', 'detailed_points', 'template_details', 'notes')
+
 # Json representation of single plays
 class PlaysSerializers(serializers.ModelSerializer):
     user_details = serializers.SerializerMethodField()
+    detailedPoints = serializers.SerializerMethodField()
 
     def get_user_details(self, play):
         user = Users.objects.get(plays=play)
         serializer = UsersSerializers(user, context={'request': self.context['request']})
         return serializer.data
 
+    def get_detailedPoints(self, play):
+        dtPoints = DetailedPoints.objects.filter(play=play)
+        serializer = DetailedPointsSerializers(dtPoints, many=True, context={'request': self.context['request']})
+        return serializer.data
+
     class Meta:
         model = Plays
-        fields = ('pk', 'match', 'user', 'user_details', 'points')
+        fields = ('pk', 'match', 'user', 'user_details', 'points', 'detailedPoints')
 
 # Json representation of single matches
 class MatchesSerializers(serializers.ModelSerializer):
     plays_set = PlaysSerializers(many=True, read_only=True)
+    boardgame_details = serializers.SerializerMethodField()
+
+    def __init__(self, *args, **kwargs):
+        super(MatchesSerializers, self).__init__(*args, **kwargs)
+        # Allowed params: "include"
+        includes = self.context['request'].query_params.get('include')
+        if includes:
+            fields = includes.split(',')
+            allowed = set(fields)
+
+            # Allowed values: "matches", "users", "friends", "favourite"
+            if "boardgame" not in allowed:
+                self.fields.pop("boardgame")
+
+    def get_boardgame_details(self, match):
+        boardgame = Boardgames.objects.get(matches=match)
+        serializer = SimpleBoardgamesSerializers(boardgame)
+        return serializer.data
+
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'time', 'location', 'duration', 'plays_set',)
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'boardgame_details', 'duration', 'plays_set',)
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):
@@ -180,14 +241,15 @@ class BoardgamesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Boardgames
-        fields = ('pk', 'title', 'description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
+        fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
 
-# Json representation of favourites boardgames by an user
+# Json representation of friends
 class FriendsSerializers(serializers.ModelSerializer):
     class Meta:
         model = Friends
         fields = ('pk', 'user1','user2')
 
+# Json representation of favourites boardgames by an user
 class FavouritesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Favourites
