@@ -25,7 +25,7 @@ SECRET_KEY = 'ed3-_@n+^10&9$6hlq4kqm2-onc@wwam)&faoc0-uy*&kqz+h$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['playapi.pythonanywhere.com']
 
 
 # Application definition
@@ -85,11 +85,11 @@ WSGI_APPLICATION = 'play.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'play',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'NAME': 'playapi$play',
+        'USER': 'playapi',
+        'PASSWORD': 'playBoardgames',
+        'HOST': 'playapi.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
+        #'PORT': '3306',
   }
 }
 #DATABASES = {
@@ -136,4 +136,5 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+STATIC_ROOT = "/home/playapi/Play/static"
 STATIC_URL = '/static/'
