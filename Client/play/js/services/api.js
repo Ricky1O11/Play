@@ -24,7 +24,7 @@ angular.module('play')
 						return r;
 					},
 		boadgames:		function(){
-						l = $http({method: 'GET', url: 'http://127.0.0.1:8000/server/boardgames/?user_id='+user_id});
+						l = $http({method: 'GET', url: 'http://chrissj2.pythonanywhere.com/server/boardgames/?user_id='+user_id});
 						return l;
 					},
 		boardgame:	function(id){

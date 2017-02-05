@@ -25,7 +25,7 @@ SECRET_KEY = 'ed3-_@n+^10&9$6hlq4kqm2-onc@wwam)&faoc0-uy*&kqz+h$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['playapi.pythonanywhere.com']
 
 
 # Application definition
