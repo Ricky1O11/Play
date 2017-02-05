@@ -16,15 +16,15 @@ class Boardgames(models.Model):
     img = models.CharField(max_length=1000)
     thumbnail = models.CharField(max_length=1000)
     bggid = models.IntegerField(db_column='bggId', unique=True, default=0)  # Field name made lowercase.
-    minage=models.IntegerField(max_length=3, default=0)
+    minage=models.IntegerField(default=0)
     playingtime=models.IntegerField(default=0)
-    minplayers=models.IntegerField(max_length=2, default=0)
-    maxplayers=models.IntegerField(max_length=3, default=0)
-    yearpublished=models.IntegerField(max_length=4, default=0)
+    minplayers=models.IntegerField(default=0)
+    maxplayers=models.IntegerField(default=0)
+    yearpublished=models.IntegerField(default=0)
     maxplaytime=models.IntegerField(default=0)
     minplaytime=models.IntegerField(default=0)
     average=models.FloatField(default=0)
-    usersrated=models.IntegerField(max_length=2, default=0)
+    usersrated=models.IntegerField(default=0)
 
     def __unicode__(self):
         return str(self.id) +" - "+self.title
@@ -42,6 +42,7 @@ class Users(models.Model):
 class Matches(models.Model):
     #match_id = models.AutoField(primary_key=True)
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    name = models.CharField(default="", max_length=256)
     time = models.DateTimeField()
     location = models.CharField(max_length=100)
     duration = models.IntegerField(default=0)
@@ -70,3 +71,27 @@ class Plays(models.Model):
 
     def __unicode__(self):
         return str(self.match).decode('utf8') + " and User id " + str(self.user)
+
+class Dictionary(models.Model):
+    word = models.CharField(max_length=100)
+    description = models.CharField(max_length=1000, default="", blank=True)
+
+    def __unicode__(self):
+        return str(self.word).decode('utf8') + ": " + str(self.description)
+
+class Templates(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    word = models.ForeignKey(Dictionary, on_delete=models.CASCADE)
+    bonus = models.IntegerField(default=1)
+
+    def __unicode__(self):
+        return str(self.word).decode('utf8') + ": " + str(self.boardgame)
+
+class DetailedPoints(models.Model):
+    template = models.ForeignKey(Templates, on_delete=models.CASCADE)
+    play = models.ForeignKey(Plays, on_delete=models.CASCADE)
+    detailed_points = models.IntegerField(default=999999)
+    notes = models.CharField(max_length=100, default="", blank=True)
+
+    def __unicode__(self):
+        return str(self.template).decode('utf8') + ": " + str(self.play)

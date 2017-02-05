@@ -49,7 +49,7 @@
 					<md-list flex>
 					
 						<md-list-item
-						class=" md-3-line animate-repeat" 
+						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 						ng-href="#/boardgames/{{boardgame.pk}}"
 						ng-repeat="boardgame in bsCtrl.boardgames | filter:{title:query} | orderBy:bsCtrl.getOrderingField()" ng-click="null">
 							<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.title}}" />
@@ -57,20 +57,20 @@
 								<div layout="row">
 									<h3>{{boardgame.title}}</h3>
 								</div>
-								<div layout="row" class="">
+								<div layout="row">
 									<div layout="column" class="relative">
 										<div layout="row" class="star-container">
 											<i ng-repeat="star in bsCtrl.range(1,10)" class="fa fa-star-o "></i>
 										</div>
 										
-											<i>{{boardgame.average | number:2}}</i>
-											<div class="star-container">
-												<div style="width:{{boardgame.average*10}}%; overflow:hidden;">
-													<div class="star-content">
-														<span ng-repeat="star in bsCtrl.range(1,10)" class="fa fa-star "></span>
-													</div>
+										<i>{{boardgame.average | number:2}}</i>
+										<div class="star-container">
+											<div style="width:{{boardgame.average*10}}%; overflow:hidden;">
+												<div class="star-content">
+													<span ng-repeat="star in bsCtrl.range(1,10)" class="fa fa-star "></span>
 												</div>
 											</div>
+										</div>
 									</div>
 									<div>
 										

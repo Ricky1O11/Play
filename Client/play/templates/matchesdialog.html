@@ -26,6 +26,14 @@
 						</md-not-found>
 					  </md-autocomplete>
 					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
+						<div layout="column" flex-gt-sm="100">  
+						  <md-input-container>
+							<label>Match name</label>
+							<input ng-model="mdCtrl.selectedValues.name">
+						  </md-input-container>
+						</div>
+					</div>
+					<div layout="row" layout-xs="column" layout-sm="column">			
 						<div layout="column" flex-gt-sm="50">  
 						  <md-input-container>
 							<label>Where?</label>
@@ -40,7 +48,6 @@
 						  </md-input-container>
 						</div>
 					</div>
-
 					<div layout="row">
 						<md-checkbox ng-model="TODO" aria-label="Lower score wins?">
 			           		 Lowest score wins?
@@ -52,7 +59,7 @@
 					<div layout="row" layout-align="end center">
 						<md-button class="md-fab size-24" ng-click="mdCtrl.storeMatchInfo()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-								<div layout="row"class="fa fa-angle-right" aria-hidden="true" >
+								<div layout="row" class="icon-angle-right" aria-hidden="true" >
 								</div>
 							</div>
 						</md-button>
@@ -90,7 +97,7 @@
 					<div layout="row" layout-align="end center">
 						<md-button class="md-fab size-24" ng-click="mdCtrl.post()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-								<div layout="row"class="fa fa-check" aria-hidden="true" >
+								<div layout="row" class="icon-check-1" aria-hidden="true" >
 								</div>
 							</div>
 						</md-button>

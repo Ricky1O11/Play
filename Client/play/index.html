@@ -4,17 +4,20 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="css/angular-material.min.css">
 		<link rel="stylesheet" href="css/style.css">
+		<link href="css/icons.css" rel="stylesheet">
 		<link rel="stylesheet" href="css/foundation-icons.css" />
 		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/animate.css" />
+		<link rel="stylesheet" href="css/animations.css" />
 		
 		<link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
 		<script src="js/includes/angular.min.js"></script>
 		<script src="js/includes/angular-route.min.js"></script>
-		
 		<script src="js/includes/angular-animate.min.js"></script>
 		<script src="js/includes/angular-aria.min.js"></script>
 		<script src="js/includes/angular-messages.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-sanitize.js"></script>
 
 		<script src="js/app.js"></script>
 		
@@ -34,6 +37,7 @@
 		<script src="js/controllers/sidebar-controller.js"></script>
 		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/match-controller.js"></script>
+		<script src="js/controllers/matches-controller.js"></script>
 		
 	</head>
 	
@@ -46,8 +50,8 @@
 				id="sidebar" 				
 				>
 				<div>
-					<div layout="row"  class="height150">
-						<div layout="column" flex="100"  layout-padding >
+					<div layout="row"   layout-padding  class="height150">
+						<div layout="column" flex="100">
 							<div layout="row" class="height100">	
 								<div layout="column" flex="50" layout-align="center start">
 									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
@@ -64,14 +68,14 @@
 								<div layout="column" flex="60">
 									<div layout="row">
 										<div layout="column" layout-align="end start" flex="100">
-											<a href="#/" class="size-24 fi-home decoNone"></a>										
+											<a href="#/" class="size-24 icon-home decoNone"></a>										
 										</div>
 									</div>
 								</div>
 								<div layout="column" flex="20">
 									<div layout="row">
 										<div layout="column" layout-align="start center" flex="50">
-											<i class="size-24 fi-puzzle"></i>
+											<i class="size-24 icon-puzzle"></i>
 										</div>
 										<div layout="column" layout-align="end start" flex="50" class="size-18">{{sCtrl.match_played}}</div>
 									</div>
@@ -79,7 +83,7 @@
 								<div layout="column" flex="20">
 									<div layout="row">
 										<div layout="column" layout-align="center end" flex="50">
-											<i class="size-24 fi-trophy"></i>
+											<i class="size-24 icon-trophy-2"></i>
 										</div>
 										<div layout="column" layout-align="end center" flex="50" class="size-18">{{sCtrl.match_won}}</div>
 									</div>
@@ -95,19 +99,19 @@
 								<div layout="column" flex="100" >
 									<a layout="row"  class="pad5t decoNone" href="#/boardgames">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="size-18 fi-list-bullet"></i>
+											<i class="size-18 icon-list-bullet"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
 									<a layout="row"  class="pad10t decoNone" href="#/favourites">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="fa fa-heart"></i>
+											<i class="icon-heart"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">Favourites</div>
 									</a>
 									<a layout="row"  class="pad10t decoNone" href="#/recents">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="size-18 fi-clock"></i>
+											<i class="size-18 icon-clock-o"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">Recents</div>
 									</a>
@@ -123,19 +127,19 @@
 								<div layout="column" flex="100" >
 									<a layout="row"  class="pad5t decoNone" href="#/matches">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="size-18 fi-list-bullet"></i>
+											<i class="size-18 icon-list-bullet"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
 									<a layout="row"  class="pad10t decoNone clickable" ng-click="matchesPopup($event)">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="fa fa-plus"></i>
+											<i class="icon-plus-1"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">New Match</div>
 									</a>
 									<a layout="row"  class="pad10t decoNone" href="#/todo">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="size-18 fi-clock"></i>
+											<i class="size-18 icon-clock-o"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">to do</div>
 									</a>

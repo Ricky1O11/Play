@@ -36,6 +36,11 @@ angular.module('play')
 		controller: 'matchController',
 		controllerAs: 'mCtrl'
 	})
+	.when('/matches', {
+		templateUrl: 'templates/matches/index.html',
+		controller: 'matchesController',
+		controllerAs: 'msCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})

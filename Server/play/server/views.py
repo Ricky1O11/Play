@@ -75,6 +75,8 @@ class BoardgamesListFiltered(APIView):
             else:
                 return Response("error: insert user_id")
 
+
+
 # Single boardgame details
 class BoardgameDetail(APIView):
 
@@ -127,12 +129,16 @@ class UserDetail(APIView):
 # Match list
 class MatchesList(APIView):
     def get(self, request):
-        match = Matches.objects.all()
-        matchesSerializers = MatchesSerializers(match, many=True, context={'request': request})
-        return Response(matchesSerializers.data)
+        user_id = self.request.query_params.get('user_id', None)
+        if (user_id is not None):
+            matchwithuser = Matches.objects.filter(plays__user=user_id)
+            matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
+            return Response(matchesSerializers.data)
+        else:
+            return Response("error: insert user_id")
 
     def post(self, request):
-        match = MatchesSerializers(data=request.data)
+        match = MatchesSerializers(data=request.data, context={'request': request})
         if match.is_valid():
             match.save()
             return Response(match.data, status=status.HTTP_201_CREATED)
@@ -141,9 +147,11 @@ class MatchesList(APIView):
 # Match detail
 class MatchDetail(APIView):
     def get(self, request, pk):
-        match = get_object_or_404(Matches, pk=pk)
-        matchSerializers= MatchesSerializers(match, context={'request': request})
-        return Response(matchSerializers.data)
+        user_id = self.request.query_params.get('user_id', None)
+        if (user_id is not None):
+            matchwithuser = Matches.objects.filter(plays__user=user_id, pk=pk).distinct()
+            matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
+            return Response(matchesSerializers.data)
 
     def get_object(self, pk):
         try:
@@ -257,3 +265,123 @@ class PlaysList(APIView):
             plays.save()
             return Response(plays.data, status=status.HTTP_201_CREATED)
         return Response(plays.errors, status=status.HTTP_400_BAD_REQUEST)
+
+# Template list
+class TemplatesList(APIView):
+    def get(self, request):
+        template = Templates.objects.all()
+        templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
+        return Response(templatesSerializers.data)
+
+    def post(self, request):
+        template = TemplatesSerializers(data=request.data, context={'request': request})
+        if template.is_valid():
+            template.save()
+            return Response(template.data, status=status.HTTP_201_CREATED)
+        return Response(template.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Template Detail
+class TemplateDetail(APIView):
+    def get(self, request, boardgame):
+        template = Templates.objects.filter(boardgame = boardgame)
+        templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
+        return Response(templatesSerializers.data)
+
+    def get_object(self, boardgame):
+        try:
+            return Templates.objects.get(boardgame=boardgame)
+        except Templates.DoesNotExist:
+            return 0
+    
+    def put(self, request, boardgame):
+        template = self.get_object(boardgame)
+        templatesSerializers = TemplatesSerializers(template, data=request.data, context={'request': request})
+        if templatesSerializers.is_valid():
+            templatesSerializers.save()
+            return Response(templatesSerializers.data)
+        return Response(templatesSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, boardgame):
+        template = self.get_object(boardgame)
+        template.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Word list
+class DictionaryList(APIView):
+    def get(self, request):
+        dictionary = Dictionary.objects.all()
+        dictionarySerializers = DictionarySerializers(dictionary, many=True, context={'request': request})
+        return Response(dictionarySerializers.data)
+
+    def post(self, request):
+        dictionary = DictionarySerializers(data=request.data, context={'request': request})
+        if dictionary.is_valid():
+            dictionary.save()
+            return Response(dictionary.data, status=status.HTTP_201_CREATED)
+        return Response(dictionary.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Word Detail
+class DictionaryDetail(APIView):
+    def get(self, request, pk):
+        dictionary = Dictionary.objects.filter(pk = pk)
+        dictionarySerializers = DictionarySerializers(dictionary, many=True, context={'request': request})
+        return Response(dictionarySerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return Dictionary.objects.get(pk=pk)
+        except Dictionary.DoesNotExist:
+            return 0
+    
+    def put(self, request, pk):
+        dictionary = self.get_object(pk)
+        dictionarySerializers = DictionarySerializers(dictionary, data=request.data, context={'request': request})
+        if dictionarySerializers.is_valid():
+            dictionarySerializers.save()
+            return Response(dictionarySerializers.data)
+        return Response(dictionarySerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        dictionary = self.get_object(pk)
+        dictionary.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Word list
+class DetailedPointsList(APIView):
+    def get(self, request):
+        detailedPoints = DetailedPoints.objects.all()
+        detailedPointsSerializers = DetailedPointsSerializers(detailedPoints, many=True, context={'request': request})
+        return Response(detailedPointsSerializers.data)
+
+    def post(self, request):
+        detailedPoints = DetailedPointsSerializers(data=request.data, context={'request': request})
+        if detailedPoints.is_valid():
+            detailedPoints.save()
+            return Response(detailedPoints.data, status=status.HTTP_201_CREATED)
+        return Response(detailedPoints.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Template Detail
+class DetailedPointsDetail(APIView):
+    def get(self, request, pk):
+        detailedPoints = DetailedPoints.objects.filter(pk = pk)
+        detailedPointsSerializers = DetailedPointsSerializers(detailedPoints, many=True, context={'request': request})
+        return Response(detailedPointsSerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return DetailedPoints.objects.get(pk=pk)
+        except DetailedPoints.DoesNotExist:
+            return 0
+    
+    def put(self, request, pk):
+        detailedPoints = self.get_object(pk)
+        detailedPointsSerializers = DetailedPointsSerializers(detailedPoints, data=request.data, context={'request': request})
+        if detailedPointsSerializers.is_valid():
+            detailedPointsSerializers.save()
+            return Response(detailedPointsSerializers.data)
+        return Response(detailedPointsSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        detailedPoints = self.get_object(pk)
+        detailedPoints.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
