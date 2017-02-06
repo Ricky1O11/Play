@@ -61,8 +61,16 @@
 							flex="10" 
 							class="shadowed-box whiteBg height60 clickable mrg10l"
 							layout-align="center center">
-							<i ng-if="bCtrl.isFavourite(bCtrl.boardgame.favourite)" class="fa fa-heart" md-colors="{color: 'myTheme-accent'}"></i>
-								<i ng-if="!bCtrl.isFavourite(bCtrl.boardgame.favourite)" class="fa fa-heart-o " md-colors="{color: 'myTheme-accent'}"></i>
+							<i ng-if="bCtrl.isFavourite" 
+							class="fa fa-heart" 
+							md-colors="{color: 'myTheme-accent'}" 
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, 2)"></i>
+
+							<i 
+							ng-if="!bCtrl.isFavourite" 
+							class="fa fa-heart-o " 
+							md-colors="{color: 'myTheme-accent'}"  
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, 2)"></i>
 						</div>
 
 					</div>

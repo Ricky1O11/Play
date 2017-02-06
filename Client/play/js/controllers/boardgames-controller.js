@@ -8,13 +8,42 @@ angular.module("play").controller('boardgamesController', function(Api) {
 	//api call to the list of boardgames
 	Api.boadgames().success(function(data){
 		controller.boardgames=data;
+		for(i=0;i<controller.boardgames.length;i++){
+			if(controller.boardgames[i].favourite.length > 0){
+				controller.boardgames[i].isFavourite = true;
+			}
+			else{
+				controller.boardgames[i].isFavourite = false;
+			}
+			controller.boardgames[i].listId = i;
+		}
 	});
 
-	//is the boardgame a favourite for the user?
-	this.isFavourite = function(favourite){
-		if (favourite == 1) return true;
-		else return false;
-	}
+	this.toggleFavourites = function(favourite, boardgame, user, id){
+        if(favourite.length > 0){
+          Api.favouritedelete(favourite[0].pk).then(
+                              function(response){
+                                //if successfull, hide the dialog and prompt a message
+                                console.log("Remove OK!");
+                              }, function errorCallback(response){
+                                console.log(response);
+                              }
+                            );
+          	controller.boardgames[id].favourite = [];
+        	controller.boardgames[id].isFavourite = false;
+        }
+        else{
+            data = {'user': user, 'boardgame': boardgame};
+            Api.favouritepost(data).then(
+                              function(response){
+                                //if successfull, hide the dialog and prompt a message
+                              	console.log(response);
+                                controller.boardgames[id].favourite = [{'pk' : response.data.pk}];
+                              }
+            );
+        	controller.boardgames[id].isFavourite = true;
+        }
+    }
 
 	//create ordered list of numbers
 	this.range = function(a, b, step) {

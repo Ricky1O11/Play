@@ -1,5 +1,5 @@
 //controller for the popup dialog used to insert a new match
-angular.module("play").controller('matchesDialogController', function(Api, $mdDialog, $mdToast) {
+angular.module("play").controller('matchesDialogController', function(Api, $mdDialog, $mdToast, $location) {
 
 	// list of `state` value/display objects
 	self=this;
@@ -14,6 +14,7 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 	self.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
 	self.postValues.match={};
 	self.postValues.plays=[];
+	self.postValues.dp=[];
     
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
@@ -95,28 +96,66 @@ angular.module("play").controller('matchesDialogController', function(Api, $mdDi
 		}
     }
 	
-	
+	//Post function
 	this.post=function(){
+		//if some player are selected
 		if(self.selectedValues.players!=[]){
+			//post match
 			Api.matchpost(self.postValues.match).then(
 					function(response){
+						//get the id of the new match
 						self.selectedValues.matchId = response.data.pk;
+							//for each player
 							for (i=0; i<self.selectedValues.players.length; i++){
+								//prepare the "play" row to be inserted in the play table
 								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
 								self.postValues.plays.push(row);
 							}
+							//post play
 							Api.playpost(self.postValues.plays).then(
 								function(response){
-									console.log(response);
-									self.showToast("Match succesfully registered!");
-									$mdDialog.hide();
+									//get the list of posted plays
+									self.selectedValues.play = response.data;
+										//get the template relative to the played game
+										Api.template(self.postValues.match.boardgame).success(function(data){
+											//for each play inserted before
+											self.postValues.dp = [];
+											for (i=0; i<self.selectedValues.play.length; i++){
+												
+												//get the current play id
+												self.selectedValues.playId = self.selectedValues.play[i].pk;
+												
+												//prepare the "detailedPoints" row to be inserted in the detailedPoints table
+												
+												self.selectedValues.template = data;
+												//for each template entry
+												for (j=0; j<self.selectedValues.template.length; j++){
+													//get its id and complete the "detailedPoints" preparation
+													row = {}
+													row.play = self.selectedValues.playId;
+													row.template = self.selectedValues.template[j].pk;
+													row.detailed_points = 0;
+													self.postValues.dp.push(row);
+												}
+											}
+											//post detailedPoints
+											Api.dpPost(self.postValues.dp).then(
+													function(response){
+														//if successfull, hide the dialog and prompt a message
+														self.showToast("Match succesfully registered!");
+														$mdDialog.hide();
+														$location.path("matches/"+self.selectedValues.matchId);
+													}, function errorCallback(response){
+													}
+												);
+										});
+									
 								},function errorCallback(response){
-									console.log(response);
 								}
 							);
+							
 					}, 
 					function errorCallback(response) {
-						console.log(response);
 					}
 			);
 		}

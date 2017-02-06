@@ -84,20 +84,27 @@
 					<md-list flex>
 						<md-list-item
 						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' " ng-click="null">
+						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
+						ng-click="mCtrl.setVisible(play.pk)">
 							<img ng-src="{{play.user_details.img}}" class="md-avatar" ng-style="mCtrl.randomColor" alt="{{play.user_details.username}}"/>
 							<div layout="column">
 								<div layout="row">
 									<h3>{{play.user_details.username}}</h3>
 								</div>
 							</div>
-							<div class="md-secondary">{{play.points}}
+							<div class="md-secondary">
+								{{mCtrl.sumPoints(play.detailedPoints)}}
 							</div>
 							
 						</md-list-item>
-						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints"
+						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible"
 						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box"  >
-									{{dp.template_details.word_details.word}}
+							<div layout="row">
+								{{dp.template_details.word_details.word}}
+							</div>
+							<div class="md-secondary">
+								{{dp.detailed_points}}
+							</div>
 						</md-list-item>
 				  </md-list>
 				</div>

@@ -1,7 +1,7 @@
 angular.module('play')
 .factory('Api', function ApiFactory($http){
 	user_id=2;
-	var u,us,f,r,l,b,m,mp,pp,ms,t;
+	var u,us,f,r,l,b,m,mp,pp,ms,t,dpp,fp;
 	var BASE_URL = "http://127.0.0.1:8000/server"
 	return{
 		user:		function(){
@@ -52,7 +52,19 @@ angular.module('play')
 		template:	function(boardgame){
 						t = $http({method: 'GET', url: BASE_URL+'/templates/'+boardgame+'/'});
 						return t;
-					},	
+					},
+		dpPost:	function(dp){
+						dpp = $http({method: 'POST', url: BASE_URL+'/points/', data:dp});
+						return dpp;
+					},
+		favouritepost:	function(data){
+						fp = $http({method: 'POST', url: BASE_URL+'/favourites/', data:data});
+						return fp;
+					},
+		favouritedelete:	function(fav){
+						fd = $http({method: 'DELETE', url: BASE_URL+'/favourites/'+fav+'/'});
+						return fd;
+					},
 		
 	}
 });

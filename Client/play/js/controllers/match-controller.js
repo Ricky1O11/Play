@@ -12,16 +12,27 @@ angular.module("play").controller('matchController', function(Api, $routeParams)
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			if (controller.match.plays_set[i].points == 999999){
 				controller.match.plays_set[i].points = "N.A";
+				controller.match.plays_set[i].visible = false;
 			}
 		}
 		console.log(controller.match.plays_set[0].detailedPoints);
 	});
 
+	this.sumPoints = function(detailedPoints){
+		sum = 0;
+		for(i = 0; i< detailedPoints.length; i++){
+			sum += detailedPoints[i].detailed_points;
+		}
+		return sum;
+	}
 
-
-
-
-
+	this.setVisible = function(pk){
+		for(i = 0; i<controller.match.plays_set.length; i++){
+			if(controller.match.plays_set[i].pk == pk){
+				controller.match.plays_set[i].visible = !controller.match.plays_set[i].visible;
+			}
+		}
+	}
 
 	//randomly color the avatars of players without a profile picture
 	this.getRandomColor = function(){

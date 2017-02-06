@@ -11,6 +11,13 @@ angular.module("play").controller('matchesController', function(Api) {
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
 			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
+			if(controller.games[i].favourite.length > 0){
+				controller.games[i].isFavourite = true;
+			}
+			else{
+				controller.games[i].isFavourite = false;
+			}
+			controller.games[i].listId = i;
 		}
 		controller.loaded = true;
 	});
@@ -59,9 +66,29 @@ angular.module("play").controller('matchesController', function(Api) {
 		return sum;
 	}
 
-	//is the boardgame a favourite for the user?
-	this.isFavourite = function(favourite){
-		if (favourite == 1) return true;
-		else return false;
-	}
+	this.toggleFavourites = function(favourite, boardgame, user, id){
+        if(favourite.length > 0){
+          Api.favouritedelete(favourite[0].pk).then(
+                              function(response){
+                                //if successfull, hide the dialog and prompt a message
+                                console.log("Remove OK!");
+                              }, function errorCallback(response){
+                                console.log(response);
+                              }
+                            );
+          	controller.games[id].favourite = [];
+        	controller.games[id].isFavourite = false;
+        }
+        else{
+            data = {'user': user, 'boardgame': boardgame};
+            Api.favouritepost(data).then(
+                              function(response){
+                                //if successfull, hide the dialog and prompt a message
+                              	console.log(response);
+                                controller.games[id].favourite = [{'pk' : response.data.pk}];
+                              }
+            );
+        	controller.games[id].isFavourite = true;
+        }
+    }
 });

@@ -354,7 +354,7 @@ class DetailedPointsList(APIView):
         return Response(detailedPointsSerializers.data)
 
     def post(self, request):
-        detailedPoints = DetailedPointsSerializers(data=request.data, context={'request': request})
+        detailedPoints = DetailedPointsSerializers(data=request.data, many=True, context={'request': request})
         if detailedPoints.is_valid():
             detailedPoints.save()
             return Response(detailedPoints.data, status=status.HTTP_201_CREATED)

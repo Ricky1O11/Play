@@ -1,5 +1,5 @@
 (function(){
-  angular.module('play',["ngMaterial", "ngRoute", ]) //"ngSanitize"
+  angular.module('play',["ngMaterial", "ngRoute", "ngSanitize"])
   .config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
     $mdThemingProvider.theme('myTheme')
@@ -14,22 +14,24 @@
                     'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class)
             });
   })
-  .run(function($rootScope, $location, $mdDialog) {
+  .run(function($rootScope, $location, $mdDialog, Api) {
         $rootScope.goTo = function(url) {
             $location.path(url);
         };
 		
-		$rootScope.matchesPopup = function(ev) {
-			$mdDialog.show({
-			  controller: 'matchesDialogController',
-			  controllerAs: 'mdCtrl',
-			  templateUrl: 'templates/matchesdialog.html',
-			  parent: angular.element(document.body),
-			  targetEvent: ev,
-			  clickOutsideToClose:true,
-			  //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-			})	
-		}
+  		$rootScope.matchesPopup = function(ev) {
+  			$mdDialog.show({
+  			  controller: 'matchesDialogController',
+  			  controllerAs: 'mdCtrl',
+  			  templateUrl: 'templates/matchesdialog.html',
+  			  parent: angular.element(document.body),
+  			  targetEvent: ev,
+  			  clickOutsideToClose:true,
+  			  //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+  			})	
+  		}
+
+      
 		
     })
 })();

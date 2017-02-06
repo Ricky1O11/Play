@@ -114,7 +114,7 @@ class TemplatesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Templates
-        fields = ('boardgame', 'word', 'word_details')
+        fields = ('pk', 'boardgame', 'word', 'word_details')
 
 class DetailedPointsSerializers(serializers.ModelSerializer):
     template_details = serializers.SerializerMethodField()
@@ -235,9 +235,9 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     def get_favourite(self, boardgame):
         user_id = self.context['request'].query_params.get('user_id')
         if user_id:
-            favourite = Users.objects.filter(favourites__boardgame=boardgame, pk=user_id).count()
+            favourite = Favourites.objects.filter(boardgame=boardgame, user=user_id).values('pk')
             return favourite
-        else: return -1
+        else: return []
 
     class Meta:
         model = Boardgames

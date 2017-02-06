@@ -60,8 +60,16 @@
 									<i>{{boardgame.matches.length}} matches</i>
 								</div>
 							</div>
-							<i ng-if="msCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
-							<i ng-if="!msCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
+							<i 
+							ng-if="boardgame.isFavourite" 
+							class="fa fa-heart md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, 2, boardgame.listId)"></i>
+							<i 
+							ng-if="!boardgame.isFavourite" 
+							class="fa fa-heart-o md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, 2, boardgame.listId)"></i>
 						</md-list-item>
 						<md-list-item 
 						ng-if="boardgame.visible"
