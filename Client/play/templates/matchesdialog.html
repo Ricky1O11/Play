@@ -108,9 +108,71 @@
         </md-tab>
         <md-tab label="three">
 			<md-content class="md-padding">
-				<h1 class="md-display-2">Tab Three</h1>
-				<p>Integer turpis erat, porttitor vitae mi faucibus, laoreet interdum tellus. Curabitur posuere molestie dictum. Morbi eget congue risus, quis rhoncus quam. Suspendisse vitae hendrerit erat, at posuere mi. Cras eu fermentum nunc. Sed id ante eu orci commodo volutpat non ac est. Praesent ligula diam, congue eu enim scelerisque, finibus commodo lectus.</p>
+				<div layout="row">
+					<div layout="column" flex="100" layout-align="center center">
+						<h2>A template helps you accurately track the match progress!</h2>
+					</div>
+				</div>
+				<div layout="row" class="mrg10t">
+					<div layout="column" class="size-14 center-align" flex="100" layout-align="center center">A template simply describes all the possible ways you can score points in this game.
+					</div>
+				</div>
+				<div layout="row" class="mrg10t">
+					<div layout="column" class="size-14 center-align" flex="100" layout-align="center center">Unfortunately we don't know the rules of every game available in the market and we don't have any template for this game, but we will very thankfull if you could contribute by adding one on your own!
+					</div>
+				</div>
+				<div layout="row"  class="mrg20t">
+					<div layout="column" flex="100" layout-align="center center">
+						<h2>Do you want to help us?</h2>
+					</div>
+				</div>
+				<div layout="row" class="mrg20t" layout-align="end center">
+					<md-button class="md-accent md-raised" ng-click="mdCtrl.addTemplate(false)">
+						No
+					</md-button>
+					<md-button class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
+						Of course!
+					</md-button>
+				</div>
 			</md-content>
+        </md-tab>
+        <md-tab label="add template">
+          <md-content class="md-padding">
+				<div class="md-dialog-content">
+					<md-input-container class="md-block">
+						<input type="number" ng-model="mdCtrl.nwords" aria-label="red" aria-controls="red-slider">
+						<label>How many ways do you have to score points?</label>
+					</md-input-container>
+					<div ng-repeat="i in mdCtrl.range(0, mdCtrl.nwords-1)" class="mrg10t">
+						<md-autocomplete 
+							md-selected-item="mdCtrl.selectedValues.dictionary[i]"
+							md-search-text="mdCtrl.searchText[i]"
+							md-items="dict in mdCtrl.querySearchWord(mdCtrl.searchText[i]) | orderBy:'display'"
+							md-item-text="dict.display"
+							md-min-length="0"
+							placeholder="Select a field or type a new one">
+								<md-item-template>
+								  <span md-highlight-text="mdCtrl.searchText[i]" md-highlight-flags="^i">{{dict.display}}</span>
+								</md-item-template>
+								<md-not-found>
+								  No word matching "{{mdCtrl.searchText[i]}}" were found.
+								</md-not-found>
+						</md-autocomplete>
+					</div>
+				</div>
+				 
+				<div layout="column" flex>
+					<div layout="row" layout-align="end center">
+						<md-button class="md-fab size-24" ng-click="mdCtrl.postWord()">
+							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+								<div layout="row" class="icon-check" aria-hidden="true" >
+								</div>
+							</div>
+						</md-button>
+						
+					</div>
+				</div>
+		  </md-content>
         </md-tab>
       </md-tabs>
     </md-dialog-content>

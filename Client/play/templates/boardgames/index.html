@@ -82,12 +82,12 @@
 							ng-if="boardgame.isFavourite" 
 							class="fa fa-heart md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, 2, boardgame.listId)"></i>
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
 							<i 
 							ng-if="!boardgame.isFavourite" 
 							class="fa fa-heart-o md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, 2, boardgame.listId)"></i>
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
 						</md-list-item>
 				  </md-list>
 				</div>

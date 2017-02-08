@@ -22,7 +22,7 @@
 							class="shadowed-box whiteBg pad10l height60 clickable">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-star"></i>
+									<i class="size-18 icon-star" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.average | number:2}}</h2>
@@ -35,7 +35,7 @@
 							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-calendar"></i>
+									<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.yearpublished}}</h2>
@@ -48,7 +48,7 @@
 							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-hourglass"></i>
+									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.playingtime}} min</h2>
@@ -64,13 +64,13 @@
 							<i ng-if="bCtrl.isFavourite" 
 							class="fa fa-heart" 
 							md-colors="{color: 'myTheme-accent'}" 
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, 2)"></i>
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)"></i>
 
 							<i 
 							ng-if="!bCtrl.isFavourite" 
 							class="fa fa-heart-o " 
 							md-colors="{color: 'myTheme-accent'}"  
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, 2)"></i>
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)"></i>
 						</div>
 
 					</div>
@@ -114,7 +114,7 @@
 					  <div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
 					  	<div layout="row" class="size-72 mrg20b">:(</div>
 					  	<div layout="row" class="mrg20b"><h1>Do you like this game? Play it!</h1></div>
-					  	<div layout="row" class="blue-grey clickable decoNone" ng-click="matchesPopup($event)"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
+					  	<div layout="row" class="blue-grey clickable decoNone" ng-click="matchesPopup($event, user_pk)"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
 					  </div>
 			</div>
 		</div>

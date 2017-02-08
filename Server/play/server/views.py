@@ -274,7 +274,7 @@ class TemplatesList(APIView):
         return Response(templatesSerializers.data)
 
     def post(self, request):
-        template = TemplatesSerializers(data=request.data, context={'request': request})
+        template = TemplatesSerializers(data=request.data, many=True, context={'request': request})
         if template.is_valid():
             template.save()
             return Response(template.data, status=status.HTTP_201_CREATED)
@@ -314,7 +314,7 @@ class DictionaryList(APIView):
         return Response(dictionarySerializers.data)
 
     def post(self, request):
-        dictionary = DictionarySerializers(data=request.data, context={'request': request})
+        dictionary = DictionarySerializers(data=request.data, many=True, context={'request': request})
         if dictionary.is_valid():
             dictionary.save()
             return Response(dictionary.data, status=status.HTTP_201_CREATED)

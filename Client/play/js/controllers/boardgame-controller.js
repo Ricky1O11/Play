@@ -1,21 +1,25 @@
 //controller for the single boardgame page
-angular.module("play").controller('boardgameController', function(Api, $routeParams) {
+angular.module("play").controller('boardgameController', function(Api, $routeParams, $scope) {
 	//read the requested boardgame'id
 	this.params=$routeParams;
 	this.boardgame={};
 	this.isFavourite = false;
 	
 	controller=this;
-
-	//api call to get the single boardgame's details
-	Api.boardgame(controller.params.id).success(function(data){
-		controller.boardgame=data[0];
-		if(controller.boardgame.favourite.length > 0){
-			controller.isFavourite = true;
+	//watch the scope variable until it's loaded
+	$scope.$watch('user_pk', function(newVal, oldVal){
+		console.log(oldVal);
+		if(newVal != ""){
+			//api call to get the single boardgame's details
+			Api.boardgame(controller.params.id, $scope.user_pk).success(function(data){
+				controller.boardgame=data[0];
+				if(controller.boardgame.favourite.length > 0){
+					controller.isFavourite = true;
+				}
+			});
 		}
 	});
-
-
+	
 	this.toggleFavourites = function(favourite, boardgame, user){
         if(favourite.length > 0){
           Api.favouritedelete(favourite[0].pk).then(
@@ -58,5 +62,4 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
 		}
 		return input;
 	};
-	
 });

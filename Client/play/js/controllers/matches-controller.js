@@ -1,28 +1,32 @@
 //controller for the list of boardgames
-angular.module("play").controller('matchesController', function(Api) {
+angular.module("play").controller('matchesController', function(Api, $scope) {
 	this.matches=[]; //container of the list of boardgames
 	this.orderingField="title"; //ordering field, selectable by the user
 	this.loaded=false; //ordering field, selectable by the user
 	controller=this;
 
-	//api call to the list of boardgames
-	Api.matches().success(function(data){
-		controller.games=data;
-		for(i = 0; i< controller.games.length; i++){
-			controller.games[i].visible = false;
-			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
-			if(controller.games[i].favourite.length > 0){
-				controller.games[i].isFavourite = true;
-			}
-			else{
-				controller.games[i].isFavourite = false;
-			}
-			controller.games[i].listId = i;
+	//watch the scope variable until it's loaded
+	$scope.$watch('user_pk', function(newVal, oldVal){
+		if(newVal != ""){
+			//api call to the list of boardgames
+			Api.matches($scope.user_pk).success(function(data){
+				controller.games=data;
+				for(i = 0; i< controller.games.length; i++){
+					controller.games[i].visible = false;
+					controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
+					if(controller.games[i].favourite.length > 0){
+						controller.games[i].isFavourite = true;
+					}
+					else{
+						controller.games[i].isFavourite = false;
+					}
+					controller.games[i].listId = i;
+				}
+				controller.loaded = true;
+			});
 		}
-		controller.loaded = true;
 	});
-
-
+	
 	//create ordered list of numbers
 	this.range = function(a, b, step) {
 		step = step || 1;
@@ -56,14 +60,6 @@ angular.module("play").controller('matchesController', function(Api) {
 				controller.games[i].visible = !controller.games[i].visible;
 			}
 		}
-	}
-
-	this.matchesSum = function(){
-		sum = 0;
-		for(i = 0; i<controller.games.length; i++){
-			sum += controller.games[i].matches.length;
-		}
-		return sum;
 	}
 
 	this.toggleFavourites = function(favourite, boardgame, user, id){
