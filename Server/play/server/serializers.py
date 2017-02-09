@@ -14,7 +14,6 @@ class SimpleBoardgamesSerializers(serializers.ModelSerializer):
         model = Boardgames
         fields = ('pk', 'title', 'thumbnail', 'img',)
 
-
 # Json representation of users and statistics
 class UsersSerializers(serializers.ModelSerializer):
     # Serializer initialization: read the url params
@@ -105,16 +104,17 @@ class UsersSerializers(serializers.ModelSerializer):
 
 # Json representation of the template of a boardgames
 class TemplatesSerializers(serializers.ModelSerializer):
-    word_details = serializers.SerializerMethodField()
+    scoringField_details = serializers.SerializerMethodField()
 
-    def get_word_details(self, template):
-        word = Dictionary.objects.get(templates=template)
-        serializer = DictionarySerializers(word)
+    def get_scoringField(self, template):
+        score = ScoringFields.objects.filter(templates=template)
+        serializer = ScoringFields(score)
         return serializer.data
 
     class Meta:
         model = Templates
-        fields = ('pk', 'boardgame', 'word', 'word_details')
+        fields = ('pk', 'boardgame', 'scoringField_details', 'scoringField')
+
 
 class DetailedPointsSerializers(serializers.ModelSerializer):
     template_details = serializers.SerializerMethodField()
