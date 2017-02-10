@@ -75,8 +75,6 @@ class BoardgamesListFiltered(APIView):
             else:
                 return Response("error: insert user_id")
 
-
-
 # Single boardgame details
 class BoardgameDetail(APIView):
 
@@ -346,7 +344,7 @@ class DictionaryDetail(APIView):
         dictionary.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# Word list
+# Detailed points list
 class DetailedPointsList(APIView):
     def get(self, request):
         detailedPoints = DetailedPoints.objects.all()
@@ -360,8 +358,8 @@ class DetailedPointsList(APIView):
             return Response(detailedPoints.data, status=status.HTTP_201_CREATED)
         return Response(detailedPoints.errors, status=status.HTTP_400_BAD_REQUEST)
 
-#Template Detail
-class DetailedPointsDetail(APIView):
+#Detailed Points Detail
+class DetailedPointDetail(APIView):
     def get(self, request, pk):
         detailedPoints = DetailedPoints.objects.filter(pk = pk)
         detailedPointsSerializers = DetailedPointsSerializers(detailedPoints, many=True, context={'request': request})
@@ -384,4 +382,44 @@ class DetailedPointsDetail(APIView):
     def delete(self, request, pk):
         detailedPoints = self.get_object(pk)
         detailedPoints.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Scoring fields list
+class ScoringFieldsList(APIView):
+    def get(self, request):
+        scf = ScoringFields.objects.all()
+        scoringfieldsSerializers = ScoringFieldsSerializers(scf, many=True, context={'request': request})
+        return Response(scoringfieldsSerializers.data)
+
+    def post(self, request):
+        scf = ScoringFieldsSerializers(data=request.data, many=True, context={'request': request})
+        if scf.is_valid():
+            scf.save()
+            return Response(scf.data, status=status.HTTP_201_CREATED)
+        return Response(scf.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Scoring field Detail
+class ScoringFieldDetail(APIView):
+    def get(self, request, pk):
+        scf = ScoringFields.objects.filter(pk = pk)
+        scoringfieldsSerializers = ScoringFieldsSerializers(scf, many=True, context={'request': request})
+        return Response(scoringfieldsSerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return ScoringFields.objects.get(pk=pk)
+        except ScoringFields.DoesNotExist:
+            return 0
+
+    def put(self, request, pk):
+        scf = self.get_object(pk)
+        scoringfieldsSerializers = ScoringFieldsSerializers(scf, data=request.data, context={'request': request})
+        if scoringfieldsSerializers.is_valid():
+            scoringfieldsSerializers.save()
+            return Response(scoringfieldsSerializers.data)
+        return Response(scoringfieldsSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        scf = self.get_object(pk)
+        scf.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

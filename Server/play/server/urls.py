@@ -20,8 +20,10 @@ urlpatterns = [
     url(r'^templates/(?P<boardgame>[0-9]+)/$', views.TemplateDetail.as_view(), name='templateDetail'), #templates detail
     url(r'^dictionary/$', views.DictionaryList.as_view(), name='dictionary'), #dictionary
     url(r'^dictionary/(?P<pk>[0-9]+)/$', views.DictionaryDetail.as_view(), name='dictionaryDetail'), #dictionary detail
-    url(r'^points/$', views.DetailedPointsList.as_view(), name='detailed_points'), #detailed points list
-    url(r'^points/(?P<pk>[0-9]+)/$', views.DetailedPointsDetail.as_view(), name='pdetailed_pointsDetail'), #detailed point detail
+    url(r'^detailedpoints/$', views.DetailedPointsList.as_view(), name='detailed_points'), #detailed points list
+    url(r'^detailedpoints/(?P<pk>[0-9]+)/$', views.DetailedPointDetail.as_view(), name='detailed_pointsDetail'), #detailed point detail
+    url(r'^scoringfields/$', views.ScoringFieldsList.as_view(), name='scoring_fields'), #scoring fields list
+    url(r'^scoringfields/(?P<pk>[0-9]+)/$', views.ScoringFieldDetail.as_view(), name='scoring_fieldDetail'), #scoring field detail
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

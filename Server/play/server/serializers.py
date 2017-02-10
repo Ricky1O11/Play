@@ -103,30 +103,43 @@ class UsersSerializers(serializers.ModelSerializer):
         fields = ('pk', 'email', 'username', 'match_played', 'most_played_game', 'match_won', 'img', )
 
 # Json representation of the template of a boardgames
-class TemplatesSerializers(serializers.ModelSerializer):
-    scoringField_details = serializers.SerializerMethodField()
+class ScoringFieldsSerializers(serializers.ModelSerializer):
+    word_details = serializers.SerializerMethodField()
 
-    def get_scoringField(self, template):
-        score = ScoringFields.objects.filter(templates=template)
-        serializer = ScoringFields(score)
+    def get_word_details(self, scField):
+        word = Dictionary.objects.get(scoringfields=scField)
+        serializer = DictionarySerializers(word , context={'request': self.context['request']})
         return serializer.data
 
     class Meta:
+        model = ScoringFields
+        fields = ('pk', 'template', 'word', 'word_details')
+
+# Json representation of the template of a boardgames
+class TemplatesSerializers(serializers.ModelSerializer):
+    #scoringField_details = serializers.SerializerMethodField()
+
+    #def get_scoringField(self, template):
+    #    score = ScoringFields.objects.filter(templates=template)
+    #    serializer = ScoringFields(score)
+    #    return serializer.data
+
+    class Meta:
         model = Templates
-        fields = ('pk', 'boardgame', 'scoringField_details', 'scoringField')
+        fields = ('pk', 'boardgame', 'vote')
 
-
+# Json representation of the detailed points of a single play
 class DetailedPointsSerializers(serializers.ModelSerializer):
-    template_details = serializers.SerializerMethodField()
-    
-    def get_template_details(self, dtPoints):
-        template = Templates.objects.get(detailedpoints=dtPoints)
-        serializer = TemplatesSerializers(template)
+    scoringField_details = serializers.SerializerMethodField()
+
+    def get_scoringField_details(self, dtPoints):
+        score = ScoringFields.objects.get(detailedpoints=dtPoints)
+        serializer = ScoringFieldsSerializers(score, context={'request': self.context['request']})
         return serializer.data
 
     class Meta:
         model = DetailedPoints
-        fields = ('template', 'play', 'detailed_points', 'template_details', 'notes')
+        fields = ( 'play', 'detailed_points', 'scoringField_details', 'scoringField', 'notes')
 
 # Json representation of single plays
 class PlaysSerializers(serializers.ModelSerializer):
