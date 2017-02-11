@@ -11,6 +11,21 @@
   display: none !important;
 }
 
+#logo{
+	width:300px;
+	height:300px;
+}
+
+/*LOGIN SCREEN MANAGMENT*/
+md-input-container.md-myTheme-theme label, 
+ md-input-container.md-myTheme-theme .md-placeholder,
+  md-input-container.md-myTheme-theme .md-input,
+  md-input-container.md-input-focused .md-input{
+    color:#ffffff !important;
+    border-color:#ffffff !important;
+}
+/*end LOGIN SCREEN MANAGMENT*/
+
 /*SIDENAV MANAGMENT*/
 #sidebar{
 	background-color:rgb(0,0,0);
@@ -431,6 +446,7 @@ figcaption{
 md-tabs-wrapper{
 	display: none !important;
 }
+
 .md-toast-content{
 	background-color: rgb(255,61,0) !important;
 }

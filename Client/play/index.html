@@ -42,7 +42,7 @@
 	</head>
 	
 	<body ng-app="play" layout="column" flex ng-cloak>
-		<div layout="row" id="container" ng-controller="sidebarController as sCtrl">
+		<div layout="row" id="container" ng-controller="sidebarController as sCtrl" ng-if="logged">
 			<md-sidenav
 				md-colors="{background: 'myTheme-primary'}"
 				class="md-sidenav-left height100perc"
@@ -163,5 +163,48 @@
 			</md-sidenav>
 			<md-content layout="column" flex ng-view></md-content>
 		</div>
+
+		<md-tabs md-dynamic-height md-border-bottom>
+      	<md-tab label="one"
+		>
+		<md-content class="height100perc" layout="row" 
+		id="container" 
+		ng-if="!logged" 
+		md-colors="{background: 'myTheme-primary'}"
+		layout-align="center center">
+			<div layout="column">
+				<div layout="row"  layout-align="center center" flex="none">
+						<img ng-src="img/play.png"  id="logo" flex="none"/>
+				</div>
+				<div layout="row"  layout-align="center center">
+					<div layout="column" flex="100">
+						<md-input-container>
+							<label>Username</label>
+							<input ng-model="lCtrl.login.username">
+						</md-input-container>
+					</div>
+				</div>
+				<div layout="row" layout-align="center center">
+					<div layout="column" flex="100">
+						<md-input-container>
+							<label>Password</label>
+							<input ng-model="lCtrl.login.password">
+						</md-input-container>
+					</div>
+				</div>
+				<div layout="row" layout-align="center center">
+					<div layout="column">
+						<md-button class="md-fab size-24" ng-click="lCtrl.submit()">
+							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+								<div layout="row" class="icon-angle-right" aria-hidden="true" >
+								</div>
+							</div>
+						</md-button>
+					</div>
+				</div>
+			</div>
+			</md-content>
+		</md-tab>
+		</md-tabs>
 	</body>
 </html>
