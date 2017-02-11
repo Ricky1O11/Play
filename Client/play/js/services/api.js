@@ -56,12 +56,12 @@ angular.module('play')
 						dp = $http({method: 'POST', url: BASE_URL+'/dictionary/', data:dict});
 						return dp;
 					},
-		templates:	function(){
-						ts = $http({method: 'GET', url: BASE_URL+'/templates/'});
+		templates:	function(boardgame){
+						ts = $http({method: 'GET', url: BASE_URL+'/templates/?boardgame_id='+boardgame});
 						return ts;
 					},
-		template:	function(boardgame){
-						t = $http({method: 'GET', url: BASE_URL+'/templates/'+boardgame+'/'});
+		template:	function(pk){
+						t = $http({method: 'GET', url: BASE_URL+'/templates/'+pk+'/'});
 						return t;
 					},
 		templatespost:	function(templates){

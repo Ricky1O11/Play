@@ -16,7 +16,9 @@
   })
   .run(function($rootScope, $location, $mdDialog, Api) {
         $rootScope.goTo = function(url) {
+            console.log(url);
             $location.path(url);
+
         };
 		
   		$rootScope.matchesPopup = function(ev, user_pk) {

@@ -1,4 +1,4 @@
-<md-dialog aria-label="Add Match" flex="50">
+ <md-dialog aria-label="Add Match" flex="50">
   <form ng-cloak>
     <md-toolbar class="md-accent">
       <div class="md-toolbar-tools">
@@ -95,7 +95,7 @@
 				 
 				<div layout="column" flex>
 					<div layout="row" layout-align="end center">
-						<md-button class="md-fab size-24" ng-click="mdCtrl.post()">
+						<md-button class="md-fab size-24" ng-click="mdCtrl.postMatchAndPlay()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 								<div layout="row" class="icon-check" aria-hidden="true" >
 								</div>
@@ -107,7 +107,7 @@
 		  </md-content>
         </md-tab>
         <md-tab label="three">
-			<md-content class="md-padding">
+			<md-content class="md-padding" ng-if="mdCtrl.selectedValues.templates.length == 0">
 				<div layout="row">
 					<div layout="column" flex="100" layout-align="center center">
 						<h2>A template helps you accurately track the match progress!</h2>
@@ -134,6 +134,30 @@
 						Of course!
 					</md-button>
 				</div>
+			</md-content>
+			<md-content class="md-padding" ng-if="mdCtrl.selectedValues.templates.length > 0">
+				<md-list flex>
+						<md-list-item
+						class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+						ng-repeat-start="template in mdCtrl.selectedValues.templates"
+						ng-click="mdCtrl.setVisible($index)">
+							<div layout="column">
+								<div layout="row">
+									<h3>Template {{$index+1}}</h3>
+								</div>
+							</div>
+							<i 
+							class="icon-angle-right md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="goTo('matches/'+mdCtrl.selectedValues.match.pk)"></i>
+						</md-list-item>
+						<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
+						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+							<div layout="row">
+								{{scoringField.word_details.word}}
+							</div>
+						</md-list-item>
+				  </md-list>
 			</md-content>
         </md-tab>
         <md-tab label="add template">

@@ -267,9 +267,13 @@ class PlaysList(APIView):
 # Template list
 class TemplatesList(APIView):
     def get(self, request):
-        template = Templates.objects.all()
-        templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
-        return Response(templatesSerializers.data)
+        boardgame_id = self.request.query_params.get('boardgame_id', None)
+        if (boardgame_id is not None):
+            template = Templates.objects.filter(boardgame=boardgame_id)
+            templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
+            return Response(templatesSerializers.data)
+        else:
+            return Response("error: insert boardgame_id")
 
     def post(self, request):
         template = TemplatesSerializers(data=request.data, many=True, context={'request': request})
@@ -280,27 +284,27 @@ class TemplatesList(APIView):
 
 #Template Detail
 class TemplateDetail(APIView):
-    def get(self, request, boardgame):
-        template = Templates.objects.filter(boardgame = boardgame)
+    def get(self, request, pk):
+        template = Templates.objects.filter(pk = pk)
         templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
         return Response(templatesSerializers.data)
 
-    def get_object(self, boardgame):
+    def get_object(self, pk):
         try:
-            return Templates.objects.get(boardgame=boardgame)
+            return Templates.objects.get(pk=pk)
         except Templates.DoesNotExist:
             return 0
     
-    def put(self, request, boardgame):
-        template = self.get_object(boardgame)
+    def put(self, request, pk):
+        template = self.get_object(pk)
         templatesSerializers = TemplatesSerializers(template, data=request.data, context={'request': request})
         if templatesSerializers.is_valid():
             templatesSerializers.save()
             return Response(templatesSerializers.data)
         return Response(templatesSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, boardgame):
-        template = self.get_object(boardgame)
+    def delete(self, request, pk):
+        template = self.get_object(pk)
         template.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 

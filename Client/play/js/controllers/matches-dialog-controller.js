@@ -1,4 +1,4 @@
-//controller for the popup dialog used to insert a new match
+ //controller for the popup dialog used to insert a new match
 angular.module("play").controller('matchesDialogController', function($scope, Api, $mdDialog, $mdToast, $location, user_pk) {
 
 	// list of `state` value/display objects
@@ -17,6 +17,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.postValues.match={};
 	self.postValues.plays=[];
 	self.postValues.templates=[];
+	self.postValues.scoringFields=[];
 	self.postValues.dictionary = [];
 	self.postValues.dp=[];
     
@@ -89,17 +90,20 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
       };
     }
 
-    function remaining(query) {
-      console.log(query)
-
-      return function filterFn(state) {
-        return (state.value.indexOf(lowercaseQuery) === 0);
-      };
-    }
 
     this.storeMatchInfo= function() {
+    	//if a boardgame is selected
 		if(self.selectedValues.boardgame!=null){
+			//get its id
 			self.postValues.match.boardgame=self.selectedValues.boardgame.id;
+
+			//get the template relative to the game
+			Api.templates(self.selectedValues.boardgame.id).success(function(data){
+				self.selectedValues.templates = data;
+				for(i=0;i<self.selectedValues.templates.length;i++)
+					self.selectedValues.templates[i].visible = false;
+			});
+
 			if(self.selectedValues.time!=null){
 				self.postValues.match.time=self.selectedValues.time;
 				if(self.selectedValues.location!=null && self.selectedValues.location.replace(/\s/g, '').length){
@@ -121,16 +125,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
     }
 	
-	this.showToast=function(string){
-		$mdToast.show(
-			  $mdToast.simple()
-				.textContent(string)
-				.hideDelay(3000)
-				.position('top right')
-		);
-	}
 	//Post function
-	this.post=function(){
+	this.postMatchAndPlay=function(){
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
@@ -138,43 +134,29 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					function(response){
 						//get the id of the new match
 						self.selectedValues.matchId = response.data.pk;
-							//for each player
-							for (i=0; i<self.selectedValues.players.length; i++){
-								//prepare the "play" row to be inserted in the play table
-								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
-								self.postValues.plays.push(row);
+						//for each player
+						for (i=0; i<self.selectedValues.players.length; i++){
+							//prepare the "play" row to be inserted in the play table
+							row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
+							self.postValues.plays.push(row);
+						}
+						//post play
+						Api.playpost(self.postValues.plays).then(
+							function(response){
+								//get the list of posted plays
+								self.selectedValues.play = response.data;
+								self.currentTab=2;
+							},
+							function errorCallback(response){
 							}
-							//post play
-							Api.playpost(self.postValues.plays).then(
-								function(response){
-									//get the list of posted plays
-									self.selectedValues.play = response.data;
-										//get the template relative to the played game
-										Api.template(self.postValues.match.boardgame).success(function(data){
-											//for each play inserted before
-											self.postValues.dp = [];
-											self.selectedValues.templates = data;
-											if(self.selectedValues.templates.length > 0){
-												self.postDetailedPoints();
-											}
-											else{
-												self.showToast("This game doesn't have a template");
-												self.currentTab=2;
-											}
-										});
-									
-								},
-								function errorCallback(response){
-								}
-							);
-							
+						);
 					}, 
 					function errorCallback(response) {
 					}
 			);
 		}
 		else{
-			self.showToast("Select at list one player");
+			self.showToast("Select at least one player");
 		}
 	}
 
@@ -218,12 +200,12 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.postTemplate = function(){
-		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n!= null});
+		//clean selectedValues array removing all null entries
+		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
 		for (i=0; i<self.selectedValues.dictionary.length; i++){
 			//prepare the "template" row to be inserted in the templates table
 			row={	
-					boardgame:self.postValues.match.boardgame, 
-					word:self.selectedValues.dictionary[i].id
+					boardgame:self.postValues.match.boardgame
 				};
 			self.postValues.templates.push(row);
 		}
@@ -266,4 +248,24 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			}
 		);
 	}
+
+	this.showToast=function(string){
+		$mdToast.show(
+			  $mdToast.simple()
+				.textContent(string)
+				.hideDelay(3000)
+				.position('top right')
+		);
+	}
+
+	this.setVisible = function(id){
+		self.selectedValues.templates[id].visible = !self.selectedValues.templates[id].visible;
+	}
 });
+ /*				if(self.selectedValues.templates.length > 0){
+					self.postDetailedPoints();
+				}
+				else{
+					self.showToast("This game doesn't have a template");
+					self.currentTab=2;
+				}*/

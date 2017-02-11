@@ -117,16 +117,16 @@ class ScoringFieldsSerializers(serializers.ModelSerializer):
 
 # Json representation of the template of a boardgames
 class TemplatesSerializers(serializers.ModelSerializer):
-    #scoringField_details = serializers.SerializerMethodField()
+    scoringField_details = serializers.SerializerMethodField()
 
-    #def get_scoringField(self, template):
-    #    score = ScoringFields.objects.filter(templates=template)
-    #    serializer = ScoringFields(score)
-    #    return serializer.data
+    def get_scoringField_details(self, template):
+        score = ScoringFields.objects.filter(template=template)
+        serializer = ScoringFieldsSerializers(score, many=True, context={'request': self.context['request']})
+        return serializer.data
 
     class Meta:
         model = Templates
-        fields = ('pk', 'boardgame', 'vote')
+        fields = ('pk', 'boardgame', 'vote', 'scoringField_details')
 
 # Json representation of the detailed points of a single play
 class DetailedPointsSerializers(serializers.ModelSerializer):
