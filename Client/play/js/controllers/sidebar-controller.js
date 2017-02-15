@@ -1,22 +1,20 @@
-angular.module("play").controller('sidebarController', function($scope, Api, $mdDialog, $scope) {
+angular.module("play").controller('sidebarController', function($scope, Api, $mdDialog, $scope, $cookies, jwtHelper) {
 	$scope.img="";
 	$scope.match_played=0;
 	$scope.match_won=0;
 	$scope.username="";
-	$scope.user_pk=2;
+	$scope.user_pk=jwtHelper.decodeToken($cookies.get('tok')).user_id;
 	
 	controllerSidebar=this;
-	Api.user(2).success(function(data){
+	Api.user($scope.user_pk).success(function(data){
 		$scope.match_played = data.match_played;
 		$scope.match_won = data.match_won;
 		$scope.username = data.username;
-		$scope.img = data.img;
+		$scope.img = data.profile.img;
 		$scope.user_pk = data.pk;
 	});
 
 	this.checkImg = function(){
-	
-		console.log ($scope.img);
 		if($scope.img=="") 
 			return false;
 		else

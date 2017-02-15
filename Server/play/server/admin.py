@@ -4,7 +4,7 @@ from django.contrib import admin
 from .models import *
 
 admin.site.register(Boardgames)
-admin.site.register(Users)
+admin.site.register(Profile)
 admin.site.register(Matches)
 admin.site.register(Friends)
 admin.site.register(Plays)

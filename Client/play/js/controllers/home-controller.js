@@ -12,7 +12,7 @@ angular.module("play").controller('homeController', function(Api, $mdDialog, $sc
 	$scope.$watch('user_pk', function(newVal, oldVal){
 		if(newVal != ""){
 			//api call to the list of favourites boardgames
-			Api.favourites($scope.user_pk).success(function(data){
+			Api.favourites().success(function(data){
 				if(data.length >=4)
 					controller.favourites=data.slice(0, 4);
 				else
@@ -20,7 +20,7 @@ angular.module("play").controller('homeController', function(Api, $mdDialog, $sc
 			});
 
 			//api call to the list of the played boardgames
-			Api.recents($scope.user_pk).success(function(data){
+			Api.recents().success(function(data){
 				controller.recents=data;
 			});
 		}

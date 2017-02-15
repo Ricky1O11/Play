@@ -10,13 +10,13 @@
 		<div layout="column" class="blue-grey pad20l" flex="100">
 			<div layout="row" class="shadowed-box whiteBg pad20l mrg10b height60">
 				<div ng-if="!mCtrl.editMode" layout="column" flex="50"  layout-align="center start">
-					<h1 ng-if="mCtrl.match.name.length == 0"> Match {{mCtrl.match.pk}}</h1>
-					<h1 ng-if="mCtrl.match.name.length > 0">{{mCtrl.match.name}}</h1>
+					<h2 ng-if="mCtrl.match.name.length == 0"> Match {{mCtrl.match.pk}}</h2>
+					<h2 ng-if="mCtrl.match.name.length > 0">{{mCtrl.match.name}}</h2>
 				</div>
 				<div ng-if="mCtrl.editMode" layout="column" flex="50">
 					<md-input-container>
 							<label class="size-21">Match name</label>
-							<input ng-model="mdCtrl.selectedValues.name">
+							<input ng-model="mCtrl.match.new_name">
 					</md-input-container>
 				</div>
 				<div 
@@ -27,12 +27,24 @@
 					<i 
 					ng-if="!mCtrl.editMode" 
 					class="size-18 icon-pencil blue-grey"
-					ng-click="mCtrl.toggleEditMode()"
+					ng-click="mCtrl.startEditMode()"
 					></i>
-					<i 
-					ng-if="mCtrl.editMode" 
-					class="size-18 icon-check blue-grey"
-					ng-click="mCtrl.toggleEditMode()"></i>
+					<div layout="row">
+						<i 
+						ng-if="mCtrl.editMode" 
+						class="size-18 icon-check"
+						ng-click="mCtrl.endEditMode(true)"
+						md-colors="{color: 'myTheme-primary'}"></i>
+						<i 
+						ng-if="mCtrl.editMode" 
+						class="pad10l size-18 icon-times blue-grey"
+						ng-click="mCtrl.endEditMode(false)"></i>
+						<i 
+						ng-if="mCtrl.editMode" 
+						class="pad10l size-18 icon-trash"
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="mCtrl.deleteMatchPopup($event)"></i>
+					</div>
 				</div>
 			</div>
 			<div layout="row" id="info_container">
@@ -46,7 +58,7 @@
 							<div layout="row" class="height100perc">
 								
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{mCtrl.match.boardgame_details.title}}</h2>
+									<h3>{{mCtrl.match.boardgame_details.title}}</h3>
 								</div>
 								<div layout="column" flex="20" layout-align="center center" >
 									<i class="size-18 icon-puzzle-piece" md-colors="{color: 'myTheme-accent'}" ></i>
@@ -62,11 +74,11 @@
 									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
 								<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-									<h2>{{mCtrl.match.duration}} min</h2>
+									<h3>{{mCtrl.match.duration}} min</h3>
 								</div>
 								<div ng-if="mCtrl.editMode" layout="column" flex="70">
 									<md-input-container class="md-block">
-										<input type="number" ng-model="mdCtrl.nplayers" aria-label="red" aria-controls="red-slider">
+										<input type="number" ng-model="mCtrl.match.new_duration" aria-label="red" aria-controls="red-slider">
 										<label class="size-21">How long did you play?</label>
 									</md-input-container>
 								</div>
@@ -79,12 +91,12 @@
 							class="shadowed-box whiteBg pad10l height60 clickable">
 							<div layout="row" class="height100perc">
 								<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-									<h2>{{mCtrl.match.time | date: "short"}}</h2>
+									<h3>{{mCtrl.match.time | date: "short"}}</h3>
 								</div>
 								<div ng-if="mCtrl.editMode" layout="column" flex="80">
 									<md-input-container>
 										<label class="size-21">When?</label>
-										<md-datepicker flex ng-model="mCtrl.selectedValues.time"></md-datepicker>
+										<md-datepicker flex ng-model="mCtrl.match.new_time"></md-datepicker>
 									</md-input-container>
 								</div>
 								<div layout="column" flex="20" layout-align="center center" >
@@ -100,12 +112,12 @@
 									<i class="size-18 icon-pin" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
 								<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-									<h2>{{mCtrl.match.location}}</h2>
+									<h3>{{mCtrl.match.location}}</h3>
 								</div>
-								<div ng-if="mCtrl.editMode" layout="column" flex="80">
+								<div ng-if="mCtrl.editMode" layout="column" flex="80" >
 									<md-input-container>
 										<label class="size-21">Where?</label>
-										<input ng-model="mdCtrl.selectedValues.name">
+										<input ng-model="mCtrl.match.new_location">
 									</md-input-container>
 								</div>
 							</div>
@@ -126,24 +138,30 @@
 						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
 						ng-click="mCtrl.setVisible(play.pk)">
-							<img ng-src="{{play.user_details.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{play.user_details.username}}"/>
+							<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{play.user_details.username}}"/>
 							<div layout="column">
 								<div layout="row">
 									<h3>{{play.user_details.username}}</h3>
 								</div>
 							</div>
 							<div class="md-secondary">
-								{{mCtrl.sumPoints(play.detailedPoints)}}
+								<strong>{{mCtrl.sumPoints(play.detailedPoints)}}</strong>
 							</div>
 							
 						</md-list-item>
-						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible"
+						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible || mCtrl.allVisible"
 						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
 							<div layout="row">
-								{{dp.template_details.word_details.word}}
+								{{dp.scoringField_details.word_details.word}}
 							</div>
-							<div class="md-secondary">
+							
+							<div class="md-secondary" ng-if="!mCtrl.editMode">
 								{{dp.detailed_points}}
+							</div>
+							<div class="md-secondary" ng-if="mCtrl.editMode">
+								<md-input-container class="detailedPointsContainer md-block" >
+										<input type="number" ng-model="dp.new_detailed_points" aria-label="red" aria-controls="red-slider">
+								</md-input-container>
 							</div>
 						</md-list-item>
 				  </md-list>

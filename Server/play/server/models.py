@@ -8,6 +8,9 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from django.contrib.auth.models import User
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 
 class Boardgames(models.Model):
     #id = models.AutoField(db_column='boardgame_Id', primary_key=True, null=False)  # Field name made lowercase.
@@ -29,43 +32,54 @@ class Boardgames(models.Model):
     def __unicode__(self):
         return str(self.id) +" - "+self.title
 
-class Users(models.Model):
+class Profile(models.Model):
     #user_id = models.AutoField(primary_key=True)
-    email = models.CharField(unique=True, max_length=100)
-    username = models.CharField(unique=True, max_length=25)
-    password = models.CharField(max_length=256)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    #username = models.CharField(unique=True, max_length=25)
+    #password = models.CharField(max_length=256)
+    birth_date = models.DateField(null=True, blank=True)
     img = models.CharField(max_length=256, default="img/profile-default.png", blank=True)
 
     def __unicode__(self):
-        return self.username
+        return self.user.username
+
+
+@receiver(post_save, sender=User)
+def create_user_profile(sender, instance, created, **kwargs):
+    if created:
+        Profile.objects.create(user=instance)
+
+@receiver(post_save, sender=User)
+def save_user_profile(sender, instance, **kwargs):
+    instance.profile.save()
 
 class Matches(models.Model):
     #match_id = models.AutoField(primary_key=True)
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
-    name = models.CharField(default="", max_length=256)
-    time = models.DateTimeField()
-    location = models.CharField(max_length=100)
+    name = models.CharField(default="", max_length=256, blank=True)
+    time = models.DateTimeField(auto_now_add=True, blank=True)
+    location = models.CharField(max_length=100,  default="", blank=True)
     duration = models.IntegerField(default=0)
 
     def __unicode__(self):
         return "Match " + str(self.id) + " - game: " + str(self.boardgame).decode('utf8')
 
 class Friends(models.Model) :
-    user1 = models.ForeignKey(Users, related_name='user1', on_delete=models.CASCADE, null=True)
-    user2 = models.ForeignKey(Users, related_name='user2', on_delete=models.CASCADE, null=True)
+    user1 = models.ForeignKey(User, related_name='user1', on_delete=models.CASCADE, null=True)
+    user2 = models.ForeignKey(User, related_name='user2', on_delete=models.CASCADE, null=True)
 
     def __unicode__(self):
         return "User id 1: "+str(self.user1) + " and User id 2: " + str(self.user2)
 
 class Favourites(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
 
     def __unicode__(self):
         return "Game id "+str(self.boardgame).decode('utf8') + " and User id " + str(self.user)
 
 class Plays(models.Model):
-    user = models.ForeignKey(Users, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     match = models.ForeignKey(Matches, on_delete=models.CASCADE)
     points = models.IntegerField(default=999999)
 

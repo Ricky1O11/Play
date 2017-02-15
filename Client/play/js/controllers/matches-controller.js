@@ -9,7 +9,7 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 	$scope.$watch('user_pk', function(newVal, oldVal){
 		if(newVal != ""){
 			//api call to the list of boardgames
-			Api.matches($scope.user_pk).success(function(data){
+			Api.matches().success(function(data){
 				controller.games=data;
 				for(i = 0; i< controller.games.length; i++){
 					controller.games[i].visible = false;

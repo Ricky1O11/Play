@@ -254,3 +254,9 @@
 .icon-check-1:before {
   content: "\2a";
 }
+.icon-times:before {
+  content: "\2b";
+}
+.icon-trash:before {
+  content: "\2c";
+}

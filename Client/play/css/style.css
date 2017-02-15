@@ -17,10 +17,10 @@
 }
 
 /*LOGIN SCREEN MANAGMENT*/
-md-input-container.md-myTheme-theme label, 
- md-input-container.md-myTheme-theme .md-placeholder,
-  md-input-container.md-myTheme-theme .md-input,
-  md-input-container.md-input-focused .md-input{
+#login md-input-container.md-myTheme-theme label, 
+#login md-input-container.md-myTheme-theme .md-placeholder,
+#login md-input-container.md-myTheme-theme .md-input,
+#login md-input-container.md-input-focused .md-input{
     color:#ffffff !important;
     border-color:#ffffff !important;
 }
@@ -375,6 +375,18 @@ text-align:center;
 	background-color:rgba(0,0,0,0.5); 
 	height:100%;
 	width:100%;
+}
+
+.detailedPointsContainer{
+	margin:0;
+	width:50px;
+}
+
+.detailedPointsContainer input{
+	text-align:right;
+}
+#container .md-errors-spacer{
+	display:none !important;
 }
 /*end OTHER STUFF MANAGEMENT*/
 

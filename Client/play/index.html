@@ -17,7 +17,9 @@
 		<script src="js/includes/angular-animate.min.js"></script>
 		<script src="js/includes/angular-aria.min.js"></script>
 		<script src="js/includes/angular-messages.min.js"></script>
+		<script src="js/includes/angular-cookies.min.js"></script>
 		<script src="js/includes/angular-sanitize.min.js"></script>
+		<script src="js/includes/angular-jwt/dist/angular-jwt.js"></script>
 
 		<script src="js/app.js"></script>
 		
@@ -32,6 +34,7 @@
 		<script src="js/controllers/boardgames-controller.js"></script>
 		<script src="js/controllers/favourites-controller.js"></script>
 		<script src="js/controllers/home-controller.js"></script>
+		<script src="js/controllers/login-controller.js"></script>
 		<script src="js/controllers/recents-controller.js"></script>
 		<script src="js/controllers/sidebar-controller.js"></script>
 		<script src="js/controllers/sidebar-controller.js"></script>
@@ -42,7 +45,7 @@
 	</head>
 	
 	<body ng-app="play" layout="column" flex ng-cloak>
-		<div layout="row" id="container" ng-controller="sidebarController as sCtrl" ng-if="logged">
+		<div layout="row" id="container" ng-controller="sidebarController as sCtrl" ng-if="isLogged()">
 			<md-sidenav
 				md-colors="{background: 'myTheme-primary'}"
 				class="md-sidenav-left height100perc"
@@ -165,46 +168,53 @@
 		</div>
 
 		<md-tabs md-dynamic-height md-border-bottom>
-      	<md-tab label="one"
-		>
-		<md-content class="height100perc" layout="row" 
-		id="container" 
-		ng-if="!logged" 
-		md-colors="{background: 'myTheme-primary'}"
-		layout-align="center center">
-			<div layout="column">
-				<div layout="row"  layout-align="center center" flex="none">
-						<img ng-src="img/play.png"  id="logo" flex="none"/>
-				</div>
-				<div layout="row"  layout-align="center center">
-					<div layout="column" flex="100">
-						<md-input-container>
-							<label>Username</label>
-							<input ng-model="lCtrl.login.username">
-						</md-input-container>
-					</div>
-				</div>
-				<div layout="row" layout-align="center center">
-					<div layout="column" flex="100">
-						<md-input-container>
-							<label>Password</label>
-							<input ng-model="lCtrl.login.password">
-						</md-input-container>
-					</div>
-				</div>
-				<div layout="row" layout-align="center center">
-					<div layout="column">
-						<md-button class="md-fab size-24" ng-click="lCtrl.submit()">
-							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-								<div layout="row" class="icon-angle-right" aria-hidden="true" >
-								</div>
+      		<md-tab label="one">
+				<md-content class="height100perc" layout="row" 
+				id="login" 
+				md-colors="{background: 'myTheme-primary'}"
+				layout-align="center center"
+				ng-controller="loginController as lCtrl" 
+				ng-if="!isLogged()" >
+					<form name="loginForm" layout="column">
+						<div layout="row"  layout-align="center center" flex="none">
+								<img ng-src="img/play.png"  id="logo" flex="none"/>
+						</div>
+						<div layout="row"  layout-align="center center">
+							<div layout="column" flex="100">
+								<md-input-container>
+									<label>Username</label>
+									<input name="username" ng-model="lCtrl.login.username" required>
+									<div ng-messages="loginForm.username.$error">
+							        	<div ng-message="required">This field is required.</div>
+							       </div>
+								</md-input-container>
 							</div>
-						</md-button>
-					</div>
-				</div>
-			</div>
-			</md-content>
-		</md-tab>
+						</div>
+						<div layout="row" layout-align="center center">
+							<div layout="column" flex="100">
+								<md-input-container>
+									<label>Password</label>
+									<input type="password" name="password" ng-model="lCtrl.login.password" required minlength="8">
+									<div ng-messages="loginForm.password.$error">
+							        	<div ng-message="required">This field is required.</div>
+							        	<div ng-message="minlength">The password is too short</div>
+							        </div>
+								</md-input-container>
+							</div>
+						</div>
+						<div layout="row" layout-align="center center">
+							<div layout="column">
+								<md-button class="md-fab size-24" ng-click="lCtrl.submit()">
+									<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+										<div layout="row" class="icon-angle-right" aria-hidden="true" >
+										</div>
+									</div>
+								</md-button>
+							</div>
+						</div>
+					</form>
+				</md-content>
+			</md-tab>
 		</md-tabs>
 	</body>
 </html>

@@ -1,6 +1,7 @@
 from django.conf.urls import url
 from . import views
 from rest_framework.urlpatterns import format_suffix_patterns
+from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     url(r'^$', views.index, name='index'),
     url(r'^read[bB]gg/$', views.readBgg, name='readBgg'), #read boardgamegeek
@@ -24,6 +25,7 @@ urlpatterns = [
     url(r'^detailedpoints/(?P<pk>[0-9]+)/$', views.DetailedPointDetail.as_view(), name='detailed_pointsDetail'), #detailed point detail
     url(r'^scoringfields/$', views.ScoringFieldsList.as_view(), name='scoring_fields'), #scoring fields list
     url(r'^scoringfields/(?P<pk>[0-9]+)/$', views.ScoringFieldDetail.as_view(), name='scoring_fieldDetail'), #scoring field detail
+    url(r'^auth/token/', obtain_jwt_token)
 ]
 
 urlpatterns = format_suffix_patterns(urlpatterns)

@@ -1,11 +1,11 @@
  //controller for the popup dialog used to insert a new match
-angular.module("play").controller('matchesDialogController', function($scope, Api, $mdDialog, $mdToast, $location, user_pk) {
+angular.module("play").controller('matchesDialogController', function($scope, Api, $rootScope, $mdDialog, $location, user_pk) {
 
 	// list of `state` value/display objects
 	self=this;
 	self.user_pk = user_pk;
 	self.currentTab=0 //holds the current tab id
-	self.title=self.currentTab==0?"Add Match":"Add Players"; //sets the tab title according to its id
+	self.title= "Add Match"; //sets the tab title according to its id
 	
 	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
 	self.selectedValues.players=[]; //list that holds the list of player playing the inserted match
@@ -30,7 +30,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.dictionary=[];  //list of users to display in the dropdown menu
 	self.nwords=1; //holds the selected amount of players
 
-	self.searchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 
 	self.range = function(min, max, step) {
 		step = step || 1;
@@ -41,7 +43,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		return input;
 	};
 	//api call to the list of boardgames
-	Api.boadgames(self.user_pk).success(function(data){
+	Api.boadgames().success(function(data){
 		for (i=0; i<data.length; i++){
 			self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk}
 		}
@@ -50,33 +52,59 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
-			self.users[i]={display:data[i].username, value:data[i].username, id:data[i].pk}
+			if(data[i].pk != 2){
+				self.users.push({display:data[i].username, value:data[i].username, id:data[i].pk})
+			}
+			else{
+				 self.selectedValues.players[0] = {display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk};
+				 self.playerSearchText[0] = data[i].username;
+			}
 		}
 	});
 
 	Api.dictionary().success(function(data){
 		for (i=0; i<data.length; i++){
-			self.dictionary[i]={display:data[i].word, value:data[i].word, id:data[i].pk}
+			self.dictionary[i]={display:data[i].word, value:data[i].word.toLowerCase(), id:data[i].pk}
 		}
 	});
 
     //Search for boardagames
     self.querySearchBoardgames = function (query) {
-      var results = query ? self.boardgames.filter( createFilterFor(query) ) : self.boardgames;
-        return results;
+    	if(query){
+			results = self.boardgames.filter(createFilterFor(query));
+		}
+    	else{
+      		results= self.boardgames;
+      	}
+      	return results;
     }
 
 	//Search for users
 	self.querySearchPlayers = function (query) {
-      var results = query ? self.users.filter( createFilterFor(query) ) : self.users;
-        return results;
+		returned = [];
+		if(query){
+			results = self.users.filter(createFilterFor(query));
+		}
+    	else{
+      		results= self.users;
+      	}
+  		for(i=0;i<results.length;i++){
+			if(!containsObject(results[i], self.selectedValues.players)){
+				returned.push(results[i]);
+			}
+  		}
+      	return returned;
     }
 
     //Search for users
 	self.querySearchWord = function (query) {
-      var results = query 	? self.dictionary.filter( createFilterFor(query) ) 
-      						: self.dictionary;
-        return results;
+	    if(query){
+			results = self.dictionary.filter(createFilterFor(query));
+		}
+    	else{
+      		results= self.dictionary;
+      	}
+      	return results;
     }
 
     /**
@@ -84,7 +112,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
      */
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
-
       return function filterFn(state) {
         return (state.value.indexOf(lowercaseQuery) === 0);
       };
@@ -106,27 +133,70 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 			if(self.selectedValues.time!=null){
 				self.postValues.match.time=self.selectedValues.time;
-				if(self.selectedValues.location!=null && self.selectedValues.location.replace(/\s/g, '').length){
-					self.postValues.match.location=self.selectedValues.location;
-					self.postValues.match.name=self.selectedValues.name;
-					self.searchText=[];
-					self.currentTab=1;
-				}
-				else{
-				self.showToast("Insert a location");
 			}
+			if(self.selectedValues.location!=null && self.selectedValues.location.replace(/\s/g, '').length){
+				self.postValues.match.location=self.selectedValues.location;
 			}
-			else{
-				self.showToast("Pick a date");
+			if(self.selectedValues.name!=null){
+				self.postValues.match.name=self.selectedValues.name;
 			}
+			self.goTo(1);
 		}
 		else{			
-			self.showToast("Select a boardgame");
+			$rootScope.showToast("Select a boardgame");
 		}
     }
+
+
+	this.goTo = function(tab){
+			self.currentTab=tab;
+			switch(self.currentTab){
+				case 0: {
+					self.title= "Add match";
+					break;
+				}
+				case 1: {
+					self.title= "Add players";
+					break;
+				}
+				case 2: {
+					self.title= "Select template";
+					break;
+				}
+				case 3: {
+					self.title= "Add scoring fields";
+					break;
+				}
+			}
+	}
+
+
+    this.addTemplate = function(wantToAdd){
+		if(wantToAdd){
+			self.goTo(3);
+		}
+		else{
+			self.selectedValues.dictionary[0] = self.dictionary[0];
+			self.postMatch("postTemplate");
+		}
+	}
+
+	this.selectTemplate = function(template){
+		self.selectedValues.scoringFields = template.scoringField_details;
+		self.postMatch("selectTemplate");
+	}
+
+	this.createTemplate = function(){
+		self.postMatch("createTemplate");
+	}
+
+
+
+
+
 	
 	//Post function
-	this.postMatchAndPlay=function(){
+	this.postMatch=function(step){
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
@@ -136,46 +206,106 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 						self.selectedValues.matchId = response.data.pk;
 						//for each player
 						for (i=0; i<self.selectedValues.players.length; i++){
-							//prepare the "play" row to be inserted in the play table
-							row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
-							self.postValues.plays.push(row);
-						}
-						//post play
-						Api.playpost(self.postValues.plays).then(
-							function(response){
-								//get the list of posted plays
-								self.selectedValues.play = response.data;
-								self.currentTab=2;
-							},
-							function errorCallback(response){
+							if(self.selectedValues.players[i] != null){
+								//prepare the "play" row to be inserted in the play table
+								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
+								self.postValues.plays.push(row);
 							}
-						);
+						}
+						self.postPlay(step);
 					}, 
 					function errorCallback(response) {
+						console.log(response);
 					}
 			);
 		}
 		else{
-			self.showToast("Select at least one player");
+			$rootScope.showToast("Select at least one player");
 		}
 	}
 
-	this.addTemplate = function(wantToAdd){
-		if(wantToAdd){
-			self.currentTab=3;
-			self.searchText = [];
-		}
-		else{
-			self.selectedValues.dictionary[0] = self.dictionary[0];
-			self.postTemplate();
-		}
+
+
+
+	this.postPlay = function(step){
+		//post play
+		Api.playpost(self.postValues.plays).then(
+			function(response){
+				//get the list of posted plays
+				self.selectedValues.play = response.data;
+				if(step == "selectTemplate"){
+					self.postDetailedPoints();
+				}
+				else if(step == "postTemplate"){
+					self.postTemplate();
+				}
+				else if(step == "createTemplate"){
+					self.postWord();
+				}
+			},
+			function errorCallback(response){
+				console.log(response);
+			}
+		); 
 	}
+
+
+
+
+	this.postTemplate = function(){
+		//prepare the "template" row to be inserted in the templates table
+		row={	
+				boardgame:self.postValues.match.boardgame
+			};
+		self.postValues.templates.push(row);
+		
+		//post template
+		Api.templatespost(self.postValues.templates).then(
+			function(response){
+				self.selectedValues.templates = response.data[0];
+				self.postScoringFields();
+			},
+			function errorCallback(response){
+				console.log(response);
+			}
+		);
+	}
+
+
+
+
+
+	this.postScoringFields = function(){
+		//clean selectedValues array removing all null entries
+		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
+		for (i=0; i<self.selectedValues.dictionary.length; i++){
+			//prepare the "template" row to be inserted in the templates table
+			row={	
+					template:self.selectedValues.templates.pk,
+					word: self.selectedValues.dictionary[i].id
+				};
+			self.postValues.scoringFields.push(row);
+		}
+		//post template
+		Api.scoringfieldspost(self.postValues.scoringFields).then(
+			function(response){
+				self.selectedValues.scoringFields = response.data;
+				self.postDetailedPoints();
+			},
+			function errorCallback(response){
+				console.log(response);
+			}
+		);
+	}
+
+
+
 
 	this.postWord = function(){
-		for (i=0; i<self.searchText.length; i++){
+		for (i=0; i<self.dictionarySearchText.length; i++){
 			if( self.selectedValues.dictionary[i] == null){
 				row={
-					word:self.searchText[i],
+					word:self.dictionarySearchText[i],
 					description:""
 				};
 				self.postValues.dictionary.push(row);
@@ -187,8 +317,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					for (j=0; j<response.data.length; j++){
 						row = {display: response.data[j].word, value: response.data[j].word, id: response.data[j].pk}
 						self.selectedValues.dictionary.push(row);
-						self.postTemplate();
 					}
+					self.postTemplate();
 				},
 				function errorCallback(response){
 				}
@@ -199,48 +329,30 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-	this.postTemplate = function(){
-		//clean selectedValues array removing all null entries
-		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
-		for (i=0; i<self.selectedValues.dictionary.length; i++){
-			//prepare the "template" row to be inserted in the templates table
-			row={	
-					boardgame:self.postValues.match.boardgame
-				};
-			self.postValues.templates.push(row);
-		}
-		
-		//post template
-		Api.templatespost(self.postValues.templates).then(
-			function(response){
-				self.selectedValues.templates = response.data;
-				self.postDetailedPoints();
-			},
-			function errorCallback(response){
-				console.log(response);
-			}
-		);
-	}
+
+
+
 
 	this.postDetailedPoints = function(){
 		for (i=0; i<self.selectedValues.play.length; i++){	
 			//get the current play id
 			self.selectedValues.playId = self.selectedValues.play[i].pk;
 			//for each template entry
-			for (j=0; j<self.selectedValues.templates.length; j++){
+			for (j=0; j<self.selectedValues.scoringFields.length; j++){
 				//get its id and prepare the "detailedPoints" row to be inserted in the detailedPoints table
 				row = {}
 				row.play = self.selectedValues.playId;
-				row.template = self.selectedValues.templates[j].pk;
+				row.scoringField = self.selectedValues.scoringFields[j].pk;
 				row.detailed_points = 0;
 				self.postValues.dp.push(row);
 			}
 		}
+
 		//post detailedPoints
 		Api.dpPost(self.postValues.dp).then(
 			function(response){
 				//if successfull, hide the dialog and prompt a message
-				self.showToast("Match succesfully registered!");
+				$rootScope.showToast("Match succesfully registered!");
 				$mdDialog.hide();
 				$location.path("matches/"+self.selectedValues.matchId);
 			}, 
@@ -249,23 +361,27 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		);
 	}
 
-	this.showToast=function(string){
-		$mdToast.show(
-			  $mdToast.simple()
-				.textContent(string)
-				.hideDelay(3000)
-				.position('top right')
-		);
-	}
+
+
 
 	this.setVisible = function(id){
 		self.selectedValues.templates[id].visible = !self.selectedValues.templates[id].visible;
 	}
+
+	function containsObject(obj, list) {
+	    var i;
+	    for (i = 0; i < list.length; i++) {
+	        if (list[i] === obj) {
+	            return true;
+	        }
+	    }
+	    return false;
+	}
+
+	this.back = function(){
+		self.currentTab--;
+	}
+	this.dismiss = function(){
+		$mdDialog.hide();
+	}
 });
- /*				if(self.selectedValues.templates.length > 0){
-					self.postDetailedPoints();
-				}
-				else{
-					self.showToast("This game doesn't have a template");
-					self.currentTab=2;
-				}*/

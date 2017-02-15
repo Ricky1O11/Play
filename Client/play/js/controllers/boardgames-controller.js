@@ -8,8 +8,8 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 	$scope.$watch('user_pk', function(newVal, oldVal){
 		if(newVal != ""){
 			//api call to the list of boardgames
-			Api.boadgames($scope.user_pk).success(function(data){
-				controller.boardgames=data;
+			Api.boadgames().then(function(response){
+				controller.boardgames=response.data;
 				for(i=0;i<controller.boardgames.length;i++){
 					if(controller.boardgames[i].favourite.length > 0){
 						controller.boardgames[i].isFavourite = true;
@@ -19,6 +19,8 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 					}
 					controller.boardgames[i].listId = i;
 				}
+			}, function errorCallback(response){
+				console.log(response);
 			});
 		}
 	});

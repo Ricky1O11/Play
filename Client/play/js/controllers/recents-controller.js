@@ -6,7 +6,7 @@ angular.module("play").controller('recentsController', function($scope, Api) {
 	//watch the scope variable until it's loaded
 	$scope.$watch('user_pk', function(newVal, oldVal){
 		if(newVal != ""){
-			Api.recents($scope.user_pk).success(function(data){
+			Api.recents().success(function(data){
 				controller.recents=data;
 			});
 		}

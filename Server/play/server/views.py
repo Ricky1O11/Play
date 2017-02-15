@@ -7,13 +7,15 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+
+from rest_framework.permissions import AllowAny,IsAuthenticated
 #from django.db.models import F, Q
 
 def index(request):
     return HttpResponse("Home")
 
 # Retrieve data from json representation of boardgamegeek database
-def readBgg():
+def readBgg(self):
     in_file = open("server/bgg_1_20.json", "r")
     text = in_file.read()
 
@@ -45,6 +47,7 @@ def readBgg():
 
 # Boardgame list
 class BoardgamesList(APIView):
+    permission_classes = (AllowAny,)
     def get(self, request):
         boardgames = Boardgames.objects.all()
         boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
@@ -56,24 +59,17 @@ class BoardgamesList(APIView):
 # Boardgame list with filters. Allowed: "favourites", "recents"
 class BoardgamesListFiltered(APIView):
     def get(self, request, filter):
+        auth_user = self.request.user
         if (filter == 'favourites' or filter == 'favourites'):
-            user_id = self.request.query_params.get('user_id', None)
-            if (user_id is not None):
-                boardgames = Boardgames.objects.filter(favourites__user=user_id)
-                boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
-                return Response(boardgamesSerializers.data)
-            else:
-                return Response("error: insert user_id")
+            boardgames = Boardgames.objects.filter(favourites__user=auth_user)
+            boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
+            return Response(boardgamesSerializers.data)
 
         elif (filter == 'recents'):
-            user_id = self.request.query_params.get('user_id', None)
-            if (user_id is not None):
-                boardgames = Boardgames.objects.filter(matches__plays__user=user_id).distinct()
-                boardgames.order_by('matches__match_time')
-                boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
-                return Response(boardgamesSerializers.data)
-            else:
-                return Response("error: insert user_id")
+            boardgames = Boardgames.objects.filter(matches__plays__user=auth_user).distinct()
+            boardgames.order_by('matches__match_time')
+            boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
+            return Response(boardgamesSerializers.data)
 
 # Single boardgame details
 class BoardgameDetail(APIView):
@@ -87,7 +83,7 @@ class BoardgameDetail(APIView):
 # User list
 class UsersList(APIView):
     def get(self, request):
-        users = Users.objects.all()
+        users = User.objects.all()
         usersSerializers = UsersSerializers(users, many=True, context={'request': request})
         return Response(usersSerializers.data)
 
@@ -101,7 +97,7 @@ class UsersList(APIView):
 # Single user details
 class UserDetail(APIView):
     def get(self, request, pk):
-        user = get_object_or_404(Users, pk=pk)
+        user = get_object_or_404(User, pk=pk)
         userSerializers = UsersSerializers(user, context={'request': request})
         return Response(userSerializers.data)
 
@@ -120,20 +116,20 @@ class UserDetail(APIView):
         return Response(userSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        user = self.get_object(pk)
-        user.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        auth_user = request.user
+        if(auth_user == pk):
+            user = self.get_object(pk)
+            user.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Match list
 class MatchesList(APIView):
     def get(self, request):
-        user_id = self.request.query_params.get('user_id', None)
-        if (user_id is not None):
-            matchwithuser = Matches.objects.filter(plays__user=user_id)
+        auth_user = self.request.user
+        if (auth_user is not None):
+            matchwithuser = Matches.objects.filter(plays__user=auth_user)
             matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
             return Response(matchesSerializers.data)
-        else:
-            return Response("error: insert user_id")
 
     def post(self, request):
         match = MatchesSerializers(data=request.data, context={'request': request})
@@ -145,10 +141,10 @@ class MatchesList(APIView):
 # Match detail
 class MatchDetail(APIView):
     def get(self, request, pk):
-        user_id = self.request.query_params.get('user_id', None)
-        if (user_id is not None):
-            matchwithuser = Matches.objects.filter(plays__user=user_id, pk=pk).distinct()
-            matchesSerializers = MatchesSerializers(matchwithuser, many=True, context={'request': request})
+        auth_user = self.request.user
+        if (auth_user is not None):
+            match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
+            matchesSerializers = MatchesSerializers(match, many=True, context={'request': request})
             return Response(matchesSerializers.data)
 
     def get_object(self, pk):
@@ -158,7 +154,8 @@ class MatchDetail(APIView):
             return 0
 
     def put(self, request, pk):
-        match = self.get_object(pk)
+        auth_user = self.request.user
+        match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
         matchSerializers = MatchesSerializers(match, data=request.data, context={'request': request})
         if matchSerializers.is_valid():
             matchSerializers.save()
@@ -166,7 +163,8 @@ class MatchDetail(APIView):
         return Response(matchSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        match = self.get_object(pk)
+        auth_user = self.request.user
+        match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
         match.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -238,7 +236,8 @@ class FavouriteDetail(APIView):
             return 0
 
     def put(self, request, pk):
-        favourite = self.get_object(pk)
+        auth_user = self.request.user
+        favourite = Favourites.objects.filter(pk=pk, user=auth_user)
         favouriteSerializers = FavouritesSerializers(favourite, data=request.data, context={'request': request})
         if favouriteSerializers.is_valid():
             favouriteSerializers.save()
@@ -246,7 +245,8 @@ class FavouriteDetail(APIView):
         return Response(favouriteSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        favourite = self.get_object(pk)
+        auth_user = self.request.user
+        favourite = Favourites.objects.filter(pk=pk, user=auth_user)
         favourite.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -304,9 +304,11 @@ class TemplateDetail(APIView):
         return Response(templatesSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
-        template = self.get_object(pk)
-        template.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            template = self.get_object(pk)
+            template.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Word list
 class DictionaryList(APIView):
@@ -344,9 +346,11 @@ class DictionaryDetail(APIView):
         return Response(dictionarySerializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
-        dictionary = self.get_object(pk)
-        dictionary.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            dictionary = self.get_object(pk)
+            dictionary.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Detailed points list
 class DetailedPointsList(APIView):
@@ -360,7 +364,7 @@ class DetailedPointsList(APIView):
         if detailedPoints.is_valid():
             detailedPoints.save()
             return Response(detailedPoints.data, status=status.HTTP_201_CREATED)
-        return Response(detailedPoints.errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(detailedPoints.errors, status=status.HTTP_400_BAD_REQUEST)        
 
 #Detailed Points Detail
 class DetailedPointDetail(APIView):
@@ -384,9 +388,11 @@ class DetailedPointDetail(APIView):
         return Response(detailedPointsSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
     
     def delete(self, request, pk):
-        detailedPoints = self.get_object(pk)
-        detailedPoints.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            detailedPoints = self.get_object(pk)
+            detailedPoints.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
 # Scoring fields list
 class ScoringFieldsList(APIView):
@@ -424,6 +430,8 @@ class ScoringFieldDetail(APIView):
         return Response(scoringfieldsSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        scf = self.get_object(pk)
-        scf.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            scf = self.get_object(pk)
+            scf.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)

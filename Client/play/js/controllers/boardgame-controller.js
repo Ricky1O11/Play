@@ -11,7 +11,7 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
 		console.log(oldVal);
 		if(newVal != ""){
 			//api call to get the single boardgame's details
-			Api.boardgame(controller.params.id, $scope.user_pk).success(function(data){
+			Api.boardgame(controller.params.id).success(function(data){
 				controller.boardgame=data[0];
 				if(controller.boardgame.favourite.length > 0){
 					controller.isFavourite = true;
