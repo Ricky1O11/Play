@@ -3,10 +3,13 @@ angular.module('play')
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
 	}
-	var b,d,dpp,dppu,f,fp,l,m,md,mp,mpu,ms,pp,r,sfp,t,tok,ts,tp,u,us;
+	var b,d,dpp,dppu,f,fp,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,u,us;
 	var BASE_URL = "http://127.0.0.1:8000/server"
 	return{
-
+		register:	function(data){
+						reg = $http({method: 'POST', url: BASE_URL+'/register/', data:data});
+						return reg;
+					},
 		login:		function(data){
 						tok = $http({method: 'POST', url: BASE_URL+'/auth/token/', data:data});
 						return tok;

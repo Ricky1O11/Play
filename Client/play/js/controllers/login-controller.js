@@ -1,19 +1,20 @@
-//controller for the single match page
-angular.module("play").controller('loginController', function(Api, $cookies, $route) {
+//controller for login
+angular.module("play").controller('loginController', function(Api, $cookies, $window) {
 	this.login = {};
 	this.login.username = "";
 	this.login.password = "";
-	controller = this;
+	loginController = this;
+
 	this.submit = function(){
-		Api.login(controller.login).then(function(response){
+		Api.login(loginController.login).then(
+			function(response){
 				if(response.status==200){
 					var expireDate = new Date();
 					expireDate.setDate(expireDate.getDate() + 7);
 					$cookies.put('tok', response.data.token, {'expires': expireDate});
-					$route.reload();
+					$window.location.reload();
 				}
-			}, function errorCallback(data){
-				console.log(data);
+			}, function errorCallback(response){
 			});
-	}
+	};
 });

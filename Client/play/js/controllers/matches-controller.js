@@ -1,30 +1,25 @@
 //controller for the list of boardgames
 angular.module("play").controller('matchesController', function(Api, $scope) {
 	this.matches=[]; //container of the list of boardgames
-	this.orderingField="title"; //ordering field, selectable by the user
-	this.loaded=false; //ordering field, selectable by the user
+	this.orderingField="-title"; //ordering field, selectable by the user
+	this.loaded=false;
 	controller=this;
 
-	//watch the scope variable until it's loaded
-	$scope.$watch('user_pk', function(newVal, oldVal){
-		if(newVal != ""){
-			//api call to the list of boardgames
-			Api.matches().success(function(data){
-				controller.games=data;
-				for(i = 0; i< controller.games.length; i++){
-					controller.games[i].visible = false;
-					controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
-					if(controller.games[i].favourite.length > 0){
-						controller.games[i].isFavourite = true;
-					}
-					else{
-						controller.games[i].isFavourite = false;
-					}
-					controller.games[i].listId = i;
-				}
-				controller.loaded = true;
-			});
+	//api call to the list of boardgames
+	Api.matches().success(function(data){
+		controller.games=data;
+		for(i = 0; i< controller.games.length; i++){
+			controller.games[i].visible = false;
+			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
+			if(controller.games[i].favourite.length > 0){
+				controller.games[i].isFavourite = true;
+			}
+			else{
+				controller.games[i].isFavourite = false;
+			}
+			controller.games[i].listId = i;
 		}
+		controller.loaded = true;
 	});
 	
 	//create ordered list of numbers
@@ -66,10 +61,7 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
         if(favourite.length > 0){
           Api.favouritedelete(favourite[0].pk).then(
                               function(response){
-                                //if successfull, hide the dialog and prompt a message
-                                console.log("Remove OK!");
                               }, function errorCallback(response){
-                                console.log(response);
                               }
                             );
           	controller.games[id].favourite = [];
@@ -79,12 +71,20 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
             data = {'user': user, 'boardgame': boardgame};
             Api.favouritepost(data).then(
                               function(response){
-                                //if successfull, hide the dialog and prompt a message
-                              	console.log(response);
                                 controller.games[id].favourite = [{'pk' : response.data.pk}];
                               }
             );
         	controller.games[id].isFavourite = true;
         }
     }
+
+    this.timeGreaterThan = function (game) {
+    	var now = new Date();
+    	for(i = 0; i< game.matches.length; i++){
+			if(now < new Date(game.matches[i].time)){
+				return true;
+			}
+    	}
+    	return false;
+};
 });

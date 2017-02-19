@@ -15,7 +15,7 @@
 				</div>
 				<div ng-if="mCtrl.editMode" layout="column" flex="50">
 					<md-input-container>
-							<label class="size-21">Match name</label>
+							<label class="size-18">Match name</label>
 							<input ng-model="mCtrl.match.new_name">
 					</md-input-container>
 				</div>
@@ -32,12 +32,12 @@
 					<div layout="row">
 						<i 
 						ng-if="mCtrl.editMode" 
-						class="size-18 icon-check"
+						class="size-18 icon-check-2"
 						ng-click="mCtrl.endEditMode(true)"
 						md-colors="{color: 'myTheme-primary'}"></i>
 						<i 
 						ng-if="mCtrl.editMode" 
-						class="pad10l size-18 icon-times blue-grey"
+						class="pad10l size-18 icon-close-round blue-grey"
 						ng-click="mCtrl.endEditMode(false)"></i>
 						<i 
 						ng-if="mCtrl.editMode" 
@@ -79,7 +79,7 @@
 								<div ng-if="mCtrl.editMode" layout="column" flex="70">
 									<md-input-container class="md-block">
 										<input type="number" ng-model="mCtrl.match.new_duration" aria-label="red" aria-controls="red-slider">
-										<label class="size-21">How long did you play?</label>
+										<label class="size-16">How long did you play?</label>
 									</md-input-container>
 								</div>
 							</div>
@@ -95,7 +95,7 @@
 								</div>
 								<div ng-if="mCtrl.editMode" layout="column" flex="80">
 									<md-input-container>
-										<label class="size-21">When?</label>
+										<label class="size-16">When?</label>
 										<md-datepicker flex ng-model="mCtrl.match.new_time"></md-datepicker>
 									</md-input-container>
 								</div>
@@ -116,7 +116,7 @@
 								</div>
 								<div ng-if="mCtrl.editMode" layout="column" flex="80" >
 									<md-input-container>
-										<label class="size-21">Where?</label>
+										<label class="size-16">Where?</label>
 										<input ng-model="mCtrl.match.new_location">
 									</md-input-container>
 								</div>

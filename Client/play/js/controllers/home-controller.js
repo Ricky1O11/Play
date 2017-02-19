@@ -7,23 +7,17 @@ angular.module("play").controller('homeController', function(Api, $mdDialog, $sc
 	this.recents = 0;
 	
 	controller=this;
+	//api call to the list of favourites boardgames
+	Api.favourites().success(function(data){
+		if(data.length >=4)
+			controller.favourites=data.slice(0, 4);
+		else
+			controller.favourites=data;
+	});
 
-	//watch the scope variable until it's loaded
-	$scope.$watch('user_pk', function(newVal, oldVal){
-		if(newVal != ""){
-			//api call to the list of favourites boardgames
-			Api.favourites().success(function(data){
-				if(data.length >=4)
-					controller.favourites=data.slice(0, 4);
-				else
-					controller.favourites=data;
-			});
-
-			//api call to the list of the played boardgames
-			Api.recents().success(function(data){
-				controller.recents=data;
-			});
-		}
+	//api call to the list of the played boardgames
+	Api.recents().success(function(data){
+		controller.recents=data;
 	});
 	
 	//are there less then 4 boardgames in the "arg" (favourites / recents) list?

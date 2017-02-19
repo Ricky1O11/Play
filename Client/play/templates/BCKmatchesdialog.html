@@ -2,12 +2,12 @@
   <form ng-cloak>
     <md-toolbar class="md-accent">
       <div class="md-toolbar-tools">
-      	<md-button aria-label="go back" class="md-icon-button size-21" ng-click="mdCtrl.back()" ng-show="mdCtrl.currentTab > 0">
+      	<md-button class="md-icon-button" ng-click="mdCtrl.back()" ng-show="mdCtrl.currentTab > 0">
           <i class="icon-angle-left"></i>
         </md-button>
         <h3>{{mdCtrl.title}}</h3>
         <span flex></span>
-        <md-button class="md-icon-button" ng-click="mdCtrl.dismiss()" aria-label="close dialog">
+        <md-button class="md-icon-button" ng-click="mdCtrl.dismiss()">
           <i class="icon-close-round"></i>
         </md-button>
       </div>
@@ -64,7 +64,7 @@
 				 
 				<div layout="column" flex>
 					<div layout="row" layout-align="end center">
-						<md-button class="md-fab size-24" ng-click="mdCtrl.storeMatchInfo()" aria-label="next">
+						<md-button class="md-fab size-24" ng-click="mdCtrl.storeMatchInfo()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 								<div layout="row" class="icon-angle-right" aria-hidden="true" >
 								</div>
@@ -78,7 +78,7 @@
         <md-tab label="add players">
           <md-content class="md-padding">
 				<div class="md-dialog-content">
-					<!--<md-input-container class="md-block">
+					<md-input-container class="md-block">
 						<input type="number" ng-model="mdCtrl.nplayers" aria-label="red" aria-controls="red-slider" min="1">
 						<label>How many players join this match?</label>
 					</md-input-container>
@@ -116,45 +116,11 @@
 								</md-not-found>
 						</md-autocomplete>
 					</div>
-					-->
-					<md-list class="fixedRows">
-				      <md-subheader class="md-no-sticky">Players</md-subheader>
-						<md-list-item class="md-1-line contact-item" ng-repeat="player in mdCtrl.selectedValues.players" ng-if="$first"
-				       	>
-				        <img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{player.display}}" />
-				        <div class="md-list-item-text compact">
-				          <h4>{{player.display}}</h4>
-				        </div>
-				      </md-list-item>
-				      <md-list-item class="md-1-line contact-item" ng-repeat="player in mdCtrl.selectedValues.players" ng-if="!$first"
-				       >
-				        <img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{player.display}}" />
-				        <div class="md-list-item-text compact">
-				          <h4>{{player.display}}</h4>
-				        </div>
-				        <div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player, $index)">
-				          <i class="icon-times" ></i>
-				        </div>
-				      </md-list-item>
-				    </md-list>
-
-					<md-list class="fixedRows clear">
-				      <md-subheader class="md-no-sticky">Select friends</md-subheader>
-				      <md-list-item class="md-1-line contact-item" ng-repeat="user in mdCtrl.users"
-				      ng-click="mdCtrl.togglePlayer('select', user, $index)"
-				      >
-				        <img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{user.display}}" />
-				        <div class="md-list-item-text compact">
-				          <h4>{{user.display}}</h4>
-				        </div>
-				      </md-list-item>
-				    </md-list>
-
 				</div>
 				 
-				<div layout="column" flex class="clear">
+				<div layout="column" flex>
 					<div layout="row" layout-align="end center">
-						<md-button aria-label="next" class="md-fab size-24" ng-click="mdCtrl.goTo(2)">
+						<md-button class="md-fab size-24" ng-click="mdCtrl.goTo(2)">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 								<div layout="row" class="icon-check-2" aria-hidden="true" >
 								</div>
@@ -186,10 +152,10 @@
 					</div>
 				</div>
 				<div layout="row" class="mrg20t" layout-align="end center">
-					<md-button aria-label="use default template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate(false)">
+					<md-button class="md-accent md-raised" ng-click="mdCtrl.addTemplate(false)">
 						No
 					</md-button>
-					<md-button aria-label="add new template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
+					<md-button class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
 						Of course!
 					</md-button>
 				</div>
@@ -205,7 +171,7 @@
 									<h3>Template {{$index+1}}</h3>
 								</div>
 							</div>
-							<md-button aria-label="select template" class="md-fab md-secondary md-fab md-mini"
+							<md-button class="md-fab md-secondary md-fab md-mini"
 								ng-click="mdCtrl.selectTemplate(template)">
 							<i class="icon-angle-right"></i>
 						</md-list-item>
@@ -217,7 +183,7 @@
 						</md-list-item>
 				  </md-list>
 				  <div layout="row" class="mrg20t" layout-align="end center">
-					<md-button aria-label="add template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
+					<md-button class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
 						Add new template
 					</md-button>
 				</div>
@@ -252,7 +218,7 @@
 				 
 				<div layout="column" flex>
 					<div layout="row" layout-align="end center">
-						<md-button aria-label="post match" class="md-fab size-24" ng-click="mdCtrl.createTemplate()">
+						<md-button class="md-fab size-24" ng-click="mdCtrl.createTemplate()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 								<div layout="row" class="icon-check" aria-hidden="true" >
 								</div>

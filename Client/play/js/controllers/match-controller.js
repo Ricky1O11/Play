@@ -6,16 +6,32 @@ angular.module("play").controller('matchController', function(Api, $routeParams,
 	this.match={};
 	this.allVisible=false;
 	controller=this;
-	//watch the scope variable until it's loaded
-	$scope.$watch('user_pk', function(newVal, oldVal){
-		if(newVal != ""){
-			//api call to get the single match's details
-			Api.match(controller.params.id).success(function(data){
-				controller.match=data[0];
+	//api call to get the single match's details
+	Api.match(controller.params.id).then(
+		function(response){
+			if(response.data.length > 0){
+				controller.match=response.data[0];
 				controller.setup();
-			});
+				var now = new Date();
+				if(now < new Date(controller.match.time)){
+					controller.match.status = "programmed";
+				}
+				else if(controller.match.status == 0){
+					controller.match.status = "in progress";
+				}
+				else{
+					controller.match.status = "completed";
+				}
+			}
+			else{
+				$rootScope.showToast("You are not allowed to see this match!");
+		   		$location.path("matches/");	
+			}
+		}, function errorCallback(response){
+			$rootScope.showToast("You are not allowed to see this match!");
+		    //$location.path("matches/");			
 		}
-	});
+	);
 	
 	this.sumPoints = function(detailedPoints){
 		sum = 0;
@@ -57,7 +73,6 @@ angular.module("play").controller('matchController', function(Api, $routeParams,
 			Api.matchput(row, controller.match.pk).then(function(data){
 				}, 
 				function errorCallback(response) {
-					return;
 				});
 
 			for(i = 0; i<controller.match.plays_set.length; i++){
@@ -75,7 +90,6 @@ angular.module("play").controller('matchController', function(Api, $routeParams,
 							detailed_points:detailedPoints
 						};
 						Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
-							console.log(data);
 						}, 
 						function errorCallback(response) {
 							return;

@@ -20,6 +20,26 @@ class ProfileSerializers(serializers.ModelSerializer):
         fields = ('pk', 'img',)
 
 # Json representation of users and statistics
+class UserRegisterSerializers(serializers.ModelSerializer):
+
+    class Meta:
+        model = User
+        fields = ('pk', 'username', 'password', 'email')
+        write_only_fields = ('password',)
+
+    def create(self, validated_data):
+        user = User.objects.create(
+            username=validated_data['username'],
+            email=validated_data['email'],
+        )
+
+        user.set_password(validated_data['password'])
+        user.save()
+
+        return user
+
+
+# Json representation of users and statistics
 class UsersSerializers(serializers.ModelSerializer):
     # Serializer initialization: read the url params
     def __init__(self, *args, **kwargs):
@@ -190,7 +210,7 @@ class MatchesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'boardgame_details', 'duration', 'plays_set',)
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'duration', 'plays_set',)
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):
@@ -223,9 +243,9 @@ class BoardgamesSerializers(serializers.ModelSerializer):
 
     # Get matches played given a boardgame and a user (all matches if user is not provided)
     def get_matches(self, boardgame):
-        user_id = self.context['request'].query_params.get('user_id')
-        if user_id:
-            matches = Matches.objects.filter(boardgame=boardgame, plays__user=user_id)
+        auth_user = self.context['request'].user.pk
+        if auth_user:
+            matches = Matches.objects.filter(boardgame=boardgame, plays__user=auth_user)
         else:
             matches = Matches.objects.filter(boardgame=boardgame)
 

@@ -11,6 +11,12 @@ from rest_framework import status
 from rest_framework.permissions import AllowAny,IsAuthenticated
 #from django.db.models import F, Q
 
+# import the logging library
+import logging
+
+# Get an instance of a logger
+logger = logging.getLogger(__name__)
+
 def index(request):
     return HttpResponse("Home")
 
@@ -80,19 +86,23 @@ class BoardgameDetail(APIView):
 
         return Response(boardgamesSerializers.data)
 
+
+# User Register
+class UserRegister(APIView):
+    permission_classes = (AllowAny,)
+    def post(self, request):
+        user = UserRegisterSerializers(data=request.data, context={'request': request})
+        if user.is_valid():
+            user.create(request.data)
+            return Response(user.data, status=status.HTTP_201_CREATED)
+        return Response(user.errors, status=status.HTTP_400_BAD_REQUEST)
+
 # User list
 class UsersList(APIView):
     def get(self, request):
         users = User.objects.all()
         usersSerializers = UsersSerializers(users, many=True, context={'request': request})
         return Response(usersSerializers.data)
-
-    def post(self, request):
-        users = UsersSerializers(data=request.data, context={'request': request})
-        if users.is_valid():
-            users.save()
-            return Response(users.data, status=status.HTTP_201_CREATED)
-        return Response(users.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Single user details
 class UserDetail(APIView):
@@ -143,7 +153,7 @@ class MatchDetail(APIView):
     def get(self, request, pk):
         auth_user = self.request.user
         if (auth_user is not None):
-            match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
+            match = Matches.objects.filter(plays__user=auth_user, pk=pk)
             matchesSerializers = MatchesSerializers(match, many=True, context={'request': request})
             return Response(matchesSerializers.data)
 
@@ -155,7 +165,7 @@ class MatchDetail(APIView):
 
     def put(self, request, pk):
         auth_user = self.request.user
-        match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
+        match = Matches.objects.filter(plays__user=auth_user, pk=pk)[0]
         matchSerializers = MatchesSerializers(match, data=request.data, context={'request': request})
         if matchSerializers.is_valid():
             matchSerializers.save()
@@ -164,7 +174,7 @@ class MatchDetail(APIView):
 
     def delete(self, request, pk):
         auth_user = self.request.user
-        match = Matches.objects.filter(plays__user=auth_user, pk=pk).distinct()
+        match = Matches.objects.filter(plays__user=auth_user, pk=pk)
         match.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
@@ -210,17 +220,21 @@ class FriendDetail(APIView):
 
 # Favourites list
 class FavouritesList(APIView):
+
+    permission_classes = (AllowAny,)
     def get(self, request):
         favourites = Favourites.objects.all()
         favouritesSerializers = FavouritesSerializers(favourites, many=True, context={'request': request})
         return Response(favouritesSerializers.data)
 
     def post(self, request):
-        favourites = FavouritesSerializers(data=request.data, context={'request': request})
-        if favourites.is_valid():
-            favourites.save()
-            return Response(favourites.data, status=status.HTTP_201_CREATED)
-        return Response(favourites.errors, status=status.HTTP_400_BAD_REQUEST)
+        auth_user = request.user.pk
+        favourite = {"user" : auth_user, "boardgame" : request.data["boardgame"]}
+        favouritesSerializers = FavouritesSerializers(data=favourite, context={'request': request})
+        if favouritesSerializers.is_valid():
+            favouritesSerializers.save()
+            return Response(favouritesSerializers.data, status=status.HTTP_201_CREATED)
+        return Response(favouritesSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 #Friend Detail
 class FavouriteDetail(APIView):

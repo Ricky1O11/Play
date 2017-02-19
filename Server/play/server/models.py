@@ -11,6 +11,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 class Boardgames(models.Model):
     #id = models.AutoField(db_column='boardgame_Id', primary_key=True, null=False)  # Field name made lowercase.
@@ -35,8 +36,6 @@ class Boardgames(models.Model):
 class Profile(models.Model):
     #user_id = models.AutoField(primary_key=True)
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    #username = models.CharField(unique=True, max_length=25)
-    #password = models.CharField(max_length=256)
     birth_date = models.DateField(null=True, blank=True)
     img = models.CharField(max_length=256, default="img/profile-default.png", blank=True)
 
@@ -57,9 +56,10 @@ class Matches(models.Model):
     #match_id = models.AutoField(primary_key=True)
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
     name = models.CharField(default="", max_length=256, blank=True)
-    time = models.DateTimeField(auto_now_add=True, blank=True)
+    time = models.DateTimeField(default=timezone.now, blank=True)
     location = models.CharField(max_length=100,  default="", blank=True)
     duration = models.IntegerField(default=0)
+    status = models.IntegerField(default=0) #0 = in progress, 1 = completed
 
     def __unicode__(self):
         return "Match " + str(self.id) + " - game: " + str(self.boardgame).decode('utf8')

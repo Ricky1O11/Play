@@ -4,9 +4,7 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="css/angular-material.min.css">
 		<link rel="stylesheet" href="css/style.css">
-		<link href="css/icons.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/foundation-icons.css" />
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/icons.css">
 		<link rel="stylesheet" href="css/animate.css" />
 		<link rel="stylesheet" href="css/animations.css" />
 		
@@ -41,24 +39,26 @@
 		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/match-controller.js"></script>
 		<script src="js/controllers/matches-controller.js"></script>
+		<script src="js/controllers/register-controller.js"></script>
 		
 	</head>
 	
 	<body ng-app="play" layout="column" flex ng-cloak>
-		<div layout="row" id="container" ng-controller="sidebarController as sCtrl" ng-if="isLogged()">
+		<div layout="row" id="container">
 			<md-sidenav
+				ng-if="isLogged"
 				md-colors="{background: 'myTheme-primary'}"
 				class="md-sidenav-left height100perc"
 				md-is-locked-open="$mdMedia('gt-sm')"
 				id="sidebar" 				
 				>
-				<div>
+				<div ng-controller="sidebarController as sCtrl">
 					<div layout="row" layout-padding  class="height150">
 						<div layout="column" flex="100" class="greyBg blue-grey shadowed-box" layout-padding>
 							<div layout="row" class="height100">	
 								<div layout="column" flex="50" layout-align="center start">
 									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
-										<img ng-src="{{img}}" class="md-avatar" ng-style="randomColor" alt="profileImage" class="size-90"/>
+										<img ng-src="{{img}}" class="md-avatar size-90" ng-style="randomColor" alt="profileImage"/>
 									</div>
 								</div>						
 									
@@ -164,57 +164,142 @@
 					<div layout="row" class="height100">ee</div>
 				</div> 
 			</md-sidenav>
-			<md-content layout="column" flex ng-view></md-content>
+			<md-content ng-if="isLogged" layout="column" flex ng-view></md-content>
 		</div>
-
-		<md-tabs md-dynamic-height md-border-bottom>
-      		<md-tab label="one">
-				<md-content class="height100perc" layout="row" 
-				id="login" 
-				md-colors="{background: 'myTheme-primary'}"
-				layout-align="center center"
-				ng-controller="loginController as lCtrl" 
-				ng-if="!isLogged()" >
-					<form name="loginForm" layout="column">
-						<div layout="row"  layout-align="center center" flex="none">
-								<img ng-src="img/play.png"  id="logo" flex="none"/>
-						</div>
-						<div layout="row"  layout-align="center center">
-							<div layout="column" flex="100">
-								<md-input-container>
-									<label>Username</label>
-									<input name="username" ng-model="lCtrl.login.username" required>
-									<div ng-messages="loginForm.username.$error">
-							        	<div ng-message="required">This field is required.</div>
-							       </div>
-								</md-input-container>
-							</div>
-						</div>
+		<div id="tabs" ng-if="!isLogged">
+			<md-tabs  md-selected="currentTab"
+			md-stretch-tabs="always" class="height100perc" >
+				<md-tab label="login">
+					<md-content
+					ng-controller="loginController as lCtrl"
+					id="login" 
+					md-colors="{background: 'myTheme-primary'}"
+					class="height100perc" 
+					>
 						<div layout="row" layout-align="center center">
-							<div layout="column" flex="100">
-								<md-input-container>
-									<label>Password</label>
-									<input type="password" name="password" ng-model="lCtrl.login.password" required minlength="8">
-									<div ng-messages="loginForm.password.$error">
-							        	<div ng-message="required">This field is required.</div>
-							        	<div ng-message="minlength">The password is too short</div>
-							        </div>
-								</md-input-container>
-							</div>
-						</div>
-						<div layout="row" layout-align="center center">
-							<div layout="column">
-								<md-button class="md-fab size-24" ng-click="lCtrl.submit()">
-									<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-										<div layout="row" class="icon-angle-right" aria-hidden="true" >
-										</div>
+							<form name="loginForm" layout="column">
+								<div layout="row"  layout-align="center center" flex="none">
+										<img ng-src="img/play.png"  id="logo" flex="none"/>
+								</div>
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Username</label>
+											<input name="username" ng-model="lCtrl.login.username" required>
+											<div ng-messages="loginForm.username.$error">
+												<div ng-message="required">This field is required.</div>
+										   </div>
+										</md-input-container>
 									</div>
-								</md-button>
-							</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password</label>
+											<input type="password" name="password" ng-model="lCtrl.login.password" required minlength="8">
+											<div ng-messages="loginForm.password.$error">
+												<div ng-message="required">This field is required.</div>
+												<div ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column">
+										<md-button 
+										class="md-fab size-24" 
+										ng-click="lCtrl.submit()"
+										aria-label="login">
+											<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+												<div layout="row" class="icon-angle-right" aria-hidden="true" >
+												</div>
+											</div>
+										</md-button>
+									</div>
+								</div>
+							</form>
 						</div>
-					</form>
-				</md-content>
-			</md-tab>
-		</md-tabs>
+					</md-content>
+				</md-tab>
+				<md-tab label="register">
+					<md-content
+					id="login" 
+					md-colors="{background: 'myTheme-accent'}"
+					ng-controller="registerController as rCtrl"
+					class="height100perc" >
+						<div layout="row" class="height100perc" layout-align="center center">
+							<form name="registerForm" layout="column">
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Email</label>
+											<input name="email" ng-model="rCtrl.register.email" required type="email"  minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" >
+											<div ng-messages="registerForm.email.$error" role="alert">
+												<div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
+													Your email must be between 10 and 100 characters long and look like an e-mail address.
+												</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Username</label>
+											<input name="username" ng-model="rCtrl.register.username" required>
+											<div ng-messages="registerForm.username.$error">
+												<div 
+												ng-message="required"
+												>
+													This field is required.
+												</div>
+										   </div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password</label>
+											<input type="password" name="password" ng-model="rCtrl.register.password" required minlength="8">
+											<div ng-messages="registerForm.password.$error">
+												<div ng-message="required">This field is required.</div>
+												<div ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password again</label>
+											<input type="password" name="password2" ng-model="rCtrl.register.password2" required minlength="8">
+											<div ng-messages="registerForm.password2.$error">
+												<div ng-message="required">This field is required.</div>
+												<div ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column">
+										<md-button 
+										class="md-fab size-24 md-primary" 
+										ng-click="rCtrl.signin()"
+										aria-label="register"
+										>
+											<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+												<div layout="row" class="icon-angle-right" aria-hidden="true" >
+												</div>
+											</div>
+										</md-button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</div>
 	</body>
 </html>

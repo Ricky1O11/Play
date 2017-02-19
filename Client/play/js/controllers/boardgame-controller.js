@@ -6,17 +6,11 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
 	this.isFavourite = false;
 	
 	controller=this;
-	//watch the scope variable until it's loaded
-	$scope.$watch('user_pk', function(newVal, oldVal){
-		console.log(oldVal);
-		if(newVal != ""){
-			//api call to get the single boardgame's details
-			Api.boardgame(controller.params.id).success(function(data){
-				controller.boardgame=data[0];
-				if(controller.boardgame.favourite.length > 0){
-					controller.isFavourite = true;
-				}
-			});
+	//api call to get the single boardgame's details
+	Api.boardgame(controller.params.id).success(function(data){
+		controller.boardgame=data[0];
+		if(controller.boardgame.favourite.length > 0){
+			controller.isFavourite = true;
 		}
 	});
 	
@@ -25,9 +19,7 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
           Api.favouritedelete(favourite[0].pk).then(
                               function(response){
                                 //if successfull, hide the dialog and prompt a message
-                                console.log("Remove OK!");
                               }, function errorCallback(response){
-                                console.log(response);
                               }
                             );
           	controller.boardgame.favourite = [];

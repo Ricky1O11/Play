@@ -52,11 +52,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
-			if(data[i].pk != 2){
-				self.users.push({display:data[i].username, value:data[i].username, id:data[i].pk})
+			if(data[i].pk != user_pk){
+				self.users.push({display:data[i].username, value:data[i].username, id:data[i].pk, img:data[i].profile.img})
 			}
 			else{
-				 self.selectedValues.players[0] = {display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk};
+				 self.selectedValues.players[0] = {display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile.img};
 				 self.playerSearchText[0] = data[i].username;
 			}
 		}
@@ -215,7 +215,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 						self.postPlay(step);
 					}, 
 					function errorCallback(response) {
-						console.log(response);
 					}
 			);
 		}
@@ -244,7 +243,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				}
 			},
 			function errorCallback(response){
-				console.log(response);
 			}
 		); 
 	}
@@ -266,7 +264,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				self.postScoringFields();
 			},
 			function errorCallback(response){
-				console.log(response);
 			}
 		);
 	}
@@ -293,7 +290,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				self.postDetailedPoints();
 			},
 			function errorCallback(response){
-				console.log(response);
 			}
 		);
 	}
@@ -376,6 +372,17 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	        }
 	    }
 	    return false;
+	}
+
+	this.togglePlayer = function(act, user, id){
+		if(act == "select"){
+			self.users.splice(id, 1);
+			self.selectedValues.players.push(user);
+		}
+		else{
+			self.selectedValues.players.splice(id, 1);
+			self.users.push(user);
+		}
 	}
 
 	this.back = function(){

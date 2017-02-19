@@ -3,7 +3,7 @@
 	.config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
 		$mdThemingProvider.theme('myTheme')
-	.primaryPalette('indigo', {
+		.primaryPalette('indigo', {
 										'default': '600', // by default use shade 400 from the pink palette for primary intentions
 										'hue-1': '400', // use shade 100 for the <code>md-hue-1</code> class
 										'hue-2': '800', // use shade 600 for the <code>md-hue-2</code> class)
@@ -14,18 +14,28 @@
 										'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class)
 						});
 	})
-	.run(function($rootScope, $location, $mdDialog, Api, $mdToast, $cookies) {
-				$rootScope.goTo = function(url) {
-						console.log(url);
-						$location.path(url);
-				};
+	.run(function($rootScope, $location, $mdDialog, Api, $mdToast, $cookies, $location) {
+			$rootScope.isLogged = false;
+			$rootScope.goTo = function(url) {
+					$location.path(url);
+			};
 			
-			$rootScope.isLogged = function(){
-				return $cookies.get('tok') != null;
+			$rootScope.currentTab = 0;
+			$rootScope.setCurrentTab = function(tab){
+				$rootScope.currentTab = tab;
 			}
 
+			$rootScope.$on('$locationChangeStart', function(){
+				if($cookies.get('tok') != null){
+					$rootScope.isLogged = true;
+				}
+				else{
+					$rootScope.isLogged = false;
+				}
+				$rootScope.path = $location.path();
+			});
+
 			$rootScope.matchesPopup = function(ev, user_pk) {
-				console.log(user_pk);
 				$mdDialog.show({
 					locals:{user_pk : user_pk},
 					controller: 'matchesDialogController',
@@ -33,6 +43,8 @@
 					templateUrl: 'templates/matchesdialog.html',
 					parent: angular.element(document.body),
 					targetEvent: ev,
+					scope:$rootScope,
+					preserveScope:true,	
 					//fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
 				})	
 			}
@@ -47,13 +59,8 @@
 					case 3: return {'background-color':'#4DB6AC'}; //teal
 					default: return {'background-color':'#FFD740'}; //amber
 				}
-			}
+			}			
 			$rootScope.randomColor = $rootScope.getRandomColor();
-			
-			$rootScope.$on("$locationChangeStart", function (event, next, current) {
-					$rootScope.path = $location.path();
-					console.log($rootScope.path);
-				});
 
 			$rootScope.showToast=function(string){
 				$mdToast.show(

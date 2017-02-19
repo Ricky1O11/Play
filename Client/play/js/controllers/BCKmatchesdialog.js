@@ -5,7 +5,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self=this;
 	self.user_pk = user_pk;
 	self.currentTab=0 //holds the current tab id
-	self.title=self.currentTab==0?"Add Match":"Add Players"; //sets the tab title according to its id
+	self.title= "Add Match"; //sets the tab title according to its id
 	
 	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
 	self.selectedValues.players=[]; //list that holds the list of player playing the inserted match
@@ -52,7 +52,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
-			if(data[i].pk != 2){
+			if(data[i].pk != user_pk){
 				self.users.push({display:data[i].username, value:data[i].username, id:data[i].pk})
 			}
 			else{
@@ -140,15 +140,63 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			if(self.selectedValues.name!=null){
 				self.postValues.match.name=self.selectedValues.name;
 			}
-			self.currentTab=1;
+			self.goTo(1);
 		}
 		else{			
 			$rootScope.showToast("Select a boardgame");
 		}
     }
+
+
+	this.goTo = function(tab){
+			self.currentTab=tab;
+			switch(self.currentTab){
+				case 0: {
+					self.title= "Add match";
+					break;
+				}
+				case 1: {
+					self.title= "Add players";
+					break;
+				}
+				case 2: {
+					self.title= "Select template";
+					break;
+				}
+				case 3: {
+					self.title= "Add scoring fields";
+					break;
+				}
+			}
+	}
+
+
+    this.addTemplate = function(wantToAdd){
+		if(wantToAdd){
+			self.goTo(3);
+		}
+		else{
+			self.selectedValues.dictionary[0] = self.dictionary[0];
+			self.postMatch("postTemplate");
+		}
+	}
+
+	this.selectTemplate = function(template){
+		self.selectedValues.scoringFields = template.scoringField_details;
+		self.postMatch("selectTemplate");
+	}
+
+	this.createTemplate = function(){
+		self.postMatch("createTemplate");
+	}
+
+
+
+
+
 	
 	//Post function
-	this.postMatchAndPlay=function(){
+	this.postMatch=function(step){
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
@@ -164,20 +212,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 								self.postValues.plays.push(row);
 							}
 						}
-						//post play
-						Api.playpost(self.postValues.plays).then(
-							function(response){
-								//get the list of posted plays
-								self.selectedValues.play = response.data;
-								self.currentTab=2;
-							},
-							function errorCallback(response){
-								console.log(response);
-							}
-						); 
+						self.postPlay(step);
 					}, 
 					function errorCallback(response) {
-						console.log(response);
 					}
 			);
 		}
@@ -186,20 +223,75 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-	this.addTemplate = function(wantToAdd){
-		if(wantToAdd){
-			self.currentTab=3;
 
-		}
-		else{
-			self.selectedValues.dictionary[0] = self.dictionary[0];
-			self.postTemplate();
-		}
+
+
+	this.postPlay = function(step){
+		//post play
+		Api.playpost(self.postValues.plays).then(
+			function(response){
+				//get the list of posted plays
+				self.selectedValues.play = response.data;
+				if(step == "selectTemplate"){
+					self.postDetailedPoints();
+				}
+				else if(step == "postTemplate"){
+					self.postTemplate();
+				}
+				else if(step == "createTemplate"){
+					self.postWord();
+				}
+			},
+			function errorCallback(response){
+			}
+		); 
 	}
 
-	this.selectTemplate = function(template){
-		self.selectedValues.scoringFields = template.scoringField_details;
-		self.postDetailedPoints();
+
+
+
+	this.postTemplate = function(){
+		//prepare the "template" row to be inserted in the templates table
+		row={	
+				boardgame:self.postValues.match.boardgame
+			};
+		self.postValues.templates.push(row);
+		
+		//post template
+		Api.templatespost(self.postValues.templates).then(
+			function(response){
+				self.selectedValues.templates = response.data[0];
+				self.postScoringFields();
+			},
+			function errorCallback(response){
+			}
+		);
+	}
+
+
+
+
+
+	this.postScoringFields = function(){
+		//clean selectedValues array removing all null entries
+		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
+		for (i=0; i<self.selectedValues.dictionary.length; i++){
+			//prepare the "template" row to be inserted in the templates table
+			row={	
+					template:self.selectedValues.templates.pk,
+					word: self.selectedValues.dictionary[i].id
+				};
+			self.postValues.scoringFields.push(row);
+		}
+		//post template
+		Api.scoringfieldspost(self.postValues.scoringFields).then(
+			function(response){
+				self.selectedValues.scoringFields = response.data;
+				self.postDetailedPoints();
+			},
+			function errorCallback(response){
+			}
+		);
 	}
 
 
@@ -236,53 +328,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 
 
-	this.postTemplate = function(){
-		//prepare the "template" row to be inserted in the templates table
-		row={	
-				boardgame:self.postValues.match.boardgame
-			};
-		self.postValues.templates.push(row);
-		
-		//post template
-		Api.templatespost(self.postValues.templates).then(
-			function(response){
-				self.selectedValues.templates = response.data[0];
-				self.postScoringFields();
-			},
-			function errorCallback(response){
-				console.log(response);
-			}
-		);
-	}
-
-
-
-
-	this.postScoringFields = function(){
-		//clean selectedValues array removing all null entries
-		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
-		for (i=0; i<self.selectedValues.dictionary.length; i++){
-			//prepare the "template" row to be inserted in the templates table
-			row={	
-					template:self.selectedValues.templates.pk,
-					word: self.selectedValues.dictionary[i].id
-				};
-			self.postValues.scoringFields.push(row);
-		}
-		//post template
-		Api.scoringfieldspost(self.postValues.scoringFields).then(
-			function(response){
-				self.selectedValues.scoringFields = response.data;
-				self.postDetailedPoints();
-			},
-			function errorCallback(response){
-				console.log(response);
-			}
-		);
-	}
-
-
-
 
 	this.postDetailedPoints = function(){
 		for (i=0; i<self.selectedValues.play.length; i++){	
@@ -295,8 +340,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				row.play = self.selectedValues.playId;
 				row.scoringField = self.selectedValues.scoringFields[j].pk;
 				row.detailed_points = 0;
-				console.log("row");
-				console.log(row);
 				self.postValues.dp.push(row);
 			}
 		}
