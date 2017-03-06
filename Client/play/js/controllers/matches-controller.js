@@ -78,7 +78,7 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
         }
     }
 
-    this.timeGreaterThan = function (game) {
+    this.timeGreaterThanGame = function (game) {
     	var now = new Date();
     	for(i = 0; i< game.matches.length; i++){
 			if(now < new Date(game.matches[i].time)){
@@ -86,5 +86,13 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 			}
     	}
     	return false;
-};
+	};
+
+	this.timeGreaterThanMatch = function (match) {
+    	var now = new Date();
+		if(now < new Date(match.time)){
+			return true;
+		}
+    	return false;
+	};
 });

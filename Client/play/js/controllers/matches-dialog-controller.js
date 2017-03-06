@@ -45,7 +45,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	//api call to the list of boardgames
 	Api.boadgames().success(function(data){
 		for (i=0; i<data.length; i++){
-			self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk}
+			self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
 		}
 	});
 	

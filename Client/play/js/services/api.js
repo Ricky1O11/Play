@@ -3,7 +3,7 @@ angular.module('play')
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
 	}
-	var b,d,dpp,dppu,f,fp,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,u,us;
+	var b,d,dpp,dppu,f,fp,fr,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,u,us;
 	var BASE_URL = "http://127.0.0.1:8000/server"
 	return{
 		register:	function(data){
@@ -27,6 +27,10 @@ angular.module('play')
 		favourites:	function(){
 						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/'});
 						return f;
+					},
+		friends:	function(){
+						fr = $http({method: 'GET', url: BASE_URL+'/friends/'});
+						return fr;
 					},
 					
 		recents:	function(user_id){

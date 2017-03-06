@@ -36,14 +36,14 @@
 					md-stretch-tabs="always" class="height100perc" >
 						<md-tab label="Programmed matches">
 							<md-content>
-								<div layout="row" class="height200 overflowScroll">
+								<div layout="row" class="overflowScroll">
 									<div layout="column" flex="100">
 										<md-list 
 										ng-show="msCtrl.loaded && filteredGames.length"
 										ng-init=$scope>
 											<md-list-item
 											class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"
-											ng-repeat-start="boardgame in filteredGames = (msCtrl.games | filter:{title:query} | filter: msCtrl.timeGreaterThan) | orderBy:msCtrl.getOrderingField():true"
+											ng-repeat-start="boardgame in filteredGames = (msCtrl.games | filter:{title:query} | filter: msCtrl.timeGreaterThanGame) | orderBy:msCtrl.getOrderingField():true"
 											ng-click="msCtrl.setVisible(boardgame.pk)">
 												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
 												<div layout="column">
@@ -59,18 +59,22 @@
 												aria-label="remove favourite"
 												class="icon-heart md-secondary"  
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+													<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+												</i>
 												<i 
 												ng-if="!boardgame.isFavourite" 
 												aria-label="remove favourite"
 												class="icon-heart-o md-secondary" 
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+													<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+												</i>
 											</md-list-item>
 											<md-list-item 
 											ng-if="boardgame.visible"
 											class=" md-3-line mrg50l whiteBg mrg5b mrg5r shadowed-box" ng-cloak						
-											ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:'-time'"
+											ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | filter: msCtrl.timeGreaterThanMatch | orderBy:'-time'"
 											ng-href="#/matches/{{match.pk}}"
 											>
 

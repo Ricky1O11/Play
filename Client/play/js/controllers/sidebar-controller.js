@@ -3,7 +3,7 @@ angular.module("play").controller('sidebarController', function($scope, Api, $md
 	$scope.match_played=0;
 	$scope.match_won=0;
 	$scope.username="";
-	$scope.user_pk=jwtHelper.decodeToken($cookies.get('tok')).user_id;
+	
 	
 	controllerSidebar=this;
 	Api.user($scope.user_pk).success(function(data){

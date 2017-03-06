@@ -2,9 +2,12 @@ angular.module('play')
 .config(function($routeProvider) {
 	$routeProvider
 	.when('/', {
-		templateUrl: 'templates/home/index.html',
+		templateUrl: 'templates/profile/index.html',
+		controller: 'profileController',
+		controllerAs: 'pCtrl'
+		/*templateUrl: 'templates/home/index.html',
 		controller: 'homeController',
-		controllerAs: 'hCtrl'
+		controllerAs: 'hCtrl'*/
 	})
 	.when('/home', {
 		templateUrl: 'templates/home/index.html',

@@ -1,49 +1,88 @@
-<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
+<div class="container-fluid pad20l pad20t pad20r" layout="column">
 	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
-		<div layout="column" flex="none">
+		<div layout="column" flex="none" class="relative" >
 			<div class="circleBase imgBoardgame hideScrollbar shadowed-box">
 				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
 					<div class="circleBase" style="font-size:50px;"></div>
 				</div>
 			</div>
+
+			<md-fab-speed-dial	
+					md-open = "mCtrl.fabOpen"
+					md-direction="left"
+					class="absolute md-scale"
+					ng-class="{'md-scale':!mCtrl.editMode}">
+		        <md-fab-trigger>
+		          <md-button ng-if="!mCtrl.editMode"
+		          	ng-click="mCtrl.startEditMode($event)"
+		          	aria-label="Edit match info" 
+		          	class="md-fab">
+		            <i class="icon-pencil">
+		            </i>
+		            <md-tooltip md-direction="bottom" md-delay="200">Edit match stats and user points</md-tooltip>
+		          </md-button>
+		          <md-button 
+		        	  ng-if="mCtrl.editMode"
+		          		aria-label="Confirm changes" 
+		          		class="md-fab md-raised md-primary" 
+						ng-click="mCtrl.endEditMode(true)">
+		            <i class="icon-check-2"></i>
+		          </md-button>
+		        </md-fab-trigger>
+
+		        <md-fab-actions>
+		        	<md-button 
+		          		aria-label="Discard changes" 
+		          		class="md-fab md-raised md-mini" 
+						ng-click="mCtrl.endEditMode(false)">
+		            <i class="icon-close-round blue-grey"></i>
+		          </md-button>
+		          <md-button 
+		          		aria-label="Delete match"
+		          		class="md-fab md-raised md-mini md-accent"
+						ng-click="mCtrl.deleteMatchPopup($event)">
+		            	<i class="icon-trash"></i>
+		          </md-button>
+				</md-fab-actions>
+			</md-fab-speed-dial>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex="100">
 			<div layout="row" class="shadowed-box whiteBg pad20l mrg10b height60">
-				<div ng-if="!mCtrl.editMode" layout="column" flex="50"  layout-align="center start">
+				<div ng-if="!mCtrl.editMode" layout="column" flex="70"  layout-align="center start">
 					<h2 ng-if="mCtrl.match.name.length == 0"> Match {{mCtrl.match.pk}}</h2>
 					<h2 ng-if="mCtrl.match.name.length > 0">{{mCtrl.match.name}}</h2>
 				</div>
-				<div ng-if="mCtrl.editMode" layout="column" flex="50">
+				<div ng-if="mCtrl.editMode" layout="column" flex="70">
 					<md-input-container>
 							<label class="size-18">Match name</label>
-							<input ng-model="mCtrl.match.new_name">
+							<input ng-model="mCtrl.match.name">
 					</md-input-container>
 				</div>
-				<div 
-				layout="column" 
-				flex="50" 
-				class="pad10r clickable" 
-				layout-align="center end">
-					<i 
-					ng-if="!mCtrl.editMode" 
-					class="size-18 icon-pencil blue-grey"
-					ng-click="mCtrl.startEditMode()"
-					></i>
+				<div layout="column" flex="30"  layout-align="center end">
 					<div layout="row">
-						<i 
-						ng-if="mCtrl.editMode" 
-						class="size-18 icon-check-2"
-						ng-click="mCtrl.endEditMode(true)"
-						md-colors="{color: 'myTheme-primary'}"></i>
-						<i 
-						ng-if="mCtrl.editMode" 
-						class="pad10l size-18 icon-close-round blue-grey"
-						ng-click="mCtrl.endEditMode(false)"></i>
-						<i 
-						ng-if="mCtrl.editMode" 
-						class="pad10l size-18 icon-trash"
-						md-colors="{color: 'myTheme-accent'}"
-						ng-click="mCtrl.deleteMatchPopup($event)"></i>
+						<md-button 
+						ng-if="mCtrl.is('programmed')" 
+						ng-class="mCtrl.statusColor">
+							programmed
+						</md-button>
+						<md-button 
+						ng-if="!mCtrl.is('programmed')" 
+						ng-class="{
+							'buttonDisabled' : !mCtrl.is('in progress'),
+							'md-accent' : mCtrl.is('in progress')}"
+						ng-click="mCtrl.setCompletionStatus(0)"
+						>
+							in progress
+						</md-button>
+						<md-button 
+						ng-if="!mCtrl.is('programmed')" 
+						ng-class="{
+							'buttonDisabled' : mCtrl.is('in progress'),
+							'md-primary' : !mCtrl.is('in progress')}"
+						ng-click="mCtrl.setCompletionStatus(1)"
+						>
+							completed
+						</md-button>
 					</div>
 				</div>
 			</div>
@@ -73,14 +112,8 @@
 								<div layout="column" flex="20" layout-align="center center" >
 									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
 								</div>
-								<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-									<h3>{{mCtrl.match.duration}} min</h3>
-								</div>
-								<div ng-if="mCtrl.editMode" layout="column" flex="70">
-									<md-input-container class="md-block">
-										<input type="number" ng-model="mCtrl.match.new_duration" aria-label="red" aria-controls="red-slider">
-										<label class="size-16">How long did you play?</label>
-									</md-input-container>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h3>{{mCtrl.match.duration | secondsToTime | date:'HH:mm:ss'}} min</h3>
 								</div>
 							</div>
 						</div>
@@ -96,7 +129,7 @@
 								<div ng-if="mCtrl.editMode" layout="column" flex="80">
 									<md-input-container>
 										<label class="size-16">When?</label>
-										<md-datepicker flex ng-model="mCtrl.match.new_time"></md-datepicker>
+										<md-datepicker flex ng-model="mCtrl.match.time "></md-datepicker>
 									</md-input-container>
 								</div>
 								<div layout="column" flex="20" layout-align="center center" >
@@ -117,7 +150,7 @@
 								<div ng-if="mCtrl.editMode" layout="column" flex="80" >
 									<md-input-container>
 										<label class="size-16">Where?</label>
-										<input ng-model="mCtrl.match.new_location">
+										<input ng-model="mCtrl.match.location">
 									</md-input-container>
 								</div>
 							</div>
@@ -138,7 +171,7 @@
 						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
 						ng-click="mCtrl.setVisible(play.pk)">
-							<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColor" alt="{{play.user_details.username}}"/>
+							<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>
 							<div layout="column">
 								<div layout="row">
 									<h3>{{play.user_details.username}}</h3>
@@ -160,7 +193,7 @@
 							</div>
 							<div class="md-secondary" ng-if="mCtrl.editMode">
 								<md-input-container class="detailedPointsContainer md-block" >
-										<input type="number" ng-model="dp.new_detailed_points" aria-label="red" aria-controls="red-slider">
+										<input type="number" ng-model="dp.detailed_points" aria-label="red" aria-controls="red-slider">
 								</md-input-container>
 							</div>
 						</md-list-item>

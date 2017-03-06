@@ -3,7 +3,7 @@
 }
 
 #container md-content.md-myTheme-theme{
-	background-color:rgb(220,220,220);
+	background-color:#CFD8DC;
 }
 
 
@@ -110,6 +110,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .maxHeight150{
 	max-height: 150px;
 }
+.maxHeight200{
+	max-height: 200px;
+}
 /*end HEIGHT MANAGEMENT*/
 
 /*BACKGROUND MANAGEMENT*/
@@ -123,6 +126,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
 /*end BACKGROUND MANAGEMENT*/
 
 /*PADDING and MARGIN MANAGEMENT*/
+.pad0{
+	padding: 0px !important;
+}
 .pad0b{
 	padding-bottom: 0px !important;
 }
@@ -390,6 +396,14 @@ text-align:center;
 #container .md-errors-spacer{
 	display:none !important;
 }
+
+.buttonDisabled{
+	color:rgba(0,0,0,0.38);
+}
+
+.displayNone{
+	display:none !important;
+}
 /*end OTHER STUFF MANAGEMENT*/
 
 #imgProfile{
@@ -401,6 +415,16 @@ text-align:center;
 .imgBoardgame{
     height: 18em;
     width: 18em;
+    overflow:hidden;
+}
+.imgBoardgameProfile{
+    height: 15em;
+    width: 15em;
+    overflow:hidden;
+}
+.imgUser{
+    height: 12em;
+    width: 12em;
     overflow:hidden;
 }
 
@@ -455,6 +479,16 @@ figcaption{
 }
 .relative{
 	position:relative;
+}
+.absolute{
+	position:absolute;
+	bottom:0;
+	right:0;
+}
+.absolute1{
+	position:absolute;
+	bottom:-10;
+	right:-10;
 }
 
 #addMatchDialog md-tabs-wrapper{

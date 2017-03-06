@@ -14,8 +14,9 @@
 										'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class)
 						});
 	})
-	.run(function($rootScope, $location, $mdDialog, Api, $mdToast, $cookies, $location) {
+	.run(function($rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
 			$rootScope.isLogged = false;
+			$rootScope.match = {};
 			$rootScope.goTo = function(url) {
 					$location.path(url);
 			};
@@ -27,12 +28,16 @@
 
 			$rootScope.$on('$locationChangeStart', function(){
 				if($cookies.get('tok') != null){
+					$rootScope.user_pk=jwtHelper.decodeToken($cookies.get('tok')).user_id;
 					$rootScope.isLogged = true;
 				}
 				else{
 					$rootScope.isLogged = false;
 				}
 				$rootScope.path = $location.path();
+				if($rootScope.randomColors === undefined){
+					$rootScope.randomColors = {};
+				}
 			});
 
 			$rootScope.matchesPopup = function(ev, user_pk) {
@@ -50,17 +55,19 @@
 			}
 
 			//randomly color the avatars of players without a profile picture
-			$rootScope.getRandomColor = function(){
+			
+
+			$rootScope.getRandomColor = function(pk){
 				rnd = Math.floor(Math.random()*5);
 				switch (rnd){
-					case 0: return {'background-color':'#448AFF'}; //blue
-					case 1: return {'background-color':'#FF5252'}; //red
-					case 2: return {'background-color':'#7C4DFF'}; //deep purple
-					case 3: return {'background-color':'#4DB6AC'}; //teal
-					default: return {'background-color':'#FFD740'}; //amber
+					case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
+					case 1: $rootScope.randomColors[pk] = {'background-color':'#FF5252'}; break; //red
+					case 2: $rootScope.randomColors[pk] = {'background-color':'#7C4DFF'}; break; //deep purple
+					case 3: $rootScope.randomColors[pk] = {'background-color':'#4DB6AC'}; break; //teal
+					default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
 				}
 			}			
-			$rootScope.randomColor = $rootScope.getRandomColor();
+			//$rootScope.userRandomColor = $rootScope.getRandomColor();
 
 			$rootScope.showToast=function(string){
 				$mdToast.show(

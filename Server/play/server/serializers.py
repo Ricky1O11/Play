@@ -64,6 +64,7 @@ class UsersSerializers(serializers.ModelSerializer):
     match_played = serializers.SerializerMethodField()
     most_played_game = serializers.SerializerMethodField()
     match_won = serializers.SerializerMethodField()
+    match_played_with = serializers.SerializerMethodField()
     profile = ProfileSerializers()
 
     # Get the amount of match played by the user, given a boardgame (total if not given)
@@ -83,6 +84,12 @@ class UsersSerializers(serializers.ModelSerializer):
             return games[0].title
         else:
             return "No game played"
+
+    # Get the number of match that the authenticated user has played with this user
+    def get_match_played_with(self, user):  
+        auth_user = self.context['request'].user.pk
+        match_played_with = Matches.objects.filter(plays__user=user).filter(plays__user=auth_user).count()
+        return match_played_with
 
     # Get the amount of match won by the user, given a boardgame (total if not given)
     def get_match_won(self, user):
@@ -126,7 +133,7 @@ class UsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'username', 'match_played', 'most_played_game', 'match_won', 'profile' )
+        fields = ('pk', 'username', 'match_played', 'most_played_game', 'match_won', 'profile', 'match_played_with')
 
 # Json representation of the template of a boardgames
 class ScoringFieldsSerializers(serializers.ModelSerializer):
@@ -284,9 +291,22 @@ class BoardgamesSerializers(serializers.ModelSerializer):
 
 # Json representation of friends
 class FriendsSerializers(serializers.ModelSerializer):
+    user1_details = serializers.SerializerMethodField()
+    user2_details = serializers.SerializerMethodField()
+
+    def get_user1_details(self, friendship):
+        user = User.objects.get(user1=friendship)
+        serializer = UsersSerializers(user, context={'request': self.context['request']})
+        return serializer.data
+
+    def get_user2_details(self, friendship):
+        user = User.objects.get(user2=friendship)
+        serializer = UsersSerializers(user, context={'request': self.context['request']})
+        return serializer.data
+
     class Meta:
         model = Friends
-        fields = ('pk', 'user1','user2')
+        fields = ('pk', 'user1','user2', 'user1_details', 'user2_details')
 
 # Json representation of favourites boardgames by an user
 class FavouritesSerializers(serializers.ModelSerializer):

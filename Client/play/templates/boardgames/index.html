@@ -6,7 +6,6 @@
 					<h3 class="blue-grey">Boardgames ({{bsCtrl.boardgames.length}})</h3>
 				</div>
 			</div>
-			
 			<div layout="row" class="height100" >
 				<div layout="column" flex="90" >
 					<md-input-container class="md-block md-accent">
@@ -85,13 +84,17 @@
 							ng-if="boardgame.isFavourite" 
 							class="icon-heart md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+								<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+							</i>
 							<i 
 							aria-label="add favourite"
 							ng-if="!boardgame.isFavourite" 
 							class="icon-heart-o md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+							</i>
 						</md-list-item>
 				  </md-list>
 				</div>

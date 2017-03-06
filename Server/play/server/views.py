@@ -181,7 +181,8 @@ class MatchDetail(APIView):
 # Friends list
 class FriendsList(APIView):
     def get(self, request):
-        friends = Friends.objects.all()
+        auth_user = self.request.user
+        friends = Friends.objects.filter(Q(user1=auth_user) | Q(user2=auth_user))
         friendsSerializers = FriendsSerializers(friends, many=True, context={'request': request})
         return Response(friendsSerializers.data)
 

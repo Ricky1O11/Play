@@ -22,12 +22,16 @@
 							class="shadowed-box whiteBg pad10l height60 clickable">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-star" md-colors="{color: 'myTheme-accent'}" ></i>
+									<i class="size-18 icon-star" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Average vote</md-tooltip>
+									</i>
+
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.average | number:2}}</h2>
 								</div>
 							</div>
+							
 						</div>
 						<div 
 							layout="column" 
@@ -35,11 +39,14 @@
 							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" ></i>
+									<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Publishing year</md-tooltip>
+									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.yearpublished}}</h2>
 								</div>
+								
 							</div>
 						</div>
 						<div 
@@ -48,12 +55,15 @@
 							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
+									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Typical playtime</md-tooltip>
+									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
 									<h2>{{bCtrl.boardgame.playingtime}} min</h2>
 								</div>
 							</div>
+							
 						</div>
 
 						<div 
@@ -64,13 +74,17 @@
 							<i ng-if="bCtrl.isFavourite" 
 							class="icon-heart" 
 							md-colors="{color: 'myTheme-accent'}" 
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)"></i>
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+								<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
+							</i>
 
 							<i 
 							ng-if="!bCtrl.isFavourite" 
 							class="icon-heart-o " 
 							md-colors="{color: 'myTheme-accent'}"  
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)"></i>
+							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+								<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
+							</i>
 						</div>
 
 					</div>
