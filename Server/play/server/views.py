@@ -7,6 +7,8 @@ from .serializers import *
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
+from rest_framework.pagination import LimitOffsetPagination
 
 from rest_framework.permissions import AllowAny,IsAuthenticated
 #from django.db.models import F, Q
@@ -22,30 +24,45 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    in_file = open("server/bgg_1_20.json", "r")
+    in_file = open("server/bgg_1_10000.json", "r")
     text = in_file.read()
 
     data = json.loads(text)
     in_file.close()
     try:
-        for i in data:
-            game = data[i]
-            gamedb = Boardgames()
-            gamedb.average = game["average"]
-            gamedb.bggid = i
-            gamedb.description = game["description"]
-            gamedb.img = game["image"]
-            gamedb.title = game["name"]
-            gamedb.usersrated = game["usersrated"]
-            gamedb.maxplayers = game["maxplayers"]
-            gamedb.maxplaytime = game["maxplaytime"]
-            gamedb.minage = game["minage"]
-            gamedb.minplayers = game["minplayers"]
-            gamedb.minplaytime = game["minplaytime"]
-            gamedb.playingtime = game["playingtime"]
-            gamedb.yearpublished = game["yearpublished"]
-            gamedb.thumbnail = game["thumbnail"]
-            gamedb.save()
+        for i in range(1,10001):
+            if(str(i) in data):
+                game = data[str(i)]
+                gamedb = Boardgames()
+
+                gamedb.bggid = i
+                if("average" in game):
+                    gamedb.average = game["average"]
+                if("description" in game):
+                    gamedb.description = game["description"]
+                if("image" in game):
+                    gamedb.img = game["image"]
+                if("name" in game):
+                    gamedb.title = game["name"]
+                if("usersrated" in game):
+                    gamedb.usersrated = game["usersrated"]
+                if("maxplayers" in game):
+                    gamedb.maxplayers = game["maxplayers"]
+                if("maxplaytime" in game):
+                    gamedb.maxplaytime = game["maxplaytime"]
+                if("age" in game):
+                    gamedb.minage = game["age"]
+                if("minplayers" in game):
+                    gamedb.minplayers = game["minplayers"]
+                if("minplaytime" in game):
+                    gamedb.minplaytime = game["minplaytime"]
+                if("playingtime" in game):
+                    gamedb.playingtime = game["playingtime"]
+                if("yearpublished" in game):
+                    gamedb.yearpublished = game["yearpublished"]
+                if("thumbnail" in game):
+                    gamedb.thumbnail = game["thumbnail"]
+                gamedb.save()
 
         return HttpResponse("Correct reading")
     except:
@@ -55,8 +72,10 @@ def readBgg(self):
 class BoardgamesList(APIView):
     permission_classes = (AllowAny,)
     def get(self, request):
+        paginator = LimitOffsetPagination()
         boardgames = Boardgames.objects.all()
-        boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
+        result_page = paginator.paginate_queryset(boardgames, request)
+        boardgamesSerializers = BoardgamesSerializers(result_page, many=True, context={'request': request})
         return Response(boardgamesSerializers.data)
 
 # @csrf_exempt

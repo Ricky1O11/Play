@@ -26,7 +26,7 @@ SECRET_KEY = 'ed3-_@n+^10&9$6hlq4kqm2-onc@wwam)&faoc0-uy*&kqz+h$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['playapi.pythonanywhere.com']
+ALLOWED_HOSTS = ['playapi.pythonanywhere.com', 'localhost', '127.0.0.1']
 
 
 # Application definition
@@ -69,6 +69,7 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework_jwt.authentication.JSONWebTokenAuthentication',
     ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination'
 }
 
 JWT_AUTH = {
