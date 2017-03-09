@@ -47,12 +47,12 @@
 			
 			<div layout="row" class="overflowScroll">
 				<div layout="column" flex="100">
-					<md-list flex>
-					
+					<md-virtual-repeat-container class="height100perc" flex>
+					<!--  | filter:{title:query} | orderBy:bsCtrl.getOrderingField() -->
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 						ng-href="#/boardgames/{{boardgame.pk}}"
-						ng-repeat="boardgame in bsCtrl.boardgames | filter:{title:query} | orderBy:bsCtrl.getOrderingField()" ng-click="null">
+						md-virtual-repeat="boardgame in bsCtrl.boardgames" ng-click="null" md-on-demand>
 							<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.title}}" />
 							<div layout="column">
 								<div layout="row">
@@ -96,7 +96,7 @@
 								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
 							</i>
 						</md-list-item>
-				  </md-list>
+				  </md-virtual-repeat-container>
 				</div>
 			</div>
 		</div>
