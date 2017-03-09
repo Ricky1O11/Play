@@ -73,7 +73,7 @@ class BoardgamesList(APIView):
     permission_classes = (AllowAny,)
     def get(self, request):
         paginator = LimitOffsetPagination()
-        boardgames = Boardgames.objects.all()
+        boardgames = Boardgames.objects.all().order_by("-average")
         result_page = paginator.paginate_queryset(boardgames, request)
         boardgamesSerializers = BoardgamesSerializers(result_page, many=True, context={'request': request})
         return Response(boardgamesSerializers.data)

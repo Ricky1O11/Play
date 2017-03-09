@@ -15,9 +15,9 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 		  this.numItems = 0;
 
 		  /** @const {number} Number of items to fetch per request. */
-		  this.PAGE_SIZE = 50;
+		  this.PAGE_SIZE = 20;
 
-		  this.fetchNumItems_();
+		  this.loaded = 0;
 		};
 
 		// Required.
@@ -28,20 +28,20 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 		  if (page) {
 			return page[index % this.PAGE_SIZE];
 		  } else if (page !== null) {
-		  	console.log("dsf");
 			this.fetchPage_(pageNumber);
 		  }
 		};
 
 		// Required.
 		DynamicItems.prototype.getLength = function() {
-			return this.numItems;
+			return this.loaded+1;
 		};
 
 		DynamicItems.prototype.fetchPage_ = function(pageNumber) {
 			// Set the page to null so we know it is already being fetched.
 			this.loadedPages[pageNumber] = null;
 			this.loadedPages[pageNumber] = {};
+			this.loaded += this.PAGE_SIZE;
 			lp = this.loadedPages;
 			ps = this.PAGE_SIZE;
 			var pageOffset = pageNumber * this.PAGE_SIZE;
@@ -64,10 +64,6 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 
 		};
 
-		DynamicItems.prototype.fetchNumItems_ = function() {
-			this.numItems = 500000;
-		};
-
 	this.boardgames = new DynamicItems();
 	console.log(this.boardgames );
 
@@ -86,25 +82,26 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 	//}, function errorCallback(response){
 	//});
 	
-	this.toggleFavourites = function(favourite, boardgame, user, id){
+	this.toggleFavourites = function(favourite, boardgame, user, id, index){
+		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);
 		if(favourite.length > 0){
 		  Api.favouritedelete(favourite[0].pk).then(
 							  function(response){
 							  }, function errorCallback(response){
 							  }
 							);
-			controller.boardgames[id].favourite = [];
-			controller.boardgames[id].isFavourite = false;
+			controller.boardgames.loadedPages[page_number][id].favourite = [];
+			controller.boardgames.loadedPages[page_number][id].isFavourite = false;
 		}
 		else{
 			data = {'boardgame': boardgame};
 			Api.favouritepost(data).then(
 							  function(response){
-								controller.boardgames[id].favourite = [{'pk' : response.data.pk}];
+								controller.boardgames.loadedPages[page_number][id].favourite = [{'pk' : response.data.pk}];
 							  }, function errorCallback(response){
 							  }
 			);
-			controller.boardgames[id].isFavourite = true;
+			controller.boardgames.loadedPages[page_number][id].isFavourite = true;
 		}
 	}
 
