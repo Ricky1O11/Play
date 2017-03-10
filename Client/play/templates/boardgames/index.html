@@ -3,14 +3,14 @@
 		<div layout="column" flex="100">
 			<div layout="row" class="height50">
 				<div layout="column" flex="100">
-					<h3 class="blue-grey">Boardgames ({{bsCtrl.boardgames.length}})</h3>
+					<h3 class="blue-grey">Boardgames</h3>
 				</div>
 			</div>
 			<div layout="row" class="height100" >
 				<div layout="column" flex="90" >
 					<md-input-container class="md-block md-accent">
 					  <label>Search</label>
-					  <input ng-model="query">
+					  <input ng-model="bsCtrl.searchKey" ng-change="bsCtrl.search()">
 					</md-input-container>
 				</div>
 				<div layout="column" flex="10" layout-align="center center">
@@ -23,19 +23,19 @@
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['title', '-average'])">
+								<md-button ng-click="bsCtrl.setOrderingField('title')">
 									<i class="icon-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
 									Alphabetical order
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['-average', 'title'])">
+								<md-button ng-click="bsCtrl.setOrderingField('-average')">
 									<i class="icon-star-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Average order
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['-favourite', 'title'])">
+								<md-button ng-click="bsCtrl.setOrderingField('-favourite')">
 									<i class="icon-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Favourite order
 								</md-button>

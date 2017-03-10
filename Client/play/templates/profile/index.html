@@ -105,16 +105,16 @@
 			</div>
 		</div>
 	</div>
-	<md-tabs  md-selected="1" class="height350"
+	<md-tabs  md-selected="1" flex
 	md-stretch-tabs="always">
 		<md-tab label="Informations" >
 			<md-content class="pad20l pad20r">
 			</md-content>
 		</md-tab>
 		<md-tab label="Favourites" >
-			<md-content class="pad10l pad20r pad20t height270">
-				<div layout="row" flex="noshrink">
-					<div layout="column" class="pad20l" flex="none" ng-repeat="f in pCtrl.favourites| limitTo:4">
+			<md-content class="pad5l pad10t">
+				<div layout="row" layout-wrap>
+					<div layout="column" class="pad20l pad20t" flex="none" ng-repeat="f in pCtrl.favourites">
 						<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
 							<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{f.img}}">
 								<div class="circleBase" style="font-size:50px;"></div>

@@ -72,8 +72,14 @@ def readBgg(self):
 class BoardgamesList(APIView):
     permission_classes = (AllowAny,)
     def get(self, request):
+        order_by = self.request.query_params.get('order_by', None)
+        search_key = self.request.query_params.get('search_key', None)
         paginator = LimitOffsetPagination()
-        boardgames = Boardgames.objects.all().order_by("-average")
+        if(search_key != None and search_key != ""):
+            print search_key
+            boardgames = Boardgames.objects.filter(title__icontains = search_key).order_by(order_by)
+        else:
+            boardgames = Boardgames.objects.all().order_by(order_by)
         result_page = paginator.paginate_queryset(boardgames, request)
         boardgamesSerializers = BoardgamesSerializers(result_page, many=True, context={'request': request})
         return Response(boardgamesSerializers.data)

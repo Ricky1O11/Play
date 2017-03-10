@@ -37,8 +37,11 @@ angular.module('play')
 						r = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/'});
 						return r;
 					},
-		boadgames:	function(offset, limit){
-						l = $http({method: 'GET', url: BASE_URL+'/boardgames/?limit='+limit+'+&offset='+offset});
+		boadgames:	function(offset, limit, orderingField, key){
+						if(key != "")
+							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
+						else
+							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&limit='+limit+'+&offset='+offset});
 						return l;
 					},
 		boardgame:	function(id){

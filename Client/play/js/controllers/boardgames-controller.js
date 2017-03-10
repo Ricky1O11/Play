@@ -2,6 +2,7 @@
 angular.module("play").controller('boardgamesController', function(Api, $scope) {
 	//this.boardgames=[]; //container of the list of boardgames
 	this.orderingField="-average"; //ordering field, selectable by the user
+	this.searchKey=""; //ordering field, selectable by the user
 	controller=this;
 
 
@@ -34,6 +35,11 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 
 		// Required.
 		DynamicItems.prototype.getLength = function() {
+			if(Object.keys(this.loadedPages).length > 0){
+				l = this.loadedPages[0].length;
+				if(l < 20)
+					return l;
+			}
 			return this.loaded+1;
 		};
 
@@ -46,7 +52,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 			ps = this.PAGE_SIZE;
 			var pageOffset = pageNumber * this.PAGE_SIZE;
 			//api call to the list of boardgames
-			Api.boadgames(pageOffset, ps).then(function(response){
+			Api.boadgames(pageOffset, ps, controller.orderingField, controller.searchKey).then(function(response){
 				lp[pageNumber]=response.data;
 				for(i=0;i<lp[pageNumber].length;i++){
 					if(lp[pageNumber][i].favourite.length > 0){
@@ -65,23 +71,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 		};
 
 	this.boardgames = new DynamicItems();
-	console.log(this.boardgames );
 
-	//api call to the list of boardgames
-	//Api.boadgames().then(function(response){
-	//	controller.boardgames=response.data;
-	//	for(i=0;i<controller.boardgames.length;i++){
-	//		if(controller.boardgames[i].favourite.length > 0){
-	//			controller.boardgames[i].isFavourite = true;
-	//		}
-	//		else{
-	//			controller.boardgames[i].isFavourite = false;
-	//		}
-	//		controller.boardgames[i].listId = i;
-	//	}
-	//}, function errorCallback(response){
-	//});
-	
 	this.toggleFavourites = function(favourite, boardgame, user, id, index){
 		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);
 		if(favourite.length > 0){
@@ -125,10 +115,15 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
 		controller.orderingField = field;
+		this.boardgames = new DynamicItems();
 	}
 	
 	//get the ordering field selected by the user
 	this.getOrderingField= function(){
 		return controller.orderingField;
+	}
+
+	this.search = function(){
+		this.boardgames = new DynamicItems();
 	}
 });
