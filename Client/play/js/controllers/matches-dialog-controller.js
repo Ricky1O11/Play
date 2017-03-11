@@ -33,7 +33,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-
+ 
 	self.range = function(min, max, step) {
 		step = step || 1;
 		var input = [];
@@ -42,13 +42,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 		return input;
 	};
-	//api call to the list of boardgames
-	Api.boadgames().success(function(data){
-		for (i=0; i<data.length; i++){
-			self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
-		}
-	});
 	
+
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
@@ -70,13 +65,21 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
     //Search for boardagames
     self.querySearchBoardgames = function (query) {
-    	if(query){
-			results = self.boardgames.filter(createFilterFor(query));
-		}
-    	else{
-      		results= self.boardgames;
-      	}
-      	return results;
+    	//api call to the list of boardgames
+		return Api.boadgames(0, 20, "title", query).success(function(data){
+			for (i=0; i<data.length; i++){
+				self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
+			}
+			return self.boardgames;
+		});
+
+    	//if(query){
+		//	results = self.boardgames.filter(createFilterFor(query));
+		//}
+    	//else{
+      	//	results= self.boardgames;
+      	//}
+      	//return results;
     }
 
 	//Search for users
@@ -113,7 +116,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
     function createFilterFor(query) {
       var lowercaseQuery = angular.lowercase(query);
       return function filterFn(state) {
-        return (state.value.indexOf(lowercaseQuery) === 0);
+    	console.log(state);
+        return (state.value.indexOf(lowercaseQuery) > 0);
       };
     }
 

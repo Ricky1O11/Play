@@ -23,7 +23,7 @@
 						  md-search-text="mdCtrl.boardgameSearchText"
 						  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.boardgameSearchText) | orderBy:'display'"
 						  md-item-text="boardgame.display"
-						  md-min-length="0"
+						  md-min-length="2"
 						  placeholder="Select a boardgame">
 							<md-item-template>
 								<md-list-item class="item-title">
@@ -32,7 +32,7 @@
 								</md-list-item>
 							</md-item-template>
 							<md-not-found>
-								No boardgame matching "{{mdCtrl.searchText}}" were found.
+								No boardgame matching "{{mdCtrl.boardgameSearchText}}" were found.
 							</md-not-found>
 					  </md-autocomplete>
 					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
