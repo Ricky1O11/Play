@@ -21,7 +21,7 @@
 						<md-autocomplete
 						  md-selected-item="mdCtrl.selectedValues.boardgame"
 						  md-search-text="mdCtrl.boardgameSearchText"
-						  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.boardgameSearchText) | orderBy:'display'"
+						  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.boardgameSearchText)"
 						  md-item-text="boardgame.display"
 						  md-min-length="2"
 						  placeholder="Select a boardgame">
@@ -218,7 +218,7 @@
 					<div layout="row" layout-align="end center">
 						<md-button aria-label="post match" class="md-fab size-24" ng-click="mdCtrl.createTemplate()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-								<div layout="row" class="icon-check" aria-hidden="true" >
+								<div layout="row" class="icon-check-2" aria-hidden="true" >
 								</div>
 							</div>
 						</md-button>

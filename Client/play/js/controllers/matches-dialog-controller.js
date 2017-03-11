@@ -20,7 +20,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.postValues.scoringFields=[];
 	self.postValues.dictionary = [];
 	self.postValues.dp=[];
-    
+	
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	
@@ -33,7 +33,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
- 
+
 	self.range = function(min, max, step) {
 		step = step || 1;
 		var input = [];
@@ -42,13 +42,18 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 		return input;
 	};
+	//api call to the list of boardgames
+	//Api.boadgames().success(function(data){
+	//	for (i=0; i<data.length; i++){
+	//		self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
+	//	}
+	//});
 	
-
 	//api call to the list of users
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
 			if(data[i].pk != user_pk){
-				self.users.push({display:data[i].username, value:data[i].username, id:data[i].pk, img:data[i].profile.img})
+				self.users.push({display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile.img})
 			}
 			else{
 				 self.selectedValues.players[0] = {display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile.img};
@@ -63,24 +68,16 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	});
 
-    //Search for boardagames
-    self.querySearchBoardgames = function (query) {
-    	//api call to the list of boardgames
-		return Api.boadgames(0, 20, "title", query).success(function(data){
-			for (i=0; i<data.length; i++){
-				self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
+	//Search for boardagames
+	self.querySearchBoardgames = function (query) {
+		return Api.boadgames(0, 500, "title", query).then(function(response){
+			self.boardgames = [];
+			for (i=0; i<response.data.length; i++){
+				self.boardgames[i]={display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail}
 			}
 			return self.boardgames;
 		});
-
-    	//if(query){
-		//	results = self.boardgames.filter(createFilterFor(query));
-		//}
-    	//else{
-      	//	results= self.boardgames;
-      	//}
-      	//return results;
-    }
+	}
 
 	//Search for users
 	self.querySearchPlayers = function (query) {
@@ -88,42 +85,41 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		if(query){
 			results = self.users.filter(createFilterFor(query));
 		}
-    	else{
-      		results= self.users;
-      	}
-  		for(i=0;i<results.length;i++){
+		else{
+			results= self.users;
+		}
+		for(i=0;i<results.length;i++){
 			if(!containsObject(results[i], self.selectedValues.players)){
 				returned.push(results[i]);
 			}
-  		}
-      	return returned;
-    }
+		}
+		return returned;
+	}
 
-    //Search for users
+	//Search for users
 	self.querySearchWord = function (query) {
-	    if(query){
+		if(query){
 			results = self.dictionary.filter(createFilterFor(query));
 		}
-    	else{
-      		results= self.dictionary;
-      	}
-      	return results;
-    }
+		else{
+			results= self.dictionary;
+		}
+		return results;
+	}
 
-    /**
-     * Create filter function for a query string
-     */
-    function createFilterFor(query) {
-      var lowercaseQuery = angular.lowercase(query);
-      return function filterFn(state) {
-    	console.log(state);
-        return (state.value.indexOf(lowercaseQuery) > 0);
-      };
-    }
+	/**
+	 * Create filter function for a query string
+	 */
+	function createFilterFor(query) {
+	  var lowercaseQuery = angular.lowercase(query);
+	  return function filterFn(state) {
+		return (state.value.indexOf(lowercaseQuery) === 0);
+	  };
+	}
 
 
-    this.storeMatchInfo= function() {
-    	//if a boardgame is selected
+	this.storeMatchInfo= function() {
+		//if a boardgame is selected
 		if(self.selectedValues.boardgame!=null){
 			//get its id
 			self.postValues.match.boardgame=self.selectedValues.boardgame.id;
@@ -149,7 +145,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		else{			
 			$rootScope.showToast("Select a boardgame");
 		}
-    }
+	}
 
 
 	this.goTo = function(tab){
@@ -175,7 +171,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 
-    this.addTemplate = function(wantToAdd){
+	this.addTemplate = function(wantToAdd){
 		if(wantToAdd){
 			self.goTo(3);
 		}
@@ -321,6 +317,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					self.postTemplate();
 				},
 				function errorCallback(response){
+					console.log(response);
 				}
 			);
 		}
@@ -369,13 +366,13 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	function containsObject(obj, list) {
-	    var i;
-	    for (i = 0; i < list.length; i++) {
-	        if (list[i] === obj) {
-	            return true;
-	        }
-	    }
-	    return false;
+		var i;
+		for (i = 0; i < list.length; i++) {
+			if (list[i] === obj) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	this.togglePlayer = function(act, user, id){

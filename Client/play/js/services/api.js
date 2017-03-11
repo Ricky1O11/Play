@@ -38,6 +38,7 @@ angular.module('play')
 						return r;
 					},
 		boadgames:	function(offset, limit, orderingField, key){
+						console.log(BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset);
 						if(key != "")
 							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
 						else
