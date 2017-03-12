@@ -1,4 +1,4 @@
-angular.module("play").controller('sidebarController', function($scope, Api, $mdDialog, $scope, $cookies, jwtHelper) {
+angular.module("play").controller('sidebarController', function($scope, $cookies, $window, Api, $mdDialog, $scope, $cookies, jwtHelper) {
 	$scope.img="";
 	$scope.match_played=0;
 	$scope.match_won=0;
@@ -19,5 +19,10 @@ angular.module("play").controller('sidebarController', function($scope, Api, $md
 			return false;
 		else
 			return true;
+	}
+
+	this.logout = function(){
+		$cookies.remove('tok');
+		$window.location.reload();
 	}
 });

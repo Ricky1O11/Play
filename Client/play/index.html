@@ -73,7 +73,9 @@
 								<div layout="column" flex="50">
 									<div layout="row">
 										<div layout="column" flex="100" layout-align="center start">
-											<a md-colors="{color: 'myTheme-accent'}" href="#/" class="size-24 icon-home decoNone blue-grey"></a>										
+											<a md-colors="{color: 'myTheme-accent'}" ng-click="sCtrl.logout()" class="clickable size-18 icon-log-out decoNone blue-grey">
+												<md-tooltip md-direction="down">Logout</md-tooltip>
+											</a>										
 										</div>
 									</div>
 								</div>
