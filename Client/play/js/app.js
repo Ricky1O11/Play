@@ -58,12 +58,15 @@
 			
 
 			$rootScope.getRandomColor = function(pk){
-				rnd = Math.floor(Math.random()*5);
+				rnd = Math.floor(Math.random()*7);
 				switch (rnd){
 					case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
 					case 1: $rootScope.randomColors[pk] = {'background-color':'#FF5252'}; break; //red
 					case 2: $rootScope.randomColors[pk] = {'background-color':'#7C4DFF'}; break; //deep purple
 					case 3: $rootScope.randomColors[pk] = {'background-color':'#4DB6AC'}; break; //teal
+					case 4: $rootScope.randomColors[pk] = {'background-color':'#FF9800'}; break; //orange
+					case 5: $rootScope.randomColors[pk] = {'background-color':'#4DD0E1'}; break; //cyan
+					case 6: $rootScope.randomColors[pk] = {'background-color':'#F06292'}; break; //pink
 					default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
 				}
 			}			

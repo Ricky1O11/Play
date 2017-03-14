@@ -141,6 +141,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .pad2b{
 	padding-bottom: 2px;
 }
+.pad3t{
+	padding-top: 3px;
+}
 .pad3l{
 	padding-left: 3px;
 }
@@ -194,6 +197,15 @@ md-sidenav.md-closed.md-locked-open-add-active {
 
 .mrg5{
 	margin: 5px;
+}
+.mrg10{
+	margin: 10px;
+}
+.mrg16{
+	margin: 16px;
+}
+.mrg20{
+	margin: 20px;
 }
 .mrg5t{
 	margin-top: 5px;
@@ -275,6 +287,10 @@ md-sidenav.md-closed.md-locked-open-add-active {
 /*end SIZE MANAGEMENT*/
 
 /*COLORS MANAGEMENT*/
+.white80perc{
+	color: rgba(255,255,255,0.8);
+}
+
 .blue-grey{
 	color: #37474F;
 }
@@ -406,10 +422,19 @@ text-align:center;
 }
 /*end OTHER STUFF MANAGEMENT*/
 
-#imgProfile{
+.imgProfile{
 	height:72px;
 	width: 72px;
 	overflow:hidden;
+}
+
+.imgProfileMini{
+	height:40px;
+	width: 40px;
+	overflow:hidden;
+	margin-top: 8px;
+	margin-right: 16px;
+	margin-bottom: 8px;
 }
 
 .imgBoardgame{

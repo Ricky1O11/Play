@@ -133,7 +133,7 @@ class UsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'username', 'match_played', 'most_played_game', 'match_won', 'profile', 'match_played_with')
+        fields = ('pk', 'username', 'first_name', 'last_name', 'email', 'match_played', 'most_played_game', 'match_won', 'profile', 'match_played_with')
 
 # Json representation of the template of a boardgames
 class ScoringFieldsSerializers(serializers.ModelSerializer):

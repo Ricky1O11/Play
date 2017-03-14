@@ -10,6 +10,7 @@ angular.module("play").controller('profileController', function(Api, $scope) {
 	controllerSidebar=this;
 	Api.user($scope.user_pk).success(function(data){
 		controller.user = data
+		console.log(controller.user);
 	});
 	Api.friends().success(function(data){
 		for(i = 0;i<data.length; i++){

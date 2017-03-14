@@ -59,8 +59,10 @@
 						<div layout="column" flex="100" class="greyBg blue-grey shadowed-box" layout-padding>
 							<div layout="row" class="height100 clickable" ng-click="goTo('profile/')">	
 								<div layout="column" flex="50" layout-align="center start">
-									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
-										<img ng-src="{{img}}" class="md-avatar size-90" ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image"/>
+									<div class="imgProfile circleBase borderWhite" layout-align="center center">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{username.substring(0,1).toUpperCase()}}</div>
+										</div>
 									</div>
 								</div>						
 									
