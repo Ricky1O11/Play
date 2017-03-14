@@ -6,10 +6,18 @@ angular.module("play").controller('profileController', function(Api, $scope) {
 	this.favourites = [];
 	//hold the number of matches played by the current user
 	this.recents = [];
+
+	this.infoChanged = false;
+	this.settingsChanged = false;
+
 	controller = this;
 	controllerSidebar=this;
 	Api.user($scope.user_pk).success(function(data){
 		controller.user = data
+		controller.user.old_username = controller.user.username
+		controller.user.old_first_name = controller.user.first_name
+		controller.user.old_last_name = controller.user.last_name
+		controller.user.old_email = controller.user.email
 		console.log(controller.user);
 	});
 	Api.friends().success(function(data){
@@ -52,5 +60,12 @@ angular.module("play").controller('profileController', function(Api, $scope) {
 				return true;
 		}
 		return false;
+	}
+
+	this.setInfoChanged = function(){
+		controller.infoChanged = true;
+	}
+	this.setSettingsChanged = function(){
+		controller.settingsChanged = true;
 	}
 });

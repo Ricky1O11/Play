@@ -117,7 +117,7 @@
 			</div>
 		</div>
 	</div>
-	<md-tabs  md-selected="0" flex
+	<md-tabs  md-selected="3" flex
 	md-stretch-tabs="always">
 		<md-tab label="Favourites" >
 			<md-content class="pad5l pad10t">
@@ -168,17 +168,20 @@
 					<div 
 						layout="column" 
 						flex="50" 
-						class="shadowed-box whiteBg clickable">
+						class="shadowed-box whiteBg">
 						<div layout="row" class=" mrg16">
 							<div layout="column" flex="10" layout-align="center center" >
 								<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
-									<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
+									<md-tooltip md-direction="top" md-delay="200">aaa</md-tooltip>
 								</i>
 							</div>
-							<div layout="column" flex layout-align="center center" >
-								<h2>
+							<div layout="column" flex="70" layout-align="center start" >
+								<h2 class="mrg10">
 									Personal data
 								</h2>
+							</div>
+							<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
+								<md-button class="md-primary">Save</md-button>
 							</div>
 						</div>
 						<div layout="row">
@@ -188,7 +191,7 @@
 										<h4>
 											<md-input-container>
 												<label>First name</label>
-												<input ng-model="pCtrl.user.first_name">
+												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
 										</h4>
 									</div>
@@ -198,7 +201,7 @@
 										<h4>
 											<md-input-container>
 												<label>Last name</label>
-												<input ng-model="pCtrl.user.last_name">
+												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
 										</h4>
 									</div>
@@ -209,7 +212,7 @@
 										<h4>
 											<md-input-container>
 												<label>Email</label>
-												<input ng-model="pCtrl.user.email">
+												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
 										</h4>
 									</div>
@@ -220,17 +223,20 @@
 					<div 
 						layout="column" 
 						flex="50" 
-						class="shadowed-box whiteBg clickable mrg10l">
+						class="shadowed-box whiteBg mrg10l">
 						<div layout="row" class=" mrg16">
 							<div layout="column" flex="10" layout-align="center center" >
 								<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
-									<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
+									<md-tooltip md-direction="top" md-delay="200">aaa</md-tooltip>
 								</i>
 							</div>
-							<div layout="column" flex layout-align="center center" >
+							<div layout="column" flex="70" layout-align="center start" >
 								<h2>
 									Settings
 								</h2>
+							</div>
+							<div layout="column" flex="20" layout-align="center center" ng-if="pCtrl.settingsChanged">
+								<md-button class="md-primary">Save</md-button>
 							</div>
 						</div>
 						<div layout="row">
