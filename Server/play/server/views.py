@@ -24,13 +24,13 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    in_file = open("server/bgg_1_10000.json", "r")
+    in_file = open("server/bgg_1_20.json", "r")
     text = in_file.read()
 
     data = json.loads(text)
     in_file.close()
     try:
-        for i in range(1,10001):
+        for i in range(1,21):
             if(str(i) in data):
                 game = data[str(i)]
                 gamedb = Boardgames()

@@ -199,7 +199,7 @@
 											<label>Username</label>
 											<input name="username" ng-model="lCtrl.login.username" required>
 											<div ng-messages="loginForm.username.$error">
-												<div ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
 										   </div>
 										</md-input-container>
 									</div>
@@ -210,8 +210,8 @@
 											<label>Password</label>
 											<input type="password" name="password" ng-model="lCtrl.login.password" required minlength="8">
 											<div ng-messages="loginForm.password.$error">
-												<div ng-message="required">This field is required.</div>
-												<div ng-message="minlength">The password is too short</div>
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
 											</div>
 										</md-input-container>
 									</div>
@@ -240,15 +240,21 @@
 					ng-controller="registerController as rCtrl"
 					class="height100perc" >
 						<div layout="row" class="height100perc" layout-align="center center">
-							<form name="registerForm" layout="column">
+							<form name="registerForm" layout="column" flex="40">
 								<div layout="row"  layout-align="center center">
 									<div layout="column" flex="100">
-										<md-input-container>
+										<md-input-container >
 											<label>Email</label>
 											<input name="email" ng-model="rCtrl.register.email" required type="email"  minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" >
 											<div ng-messages="registerForm.email.$error" role="alert">
-												<div ng-message-exp="['required', 'minlength', 'maxlength', 'pattern']">
-													Your email must be between 10 and 100 characters long and look like an e-mail address.
+												<div class="whiteTxt" ng-message ="minlength">
+												Your email must have at least 10 characters.
+												</div>
+												<div class="whiteTxt" ng-message ="required">
+												This field is required.
+												</div>														
+												<div class="whiteTxt" ng-message ="pattern">
+												Please insert a valid email-address
 												</div>
 											</div>
 										</md-input-container>
@@ -261,7 +267,7 @@
 											<input name="username" ng-model="rCtrl.register.username" required>
 											<div ng-messages="registerForm.username.$error">
 												<div 
-												ng-message="required"
+												ng-message="required" class="whiteTxt"
 												>
 													This field is required.
 												</div>
@@ -275,8 +281,8 @@
 											<label>Password</label>
 											<input type="password" name="password" ng-model="rCtrl.register.password" required minlength="8">
 											<div ng-messages="registerForm.password.$error">
-												<div ng-message="required">This field is required.</div>
-												<div ng-message="minlength">The password is too short</div>
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
 											</div>
 										</md-input-container>
 									</div>
@@ -287,8 +293,8 @@
 											<label>Password again</label>
 											<input type="password" name="password2" ng-model="rCtrl.register.password2" required minlength="8">
 											<div ng-messages="registerForm.password2.$error">
-												<div ng-message="required">This field is required.</div>
-												<div ng-message="minlength">The password is too short</div>
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
 											</div>
 										</md-input-container>
 									</div>

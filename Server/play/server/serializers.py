@@ -47,6 +47,7 @@ class UsersSerializers(serializers.ModelSerializer):
 
         # Allowed params: "include"
         includes = self.context['request'].query_params.get('include')
+
         if includes:
             fields = includes.split(',')
             allowed = set(fields)
@@ -71,7 +72,7 @@ class UsersSerializers(serializers.ModelSerializer):
     def get_match_played(self, user):
         if ("boardgame" in self.context):
             boardgame = self.context["boardgame"]
-            plays_amount = Users.objects.filter(plays__match__boardgame=boardgame, plays__user=user).count()
+            plays_amount = Plays.objects.filter(match__boardgame=boardgame, user=user).count()
         else:
             plays_amount = Plays.objects.filter(user=user).count()
         return plays_amount
@@ -261,7 +262,7 @@ class BoardgamesSerializers(serializers.ModelSerializer):
 
     # Get list of users playing a boardgame
     def get_users(self, boardgame):
-        users = Users.objects.filter(plays__match__boardgame=boardgame).distinct()
+        users = User.objects.filter(plays__match__boardgame=boardgame).distinct()
         serializer = UsersSerializers(users, many=True,
                                       context={'request': self.context['request'], 'boardgame': boardgame})
         return serializer.data
