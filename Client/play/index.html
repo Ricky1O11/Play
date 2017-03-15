@@ -32,6 +32,7 @@
 		<script src="js/controllers/boardgame-controller.js"></script>
 		<script src="js/controllers/boardgames-controller.js"></script>
 		<script src="js/controllers/favourites-controller.js"></script>
+		<script src="js/controllers/friends-dialog-controller.js"></script>
 		<script src="js/controllers/home-controller.js"></script>
 		<script src="js/controllers/login-controller.js"></script>
 		<script src="js/controllers/match-controller.js"></script>
@@ -150,7 +151,7 @@
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
-									<a layout="row"  class="pad15t decoNone clickable" ng-click="matchesPopup($event, user_pk)">
+									<a layout="row"  class="pad15t decoNone clickable" ng-click="showPopup($event, user_pk, 'matches')">
 										<div layout="column" flex="15" layout-align="center center">
 											<i class="icon-plus-1"></i>
 										</div>

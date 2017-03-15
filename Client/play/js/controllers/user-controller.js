@@ -46,14 +46,6 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 		controller.recents=data;
 	});
 
-	//are there less then 4 boardgames in the "arg" (favourites / recents) list?
-	this.lessThenFour = function(arg){
-		if(controller[arg].length < 4)
-			return true;
-		else 
-			return false;
-	}
-	
 	//is the "title" game a favourite for the current user?
 	this.inFavourites = function(title){
 		for(f=0; f<controller.favourites.length; f++){
@@ -71,12 +63,12 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 	}
 
 	this.addFriend = function(){
-		rowToAdd = {
+		rowToAdd = [{
 			'user1' : $rootScope.user_pk,
 			'user2' : controller.user.pk
-		}
+		}];
 		Api.friendspost(rowToAdd).then(function(response){
-			controller.user.friendship = response.data.pk;
+			controller.user.friendship = response.data[0].pk;
 			$rootScope.showToast("Good job! You have a new friend!");
 		}, function errorCallback(response){
 			console.log(response);

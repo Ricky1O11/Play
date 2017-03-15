@@ -40,12 +40,12 @@
 				}
 			});
 
-			$rootScope.matchesPopup = function(ev, user_pk) {
+			$rootScope.showPopup = function(ev, user_pk,string) {
 				$mdDialog.show({
 					locals:{user_pk : user_pk},
-					controller: 'matchesDialogController',
-					controllerAs: 'mdCtrl',
-					templateUrl: 'templates/matchesdialog.html',
+					controller: string+'DialogController',
+					controllerAs: string.substring(0,1)+'dCtrl',
+					templateUrl: 'templates/'+string+'dialog.html',
 					parent: angular.element(document.body),
 					targetEvent: ev,
 					scope:$rootScope,

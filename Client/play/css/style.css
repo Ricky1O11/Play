@@ -530,7 +530,7 @@ figcaption{
 	right:-10;
 }
 
-#addMatchDialog md-tabs-wrapper{
+#dialog md-tabs-wrapper{
 	display: none !important;
 }
 

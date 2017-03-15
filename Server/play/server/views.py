@@ -214,7 +214,7 @@ class FriendsList(APIView):
         return Response(friendsSerializers.data)
 
     def post(self, request):
-        friends = FriendsSerializers(data=request.data, context={'request': request})
+        friends = FriendsSerializers(data=request.data, many=True, context={'request': request})
         if friends.is_valid():
             friends.save()
             return Response(friends.data, status=status.HTTP_201_CREATED)

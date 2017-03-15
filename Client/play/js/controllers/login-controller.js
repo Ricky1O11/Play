@@ -1,5 +1,5 @@
 //controller for login
-angular.module("play").controller('loginController', function(Api, $cookies, $window) {
+angular.module("play").controller('loginController', function(Api, $cookies, $rootScope, $window) {
 	this.login = {};
 	this.login.username = "";
 	this.login.password = "";
@@ -15,7 +15,7 @@ angular.module("play").controller('loginController', function(Api, $cookies, $wi
 					$window.location.reload();
 				}
 			}, function errorCallback(response){
-				console.log(response);
+				$rootScope.showToast("Wrong email or password");
 			});
 	};
 });
