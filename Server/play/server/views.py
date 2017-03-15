@@ -140,7 +140,7 @@ class UserDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Users.objects.get(pk=pk)
+            return User.objects.get(pk=pk)
         except Users.DoesNotExist:
             return 0
 

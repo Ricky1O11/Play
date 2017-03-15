@@ -281,3 +281,6 @@
 .icon-log-out:before {
   content: "\3e";
 }
+.icon-user-add:before {
+  content: "\3d";
+}

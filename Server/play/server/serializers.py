@@ -44,7 +44,6 @@ class UsersSerializers(serializers.ModelSerializer):
     # Serializer initialization: read the url params
     def __init__(self, *args, **kwargs):
         super(UsersSerializers, self).__init__(*args, **kwargs)
-
         # Allowed params: "include"
         includes = self.context['request'].query_params.get('include')
         if includes:
@@ -65,13 +64,41 @@ class UsersSerializers(serializers.ModelSerializer):
     most_played_game = serializers.SerializerMethodField()
     match_won = serializers.SerializerMethodField()
     match_played_with = serializers.SerializerMethodField()
-    profile = ProfileSerializers()
+    profile_details = serializers.SerializerMethodField()
+
+    # Get list of all friend playing a boardgame, given a user
+    #def get_friends(self, boardgame):
+    #    auth_user = self.context['request'].user
+    #    if auth_user.is_authenticated():
+    #        friends = Users.objects.filter(plays__match__boardgame=boardgame,
+    #                                       user2__user1=auth_user).distinct() | Users.objects.filter(
+    #                                        plays__match__boardgame=boardgame,
+    #                                        user1__user2=auth_user).distinct()
+    #        serializer = UsersSerializers(friends, many=True,
+    #                                      context={'request': self.context['request'], 'boardgame': boardgame})
+    #        return serializer.data
+    
+    friendship = serializers.SerializerMethodField()
+
+    def get_friendship(self, user):
+        auth_user = self.context['request'].user
+        friendship = (Friends.objects.filter(user1 = auth_user, user2 = user) | Friends.objects.filter(user1 = user, user2 = auth_user)).values('pk')
+        if (friendship.count() > 0):
+            return friendship[0]["pk"]
+        else:
+            return 0
+
+    # Get the profile details
+    def get_profile_details(self, user):
+        profile = Profile.objects.get(user=user)
+        serializer = ProfileSerializers(profile , context={'request': self.context['request']})
+        return serializer.data
 
     # Get the amount of match played by the user, given a boardgame (total if not given)
     def get_match_played(self, user):
         if ("boardgame" in self.context):
             boardgame = self.context["boardgame"]
-            plays_amount = Users.objects.filter(plays__match__boardgame=boardgame, plays__user=user).count()
+            plays_amount = Plays.objects.filter(match__boardgame=boardgame, user=user).count()
         else:
             plays_amount = Plays.objects.filter(user=user).count()
         return plays_amount
@@ -133,7 +160,7 @@ class UsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'username', 'first_name', 'last_name', 'email', 'match_played', 'most_played_game', 'match_won', 'profile', 'match_played_with')
+        fields = ('pk', 'username', 'first_name', 'last_name', 'email', 'friendship', 'match_played', 'most_played_game', 'match_won', 'profile_details', 'match_played_with')
 
 # Json representation of the template of a boardgames
 class ScoringFieldsSerializers(serializers.ModelSerializer):

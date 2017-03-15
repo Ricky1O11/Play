@@ -110,10 +110,10 @@
 					</md-list>
 
 					<md-list class="fixedRows clear pad0">
-					  <md-subheader class="md-no-sticky">Select friends</md-subheader>
+					  <md-subheader class="md-no-sticky">Select companions</md-subheader>
 					  <div class="maxHeight200 overflowScroll">
-						  <md-list-item class="md-1-line contact-item" ng-repeat="user in mdCtrl.users"
-						  ng-click="mdCtrl.togglePlayer('select', user, $index)"
+						  <md-list-item class="md-1-line contact-item" ng-repeat="user in mdCtrl.users | orderBy:'-friendship'"
+						  ng-click="mdCtrl.togglePlayer('select', user, $index)" 
 						  >
 						 	 <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
 								<div class="circleBase" layout-align="center center" " ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}">
@@ -230,7 +230,7 @@
 				 
 				<div layout="column" flex>
 					<div layout="row" layout-align="end center">
-						<md-button aria-label="post match" class="md-fab size-24" ng-click="mdCtrl.createTemplate()">
+						<md-button ng-disabled="mdCdtl.saving" aria-label="post match" class="md-fab size-24" ng-click="mdCtrl.createTemplate()">
 							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 								<div layout="row" class="icon-check-2" aria-hidden="true" >
 								</div>

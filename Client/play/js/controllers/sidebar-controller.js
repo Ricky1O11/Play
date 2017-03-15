@@ -10,7 +10,7 @@ angular.module("play").controller('sidebarController', function($scope, $cookies
 		$scope.match_played = data.match_played;
 		$scope.match_won = data.match_won;
 		$scope.username = data.username;
-		$scope.img = data.profile.img;
+		$scope.img = data.profile_details.img;
 		$scope.user_pk = data.pk;
 	});
 

@@ -96,7 +96,7 @@
 
 					<div layout="row" ng-if="pCtrl.friends.length > 0">
 						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="friend in pCtrl.friends">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" >
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+friend.pk)">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[friend.pk] || getRandomColor(friend.pk)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
 								</div>
@@ -181,25 +181,25 @@
 								</h2>
 							</div>
 							<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
-								<md-button class="md-primary">Save</md-button>
+								<md-button class="md-primary" ng-click="pCtrl.save()">Save</md-button>
 							</div>
 						</div>
 						<div layout="row">
 							<div layout="column" flex class="mrg10l">
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>First name</label>
-												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()">
+												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()" >
 											</md-input-container>
 										</h4>
 									</div>
 								</div>
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>Last name</label>
 												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
@@ -209,8 +209,8 @@
 
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>Email</label>
 												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
@@ -231,32 +231,32 @@
 								</i>
 							</div>
 							<div layout="column" flex="70" layout-align="center start" >
-								<h2>
+								<h2 class="mrg10">
 									Settings
 								</h2>
 							</div>
-							<div layout="column" flex="20" layout-align="center center" ng-if="pCtrl.settingsChanged">
-								<md-button class="md-primary">Save</md-button>
+							<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
+								<md-button class="md-primary" ng-click="pCtrl.save()">Save</md-button>
 							</div>
 						</div>
 						<div layout="row">
 							<div layout="column" flex class="mrg10l">
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>First name</label>
-												<input ng-model="pCtrl.user.first_name">
+												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()" >
 											</md-input-container>
 										</h4>
 									</div>
 								</div>
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>Last name</label>
-												<input ng-model="pCtrl.user.last_name">
+												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
 										</h4>
 									</div>
@@ -264,10 +264,10 @@
 
 								<div layout="row">
 									<div layout="column" flex="100">
-										<h4>
-											<md-input-container>
+										<h4 layout="row">
+											<md-input-container flex="90">
 												<label>Email</label>
-												<input ng-model="pCtrl.user.email">
+												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
 											</md-input-container>
 										</h4>
 									</div>
@@ -275,7 +275,6 @@
 							</div>
 						</div>
 					</div>
-				</div>
 			</md-content>
 		</md-tab>
 	</md-tabs>

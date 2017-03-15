@@ -34,6 +34,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 
+	self.saving = false;
+
 	self.range = function(min, max, step) {
 		step = step || 1;
 		var input = [];
@@ -51,12 +53,13 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	//api call to the list of users
 	Api.users().success(function(data){
+		console.log(data);
 		for (i=0; i<data.length; i++){
 			if(data[i].pk != user_pk){
-				self.users.push({display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile.img})
+				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img})
 			}
 			else{
-				 self.selectedValues.players[0] = {display:data[i].username, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile.img};
+				 self.selectedValues.players[0] = {display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img};
 				 self.playerSearchText[0] = data[i].username;
 			}
 		}
@@ -172,22 +175,31 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 
 	this.addTemplate = function(wantToAdd){
-		if(wantToAdd){
-			self.goTo(3);
-		}
-		else{
-			self.selectedValues.dictionary[0] = self.dictionary[0];
-			self.postMatch("postTemplate");
+		if(!self.saving){
+			self.saving = true;
+			if(wantToAdd){
+				self.goTo(3);
+			}
+			else{
+				self.selectedValues.dictionary[0] = self.dictionary[0];
+				self.postMatch("postTemplate");
+			}
 		}
 	}
 
 	this.selectTemplate = function(template){
-		self.selectedValues.scoringFields = template.scoringField_details;
-		self.postMatch("selectTemplate");
+		if(!self.saving){
+			self.saving = true;
+			self.selectedValues.scoringFields = template.scoringField_details;
+			self.postMatch("selectTemplate");
+		}
 	}
 
 	this.createTemplate = function(){
-		self.postMatch("createTemplate");
+		if(!self.saving){
+			self.saving = true;
+			self.postMatch("createTemplate");
+		}
 	}
 
 
@@ -227,6 +239,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 
 	this.postPlay = function(step){
+		
+
 		//post play
 		Api.playpost(self.postValues.plays).then(
 			function(response){
@@ -266,6 +280,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			function errorCallback(response){
 			}
 		);
+		
 	}
 
 
