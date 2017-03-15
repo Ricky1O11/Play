@@ -19,6 +19,11 @@ angular.module('play')
 						u = $http({method: 'GET', url: BASE_URL+'/users/'+user_id+'/?include=user_stats'});
 						return u;
 					},
+
+		userput:		function(user_id, user_data){
+						u = $http({method: 'PUT', url: BASE_URL+'/users/'+user_id+'/', data:user_data});
+						return u;
+					},
 					
 		users:		function(){
 						us = $http({method: 'GET', url: BASE_URL+'/users/'});
@@ -32,12 +37,21 @@ angular.module('play')
 						fr = $http({method: 'GET', url: BASE_URL+'/friends/'});
 						return fr;
 					},
+		friendspost:	function(data){
+						frp = $http({method: 'POST', url: BASE_URL+'/friends/', data:data});
+						return frp;
+					},
+		frienddelete:	function(id){
+						frd = $http({method: 'DELETE', url: BASE_URL+'/friends/'+id+'/'});
+						return frd;
+					},
 					
 		recents:	function(user_id){
 						r = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/'});
 						return r;
 					},
 		boadgames:	function(offset, limit, orderingField, key){
+						console.log(BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset);
 						if(key != "")
 							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
 						else

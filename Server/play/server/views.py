@@ -74,7 +74,9 @@ class BoardgamesList(APIView):
     def get(self, request):
         order_by = self.request.query_params.get('order_by', None)
         search_key = self.request.query_params.get('search_key', None)
+
         paginator = LimitOffsetPagination()
+        
         if(search_key != None and search_key != ""):
             print search_key
             boardgames = Boardgames.objects.filter(title__icontains = search_key).order_by(order_by)
@@ -138,7 +140,7 @@ class UserDetail(APIView):
 
     def get_object(self, pk):
         try:
-            return Users.objects.get(pk=pk)
+            return User.objects.get(pk=pk)
         except Users.DoesNotExist:
             return 0
 

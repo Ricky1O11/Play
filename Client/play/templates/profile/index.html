@@ -3,8 +3,8 @@
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
 				<div class="circleBase imgUser hideScrollbar shadowed-box" >
-					<div class="circleBase imgUser" layout-align="center center" back-img="{{pCtrl.user.profile.img}}" ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
-						<div class="circleBase" style="font-size:50px;"></div>
+					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
+						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{pCtrl.user.username.substring(0,1).toUpperCase()}}</div>
 					</div>
 				</div>
 				<md-button 
@@ -83,14 +83,23 @@
 						</div>
 					</div>
 					<div layout="row" class="height30 mrg20t">
-						<div layout="column" flex="100">
+						<div layout="column" layout-align="center center">
 							<h3 class="blue-grey">Your companions</h3>
 						</div>
+						<div layout="column" class="pad10l pad3t" layout-align="center center">
+							<h5 class="clickable" 
+								md-colors="{color: 'myTheme-accent'}">
+								ADD FRIEND
+							</h5>
+						</div>
 					</div>
-					<div layout="row">
+
+					<div layout="row" ng-if="pCtrl.friends.length > 0">
 						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="friend in pCtrl.friends">
-							<div id="imgProfile" class="circleBase borderWhite clickable" layout-align="center center" >
-								<img ng-src="{{friend.profile.img}}" class="md-avatar size-90" ng-style="randomColors[friend.pk] || getRandomColor(friend.pk)" alt="profile image"/>
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+friend.pk)">
+								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[friend.pk] || getRandomColor(friend.pk)" alt="profile image">
+									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
+								</div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
 							<md-button 
@@ -101,20 +110,20 @@
 							</md-button>
 						</div>
 					</div>
+					<div layout="row" ng-if="pCtrl.friends.length == 0" class="pad20t size-21">
+						<strong class="pad10r">): </strong> You seem so lonely! Add a friend!
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-	<md-tabs  md-selected="1" flex
+	<md-tabs  md-selected="3" flex
 	md-stretch-tabs="always">
-		<md-tab label="Informations" >
-			<md-content class="pad20l pad20r">
-			</md-content>
-		</md-tab>
 		<md-tab label="Favourites" >
 			<md-content class="pad5l pad10t">
 				<div layout="row" layout-wrap>
-					<div layout="column" class="pad20l pad20t" flex="none" ng-repeat="f in pCtrl.favourites">
+					<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="f in pCtrl.favourites"
+					ng-click="goTo('boardgames/'+f.pk)">
 						<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
 							<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{f.img}}">
 								<div class="circleBase" style="font-size:50px;"></div>
@@ -131,9 +140,10 @@
 			</md-content>
 		</md-tab>
 		<md-tab label="Recents" >
-			<md-content class="pad10l pad20r pad20t height270">
-				<div layout="row" flex="noshrink">
-					<div layout="column" class="pad20l" flex="none" ng-repeat="r in pCtrl.recents| limitTo:4">
+			<md-content class="pad5l pad10t">
+				<div layout="row" layout-wrap>
+					<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="r in pCtrl.recents" 
+					ng-click="goTo('boardgames/'+r.pk)">
 						<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
 							<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{r.img}}">
 								<div class="circleBase" style="font-size:50px;"></div>
@@ -150,6 +160,121 @@
 		</md-tab>
 		<md-tab label="Stats">
 			<md-content>
+			</md-content>
+		</md-tab>
+		<md-tab label="Settings" >
+			<md-content class="pad20l pad20r">
+				<div layout="row" class="pad10t">
+					<div 
+						layout="column" 
+						flex="50" 
+						class="shadowed-box whiteBg">
+						<div layout="row" class=" mrg16">
+							<div layout="column" flex="10" layout-align="center center" >
+								<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
+									<md-tooltip md-direction="top" md-delay="200">aaa</md-tooltip>
+								</i>
+							</div>
+							<div layout="column" flex="70" layout-align="center start" >
+								<h2 class="mrg10">
+									Personal data
+								</h2>
+							</div>
+							<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
+								<md-button class="md-primary" ng-click="pCtrl.save()">Save</md-button>
+							</div>
+						</div>
+						<div layout="row">
+							<div layout="column" flex class="mrg10l">
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>First name</label>
+												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()" >
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>Last name</label>
+												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>Email</label>
+												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div 
+						layout="column" 
+						flex="50" 
+						class="shadowed-box whiteBg mrg10l">
+						<div layout="row" class=" mrg16">
+							<div layout="column" flex="10" layout-align="center center" >
+								<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
+									<md-tooltip md-direction="top" md-delay="200">aaa</md-tooltip>
+								</i>
+							</div>
+							<div layout="column" flex="70" layout-align="center start" >
+								<h2 class="mrg10">
+									Settings
+								</h2>
+							</div>
+							<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
+								<md-button class="md-primary" ng-click="pCtrl.save()">Save</md-button>
+							</div>
+						</div>
+						<div layout="row">
+							<div layout="column" flex class="mrg10l">
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>First name</label>
+												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()" >
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>Last name</label>
+												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+
+								<div layout="row">
+									<div layout="column" flex="100">
+										<h4 layout="row">
+											<md-input-container flex="90">
+												<label>Email</label>
+												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
+											</md-input-container>
+										</h4>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 			</md-content>
 		</md-tab>
 	</md-tabs>

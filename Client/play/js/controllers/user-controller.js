@@ -1,5 +1,6 @@
 //controller for the list of favourites boardgames
-angular.module("play").controller('profileController', function(Api, $rootScope, $scope) {
+angular.module("play").controller('userController', function(Api, $routeParams, $rootScope, $scope) {
+	this.params=$routeParams;
 	this.user = {};
 	this.friends = [];
 	//hold the number of favourites for the current user
@@ -12,7 +13,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 
 	controller = this;
 	controllerSidebar=this;
-	Api.user($scope.user_pk).then(function(response){
+	Api.user(controller.params.id).then(function(response){
 		controller.user = response.data
 		controller.user.old_username = controller.user.username;
 		controller.user.old_first_name = controller.user.first_name;
@@ -69,15 +70,25 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 		controller.settingsChanged = true;
 	}
 
-	this.save = function(){
-		Api.userput($scope.user_pk, controller.user).then(function(response){
-		controller.user.old_username = controller.user.username;
-		controller.user.old_first_name = controller.user.first_name;
-		controller.user.old_last_name = controller.user.last_name;
-		controller.user.old_email = controller.user.email;
-		controller.infoChanged = false;
-		$rootScope.showToast("Great! Update successful!");
-	}, function errorCallback(response){
-	});
+	this.addFriend = function(){
+		rowToAdd = {
+			'user1' : $rootScope.user_pk,
+			'user2' : controller.user.pk
+		}
+		Api.friendspost(rowToAdd).then(function(response){
+			controller.user.friendship = response.data.pk;
+			$rootScope.showToast("Good job! You have a new friend!");
+		}, function errorCallback(response){
+			console.log(response);
+		});
+	}
+
+	this.removeFriend = function(){
+		Api.frienddelete(controller.user.friendship).then(function(response){
+			controller.user.friendship = 0;
+			$rootScope.showToast("What a pity! You lose a companion");
+		}, function errorCallback(response){
+			console.log(response);
+		});
 	}
 });

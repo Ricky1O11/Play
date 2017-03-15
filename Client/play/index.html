@@ -34,14 +34,14 @@
 		<script src="js/controllers/favourites-controller.js"></script>
 		<script src="js/controllers/home-controller.js"></script>
 		<script src="js/controllers/login-controller.js"></script>
-		<script src="js/controllers/recents-controller.js"></script>
-		<script src="js/controllers/sidebar-controller.js"></script>
-		<script src="js/controllers/sidebar-controller.js"></script>
-		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/match-controller.js"></script>
 		<script src="js/controllers/matches-controller.js"></script>
+		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/profile-controller.js"></script>
+		<script src="js/controllers/recents-controller.js"></script>
 		<script src="js/controllers/register-controller.js"></script>
+		<script src="js/controllers/sidebar-controller.js"></script>
+		<script src="js/controllers/user-controller.js"></script>
 		
 	</head>
 	
@@ -59,8 +59,10 @@
 						<div layout="column" flex="100" class="greyBg blue-grey shadowed-box" layout-padding>
 							<div layout="row" class="height100 clickable" ng-click="goTo('profile/')">	
 								<div layout="column" flex="50" layout-align="center start">
-									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
-										<img ng-src="{{img}}" class="md-avatar size-90" ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image"/>
+									<div class="imgProfile circleBase borderWhite" layout-align="center center">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{username.substring(0,1).toUpperCase()}}</div>
+										</div>
 									</div>
 								</div>						
 									
@@ -73,7 +75,9 @@
 								<div layout="column" flex="50">
 									<div layout="row">
 										<div layout="column" flex="100" layout-align="center start">
-											<a md-colors="{color: 'myTheme-accent'}" href="#/" class="size-24 icon-home decoNone blue-grey"></a>										
+											<a md-colors="{color: 'myTheme-accent'}" ng-click="sCtrl.logout()" class="clickable size-18 icon-log-out decoNone blue-grey">
+												<md-tooltip md-direction="down">Logout</md-tooltip>
+											</a>										
 										</div>
 									</div>
 								</div>

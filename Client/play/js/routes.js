@@ -44,6 +44,11 @@ angular.module('play')
 		controller: 'matchesController',
 		controllerAs: 'msCtrl'
 	})
+	.when('/users/:id', {
+		templateUrl: 'templates/user/index.html',
+		controller: 'userController',
+		controllerAs: 'uCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})

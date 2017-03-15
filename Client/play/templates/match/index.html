@@ -171,7 +171,12 @@
 						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
 						ng-click="mCtrl.setVisible(play.pk)">
-							<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>
+							<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+								<div class="circleBase" layout-align="center center" "  ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}">
+									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{play.user_details.username.substring(0,1).toUpperCase()}}</div>
+								</div>
+							</div>
+							<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
 							<div layout="column">
 								<div layout="row">
 									<h3>{{play.user_details.username}}</h3>

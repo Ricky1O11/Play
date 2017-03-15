@@ -15,6 +15,7 @@ angular.module("play").controller('loginController', function(Api, $cookies, $wi
 					$window.location.reload();
 				}
 			}, function errorCallback(response){
+				console.log(response);
 			});
 	};
 });
