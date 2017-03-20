@@ -100,7 +100,7 @@
 							</div>
 							<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
 							<div class="md-list-item-text compact">
-							  <h4>{{player.display}}</h4>
+							  <h4>{{player.display}}{{$index}}</h4>
 							</div>
 							<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player, $index)">
 							  <i class="icon-close-round" ></i>
@@ -122,7 +122,7 @@
 							</div>
 							<!--<img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}" />-->
 							<div class="md-list-item-text compact">
-							  <h4>{{user.display}}</h4>
+							  <h4>{{user.display}}{{$index}}</h4>
 							</div>
 						  </md-list-item>
 					  </div>

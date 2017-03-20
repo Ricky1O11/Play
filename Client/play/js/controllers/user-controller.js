@@ -35,9 +35,6 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 
 	//api call to the list of favourites boardgames
 	Api.favourites().success(function(data){
-		//if(data.length >=4)
-		//	controller.favourites=data.slice(0, 4);
-		//else
 			controller.favourites=data;
 	});
 

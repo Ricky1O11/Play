@@ -1,7 +1,8 @@
 //controller for the list of boardgames
 angular.module("play").controller('boardgamesController', function(Api, $scope) {
 	//this.boardgames=[]; //container of the list of boardgames
-	this.orderingField="-average"; //ordering field, selectable by the user
+	this.selectedOrderingField="-average"; //ordering field, selectable by the user
+	this.actualOrderingField="-average"; //ordering field, selectable by the user
 	this.searchKey=""; //ordering field, selectable by the user
 	controller=this;
 
@@ -48,14 +49,14 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 			this.loadedPages[pageNumber] = null;
 			this.loadedPages[pageNumber] = {};
 			this.loaded += this.PAGE_SIZE;
-			lp = this.loadedPages;
+			lp = this.loadedPages; 
 			ps = this.PAGE_SIZE;
 			var pageOffset = pageNumber * this.PAGE_SIZE;
 			//api call to the list of boardgames
-			Api.boadgames(pageOffset, ps, controller.orderingField, controller.searchKey).then(function(response){
+			Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey).then(function(response){
 				lp[pageNumber]=response.data;
 				for(i=0;i<lp[pageNumber].length;i++){
-					if(lp[pageNumber][i].favourite.length > 0){
+					if(lp[pageNumber][i].favourite > 0){
 						lp[pageNumber][i].isFavourite = true;
 					}
 					else{
@@ -74,20 +75,20 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 
 	this.toggleFavourites = function(favourite, boardgame, user, id, index){
 		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);
-		if(favourite.length > 0){
-		  Api.favouritedelete(favourite[0].pk).then(
+		if(favourite > 0){
+		  Api.favouritedelete(favourite).then(
 							  function(response){
 							  }, function errorCallback(response){
 							  }
 							);
-			controller.boardgames.loadedPages[page_number][id].favourite = [];
+			controller.boardgames.loadedPages[page_number][id].favourite = -1;
 			controller.boardgames.loadedPages[page_number][id].isFavourite = false;
 		}
 		else{
 			data = {'boardgame': boardgame};
 			Api.favouritepost(data).then(
 							  function(response){
-								controller.boardgames.loadedPages[page_number][id].favourite = [{'pk' : response.data.pk}];
+								controller.boardgames.loadedPages[page_number][id].favourite = response.data.pk;
 							  }, function errorCallback(response){
 							  }
 			);
@@ -114,13 +115,17 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 	
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
-		controller.orderingField = field;
+		controller.selectedOrderingField = field;
+		if(field == "favourite"){
+			controller.actualOrderingField = "title";
+		}
+		else controller.actualOrderingField = field;
 		this.boardgames = new DynamicItems();
 	}
 	
 	//get the ordering field selected by the user
 	this.getOrderingField= function(){
-		return controller.orderingField;
+		return controller.selectedOrderingField;
 	}
 
 	this.search = function(){

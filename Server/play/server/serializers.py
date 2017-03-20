@@ -310,12 +310,16 @@ class BoardgamesSerializers(serializers.ModelSerializer):
         auth_user = self.context['request'].user
         if auth_user.is_authenticated():
             favourite = Favourites.objects.filter(boardgame=boardgame, user=auth_user).values('pk')
-            return favourite
-        else: return []
+            if(favourite.count()>0):
+                return favourite[0]["pk"]
+            else:
+                return -1
+        else: return -1
 
     class Meta:
         model = Boardgames
         fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
+        ordering = ('favourite',)
 
 # Json representation of friends
 class FriendsSerializers(serializers.ModelSerializer):

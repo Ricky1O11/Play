@@ -34,6 +34,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 
+	self.adding = false;
+	self.selecting = false;
 	self.saving = false;
 
 	self.range = function(min, max, step) {
@@ -53,7 +55,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	//api call to the list of users
 	Api.users().success(function(data){
-		console.log(data);
 		for (i=0; i<data.length; i++){
 			if(data[i].pk != user_pk){
 				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img})
@@ -175,8 +176,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 
 	this.addTemplate = function(wantToAdd){
-		if(!self.saving){
-			self.saving = true;
+		if(!self.adding){
+			self.adding = true;
 			if(wantToAdd){
 				self.goTo(3);
 			}
@@ -188,8 +189,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.selectTemplate = function(template){
-		if(!self.saving){
-			self.saving = true;
+		if(!self.selecting){
+			self.selecting = true;
 			self.selectedValues.scoringFields = template.scoringField_details;
 			self.postMatch("selectTemplate");
 		}
@@ -235,9 +236,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-
-
-
 	this.postPlay = function(step){
 		
 
@@ -261,9 +259,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		); 
 	}
 
-
-
-
 	this.postTemplate = function(){
 		//prepare the "template" row to be inserted in the templates table
 		row={	
@@ -282,10 +277,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		);
 		
 	}
-
-
-
-
 
 	this.postScoringFields = function(){
 		//clean selectedValues array removing all null entries
@@ -308,9 +299,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			}
 		);
 	}
-
-
-
 
 	this.postWord = function(){
 		for (i=0; i<self.dictionarySearchText.length; i++){
@@ -341,10 +329,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-
-
-
-
 	this.postDetailedPoints = function(){
 		for (i=0; i<self.selectedValues.play.length; i++){	
 			//get the current play id
@@ -374,8 +358,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 
-
-
 	this.setVisible = function(id){
 		self.selectedValues.templates[id].visible = !self.selectedValues.templates[id].visible;
 	}
@@ -392,8 +374,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	this.togglePlayer = function(act, user, id){
 		if(act == "select"){
-			self.users.splice(id, 1);
 			self.selectedValues.players.push(user);
+			console.log(id)
+			self.users.splice(id, 1);
 		}
 		else{
 			self.selectedValues.players.splice(id, 1);

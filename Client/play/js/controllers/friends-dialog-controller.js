@@ -1,5 +1,5 @@
  //controller for the popup dialog used to insert a new match
-angular.module("play").controller('friendsDialogController', function($scope, Api, $rootScope, $mdDialog, $location, user_pk) {
+angular.module("play").controller('friendsDialogController', function($scope, Api, $route, $rootScope, $mdDialog, $location, user_pk) {
 
 	// list of `state` value/display objects
 	self=this;
@@ -21,9 +21,8 @@ angular.module("play").controller('friendsDialogController', function($scope, Ap
 	};
 	//api call to the list of users
 	Api.users().success(function(data){
-		console.log(data);
 		for (i=0; i<data.length; i++){
-			if(data[i].pk != user_pk || data[i].friendship!=0){
+			if(data[i].pk != user_pk && data[i].friendship==0){
 				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), pk:data[i].pk, img:data[i].profile_details.img})
 			}
 		}
@@ -33,7 +32,6 @@ angular.module("play").controller('friendsDialogController', function($scope, Ap
 		listUsers = [];
 		console.log("ok");
 		for(i=0; i<self.friends.length;i++){
-			console.log("for ok");
 			rowAddFriend = {
 			'user1' : $rootScope.user_pk,
 			'user2' : self.friends[i].pk
@@ -43,6 +41,8 @@ angular.module("play").controller('friendsDialogController', function($scope, Ap
 		
 		Api.friendspost(listUsers).then(function(response){
 			$rootScope.showToast("Good job! You have "+listUsers.length+" new friend!");
+			$mdDialog.hide();
+			$route.reload();
 		}, function errorCallback(response){
 		});
 	}
