@@ -17,7 +17,7 @@ class SimpleBoardgamesSerializers(serializers.ModelSerializer):
 class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model = Profile
-        fields = ('pk', 'img',)
+        fields = ('pk', 'img', 'rec_setting', 'fav_setting', 'visibility_group')
 
 # Json representation of users and statistics
 class UserRegisterSerializers(serializers.ModelSerializer):
@@ -66,18 +66,6 @@ class UsersSerializers(serializers.ModelSerializer):
     match_won = serializers.SerializerMethodField()
     match_played_with = serializers.SerializerMethodField()
     profile_details = serializers.SerializerMethodField()
-
-    # Get list of all friend playing a boardgame, given a user
-    #def get_friends(self, boardgame):
-    #    auth_user = self.context['request'].user
-    #    if auth_user.is_authenticated():
-    #        friends = Users.objects.filter(plays__match__boardgame=boardgame,
-    #                                       user2__user1=auth_user).distinct() | Users.objects.filter(
-    #                                        plays__match__boardgame=boardgame,
-    #                                        user1__user2=auth_user).distinct()
-    #        serializer = UsersSerializers(friends, many=True,
-    #                                      context={'request': self.context['request'], 'boardgame': boardgame})
-    #        return serializer.data
     
     friendship = serializers.SerializerMethodField()
 

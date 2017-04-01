@@ -40,7 +40,7 @@
 				}
 			});
 
-			$rootScope.showPopup = function(ev, user_pk,string) {
+			$rootScope.showPopup = function(ev, user_pk, string) {
 				$mdDialog.show({
 					locals:{user_pk : user_pk},
 					controller: string+'DialogController',

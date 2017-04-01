@@ -13,11 +13,14 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	controller = this;
 	controllerSidebar=this;
 	Api.user($scope.user_pk).then(function(response){
-		controller.user = response.data
+		controller.user = response.data;
 		controller.user.old_username = controller.user.username;
 		controller.user.old_first_name = controller.user.first_name;
 		controller.user.old_last_name = controller.user.last_name;
 		controller.user.old_email = controller.user.email;
+		controller.user.profile_details.old_visibility_group = controller.user.profile_details.visibility_group;
+		controller.user.profile_details.old_fav_setting = controller.user.profile_details.fav_setting;
+		controller.user.profile_details.old_rec_setting = controller.user.profile_details.rec_setting;
 		console.log(controller.user);
 	}, function errorCallback(response){
 	});
@@ -33,7 +36,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	});
 
 	//api call to the list of favourites boardgames
-	Api.favourites().success(function(data){
+	Api.favourites($scope.user_pk).success(function(data){
 		//if(data.length >=4)
 		//	controller.favourites=data.slice(0, 4);
 		//else
@@ -41,7 +44,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	});
 
 	//api call to the list of the played boardgames
-	Api.recents().success(function(data){
+	Api.recents($scope.user_pk).success(function(data){
 		controller.recents=data;
 	});
 
@@ -69,15 +72,32 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 		controller.settingsChanged = true;
 	}
 
-	this.save = function(){
+	this.saveInfo = function(){
 		Api.userput($scope.user_pk, controller.user).then(function(response){
-		controller.user.old_username = controller.user.username;
-		controller.user.old_first_name = controller.user.first_name;
-		controller.user.old_last_name = controller.user.last_name;
-		controller.user.old_email = controller.user.email;
-		controller.infoChanged = false;
-		$rootScope.showToast("Great! Update successful!");
-	}, function errorCallback(response){
-	});
+			controller.user.old_username = controller.user.username;
+			controller.user.old_first_name = controller.user.first_name;
+			controller.user.old_last_name = controller.user.last_name;
+			controller.user.old_email = controller.user.email;
+			controller.user.profile_details.old_visibility_group = controller.user.profile_details.visibility_group;
+			controller.user.profile_details.old_fav_setting = controller.user.profile_details.fav_setting;
+			controller.user.profile_details.old_rec_setting = controller.user.profile_details.rec_setting;
+			controller.infoChanged = false;
+			$rootScope.showToast("Great! Update successful!");
+		}, function errorCallback(response){
+		});
 	}
+
+	this.saveSettings = function(){
+		Api.profileput($scope.user_pk, controller.user.profile_details).then(function(response){
+			console.log(response);
+			controller.user.profile_details.old_visibility_group = controller.user.profile_details.visibility_group;
+			controller.user.profile_details.old_fav_setting = controller.user.profile_details.fav_setting;
+			controller.user.profile_details.old_rec_setting = controller.user.profile_details.rec_setting;
+			controller.settingsChanged = false;
+			$rootScope.showToast("Great! Update successful!");
+		}, function errorCallback(response){
+			console.log(response);
+		});
+	}
+
 });

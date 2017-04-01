@@ -10,6 +10,7 @@ urlpatterns = [
     url(r'^boardgames/(?P<pk>[0-9]+)/$', views.BoardgameDetail.as_view()), #single boardgame's details
     url(r'^users/$', views.UsersList.as_view(), name='users'), #users list
     url(r'^users/(?P<pk>[0-9]+)/$', views.UserDetail.as_view()), #user's detail
+    url(r'^profiles/(?P<pk>[0-9]+)/$', views.ProfileDetail.as_view()), #user's detail
     url(r'^matches/$', views.MatchesList.as_view(), name='matches'), #matches list
     url(r'^matches/(?P<pk>[0-9]+)/$', views.MatchDetail.as_view(), name='matchDetail'), #match's detail
     url(r'^friends/$', views.FriendsList.as_view(), name='friends'), #friends list

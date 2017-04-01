@@ -91,15 +91,16 @@ class BoardgamesList(APIView):
 
 # Boardgame list with filters. Allowed: "favourites", "recents"
 class BoardgamesListFiltered(APIView):
+    permission_classes = (AllowAny,)
     def get(self, request, filter):
-        auth_user = self.request.user
+        user_id = self.request.query_params.get('user_id', None)
         if (filter == 'favourites' or filter == 'favourites'):
-            boardgames = Boardgames.objects.filter(favourites__user=auth_user)
+            boardgames = Boardgames.objects.filter(favourites__user=user_id)
             boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
             return Response(boardgamesSerializers.data)
 
         elif (filter == 'recents'):
-            boardgames = Boardgames.objects.filter(matches__plays__user=auth_user).distinct()
+            boardgames = Boardgames.objects.filter(matches__plays__user=user_id).distinct()
             boardgames.order_by('matches__match_time')
             boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
             return Response(boardgamesSerializers.data)
@@ -158,6 +159,22 @@ class UserDetail(APIView):
             user = self.get_object(pk)
             user.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+# Single profile details
+class ProfileDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Profile.objects.get(pk=pk)
+        except Profile.DoesNotExist:
+            return 0
+            
+    def put(self, request, pk):
+        profile = self.get_object(pk)
+        profileSerializers = ProfileSerializers(profile, data=request.data, context={'request': request})
+        if profileSerializers.is_valid():
+            profileSerializers.save()
+            return Response(profileSerializers.data)
+        return Response(profileSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
 
 # Match list
 class MatchesList(APIView):
@@ -251,7 +268,8 @@ class FavouritesList(APIView):
 
     permission_classes = (AllowAny,)
     def get(self, request):
-        favourites = Favourites.objects.all()
+        user_id = self.request.query_params.get('user_id', None)
+        favourites = Favourites.objects.filter(user = user_id)
         favouritesSerializers = FavouritesSerializers(favourites, many=True, context={'request': request})
         return Response(favouritesSerializers.data)
 

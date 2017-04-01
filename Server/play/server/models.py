@@ -38,6 +38,9 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     birth_date = models.DateField(null=True, blank=True)
     img = models.CharField(max_length=256, default="img/profile-default.png", blank=True)
+    visibility_group = models.IntegerField(default=0)
+    fav_setting = models.BooleanField(default=True)
+    rec_setting = models.BooleanField(default=False)
 
     def __unicode__(self):
         return self.user.username

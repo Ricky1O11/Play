@@ -2,7 +2,6 @@
 angular.module("play").controller('userController', function(Api, $routeParams, $rootScope, $scope) {
 	this.params=$routeParams;
 	this.user = {};
-	this.friends = [];
 	//hold the number of favourites for the current user
 	this.favourites = [];
 	//hold the number of matches played by the current user
@@ -14,50 +13,26 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 	controller = this;
 	controllerSidebar=this;
 	Api.user(controller.params.id).then(function(response){
-		controller.user = response.data
-		controller.user.old_username = controller.user.username;
-		controller.user.old_first_name = controller.user.first_name;
-		controller.user.old_last_name = controller.user.last_name;
-		controller.user.old_email = controller.user.email;
-		console.log(controller.user);
+		controller.user = response.data		
+		if(controller.user.profile_details.visibility_group == 0 || (controller.user.profile_details.visibility_group == 1 && controller.user.friendship > 0)){
+
+			if(controller.user.profile_details.fav_setting){
+				//api call to the list of favourites boardgames
+				Api.favourites(controller.params.id).success(function(data){
+					controller.favourites=data;
+				});
+			}
+
+			if(controller.user.profile_details.rec_setting){
+				//api call to the list of the played boardgames
+				Api.recents(controller.params.id).success(function(data){
+					controller.recents=data;
+				});
+			}
+		}
 	}, function errorCallback(response){
 	});
-	Api.friends().success(function(data){
-		for(i = 0;i<data.length; i++){
-			if(data[i].user1 != $scope.user_pk){
-				controller.friends.push(data[i].user1_details);
-			}
-			else if(data[i].user2 != $scope.user_pk){
-				controller.friends.push(data[i].user2_details);
-			}
-		}
-	});
 
-	//api call to the list of favourites boardgames
-	Api.favourites().success(function(data){
-			controller.favourites=data;
-	});
-
-	//api call to the list of the played boardgames
-	Api.recents().success(function(data){
-		controller.recents=data;
-	});
-
-	//is the "title" game a favourite for the current user?
-	this.inFavourites = function(title){
-		for(f=0; f<controller.favourites.length; f++){
-			if(title == controller.favourites[f].title)
-				return true;
-		}
-		return false;
-	}
-
-	this.setInfoChanged = function(){
-		controller.infoChanged = true;
-	}
-	this.setSettingsChanged = function(){
-		controller.settingsChanged = true;
-	}
 
 	this.addFriend = function(){
 		rowToAdd = [{

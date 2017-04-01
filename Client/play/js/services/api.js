@@ -24,13 +24,17 @@ angular.module('play')
 						u = $http({method: 'PUT', url: BASE_URL+'/users/'+user_id+'/', data:user_data});
 						return u;
 					},
-					
+
+		profileput:		function(user_id, user_data){
+						u = $http({method: 'PUT', url: BASE_URL+'/profiles/'+user_id+'/', data:user_data});
+						return u;
+					},					
 		users:		function(){
 						us = $http({method: 'GET', url: BASE_URL+'/users/'});
 						return us;
 					},
-		favourites:	function(){
-						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/'});
+		favourites:	function(user_id){
+						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/?user_id='+user_id});
 						return f;
 					},
 		friends:	function(){
@@ -47,7 +51,7 @@ angular.module('play')
 					},
 					
 		recents:	function(user_id){
-						r = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/'});
+						r = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?user_id='+user_id});
 						return r;
 					},
 		boadgames:	function(offset, limit, orderingField, key){
