@@ -63,6 +63,7 @@ class Matches(models.Model):
     location = models.CharField(max_length=100,  default="", blank=True)
     duration = models.IntegerField(default=0)
     status = models.IntegerField(default=0) #0 = in progress, 1 = completed
+    winner = models.ForeignKey(User, on_delete=models.CASCADE, null=True)
 
     def __unicode__(self):
         return "Match " + str(self.id) + " - game: " + str(self.boardgame).decode('utf8')

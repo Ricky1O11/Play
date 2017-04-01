@@ -48,31 +48,12 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.startEditMode = function($event){
 		controller.editMode = true;
 		controller.fabOpen = true;
-		console.log(controller.editMode);
-		console.log(controller.fabOpen);
 		controller.allVisible = true;
 	}
 
 	this.endEditMode = function(wantToSave){
 		controller.editMode = !controller.editMode;
 		if(wantToSave){
-			row={
-				duration:controller.match.duration,
-				boardgame:controller.match.boardgame,
-				location:controller.match.location,
-				time:controller.match.time,
-				name:controller.match.name,
-				status:controller.match.status
-				}
-
-			Api.matchput(row, controller.match.pk).then(function(data){
-					controller.match.old_location = controller.match.location;
-					controller.match.old_duration = controller.match.duration;
-					controller.match.old_time = controller.match.time;
-					controller.match.old_name = controller.match.name;
-				}, 
-				function errorCallback(response) {
-				});
 
 			for(i = 0; i<controller.match.plays_set.length; i++){
 				play_pk = controller.match.plays_set[i].pk;
@@ -88,8 +69,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 							detailed_points:detailedPoints
 						};
 						Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
-							controller.allVisible = false;
-							controller.managePlays();
 						}, 
 						function errorCallback(response) {
 							return;
@@ -97,6 +76,29 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 					}
 				}
 			}
+			controller.allVisible = false;
+			controller.managePlays();
+			console.log(controller.getWinner());
+			row={
+				duration:controller.match.duration,
+				boardgame:controller.match.boardgame,
+				location:controller.match.location,
+				time:controller.match.time,
+				name:controller.match.name,
+				status:controller.match.status,
+				winner: controller.getWinner()
+				}
+
+			Api.matchput(row, controller.match.pk).then(function(data){
+				controller.match.old_location = controller.match.location;
+				controller.match.old_duration = controller.match.duration;
+				controller.match.old_time = controller.match.time;
+				controller.match.old_name = controller.match.name;
+			}, 
+			function errorCallback(response) {
+			});
+
+
 			$rootScope.showToast("Match successfully edited!");
 		}
 		else{
@@ -187,7 +189,8 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			row={
 				boardgame:controller.match.boardgame,
 				duration:controller.match.duration,
-				status:id
+				status:id,
+				winner: controller.getWinner()
 				}
 
 			Api.matchput(row, controller.match.pk).then(function(data){
@@ -200,6 +203,19 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 				});
 		}
 	}
+
+	this.getWinner = function(){
+		winner_pk = null;
+		winner_points = 0;
+		for(i = 0; i<controller.match.plays_set.length; i++){
+			if(controller.match.plays_set[i].points >winner_points){
+				winner_pk = controller.match.plays_set[i].user;
+				winner_points = controller.match.plays_set[i].points;
+			}	
+		}
+		return winner_pk;
+	}
+
 
 	this.is = function(message){
 		return controller.match.statusMessage == message;
@@ -214,8 +230,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 				status:controller.match.status
 				}
 
-			Api.matchput(row, controller.match.pk).then(function(data){
-					
+			Api.matchput(row, controller.match.pk).then(function(data){	
 				}, 
 				function errorCallback(response) {
 					console.log(response);

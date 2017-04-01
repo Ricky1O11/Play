@@ -375,8 +375,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	this.togglePlayer = function(act, user, id){
 		if(act == "select"){
 			self.selectedValues.players.push(user);
-			console.log(id)
-			self.users.splice(id, 1);
+			console.log(id);
+			for(i=0;i<self.users.length;i++){
+				if(self.users[i].id == id)
+					self.users.splice(i, 1);
+			}
 		}
 		else{
 			self.selectedValues.players.splice(id, 1);

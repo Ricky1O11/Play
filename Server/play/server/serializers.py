@@ -113,39 +113,14 @@ class UsersSerializers(serializers.ModelSerializer):
             boardgame = self.context["boardgame"]
             # Extract the match-points pair from the plays table, stating the highest result for each match.
             #.values() returns a dictionary (json)
-            max_points_per_match = Plays.objects.filter(match__boardgame=boardgame).values('match').annotate(max_points=Max('points'))
-
-            #Q() function is used, here, to recreate the query using the match-points pair obtained above.
-            #It is necessary because .values() returned unusable results for the database.
-            q_statement = Q()
-            for pair in max_points_per_match:
-                q_statement |= (Q(match=pair['match']) & Q(points=pair['max_points']))
-
-            #Count the amount of won matches by filtering the Plays table looking at q_statment and keeping
-            #only the plays in which the given user is the one with the most points.
-            # Finally it counts the number of obtained rows.
-            win_count = Plays.objects.filter(q_statement, user=user).count()
+            match_won = Matches.objects.filter(winner = user, match__boardgame=boardgame).count()
         else:
             # Extract the match-points pair from the plays table, stating the highest result for each match.
             #.values() returns a dictionary (json) and, aggregate with the "Max" function, performs a group by operation
             #The dictionary cannot be further analyzed because we have not visibility of the other fields of the record.
-            max_points_per_match = Plays.objects.all().values('match').annotate(max_points=Max('points'))
+            match_won = Matches.objects.filter(winner = user).count()
 
-            #Q() function is used, here, to recreate the query using the match-max_points pair obtained above.
-            # "|=" operator concatenate all the possible combination of match-points in an OR sequence in order to
-            #catch all the corresponding records. In this way we can re-obtain the full records, containing also the
-            #information regarding the "winning" user. In this way we can catch if the analyzed user is the one that
-            #obtained the highest points for each match.
-            q_statement = Q()
-            for pair in max_points_per_match:
-                q_statement |= (Q(match=pair['match']) & Q(points=pair['max_points']))
-
-            #Count the amount of won matches by filtering the Plays table looking at q_statment and keeping
-            #only the plays in which the given user is the one with the most points.
-            # Finally it counts the number of obtained rows.
-            win_count = Plays.objects.filter(q_statement, user=user).count()
-
-        return win_count
+        return match_won
 
     class Meta:
         model = User
@@ -233,7 +208,7 @@ class MatchesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'duration', 'plays_set',)
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'duration', 'plays_set', 'winner')
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):

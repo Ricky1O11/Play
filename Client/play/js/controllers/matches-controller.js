@@ -6,10 +6,11 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 	controller=this;
 
 	//api call to the list of boardgames
-	Api.matches().success(function(data){
+	Api.matches($scope.user_pk).success(function(data){
 		controller.games=data;
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
+			console.log(controller.games[i]);
 			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
 			if(controller.games[i].favourite.length > 0){
 				controller.games[i].isFavourite = true;

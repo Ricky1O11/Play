@@ -70,8 +70,8 @@ angular.module('play')
 						m = $http({method: 'GET', url: BASE_URL+'/matches/'+id+'/'});
 						return m;
 					},	
-		matches:	function(){
-						ms = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?include=matches'});
+		matches:	function(user_id){
+						ms = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?user_id='+user_id+'&include=matches'});
 						return ms;
 					},	
 		matchpost:	function(match){

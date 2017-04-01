@@ -100,7 +100,7 @@
 							</div>
 							<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
 							<div class="md-list-item-text compact">
-							  <h4>{{player.display}}{{$index}}</h4>
+							  <h4>{{player.display}}</h4>
 							</div>
 							<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player, $index)">
 							  <i class="icon-close-round" ></i>
@@ -113,7 +113,7 @@
 					  <md-subheader class="md-no-sticky">Select companions</md-subheader>
 					  <div class="maxHeight200 overflowScroll">
 						  <md-list-item class="md-1-line contact-item" ng-repeat="user in mdCtrl.users | orderBy:'-friendship'"
-						  ng-click="mdCtrl.togglePlayer('select', user, $index)" 
+						  ng-click="mdCtrl.togglePlayer('select', user, user.id)" 
 						  >
 						 	 <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
 								<div class="circleBase" layout-align="center center" " ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}">
@@ -122,14 +122,13 @@
 							</div>
 							<!--<img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}" />-->
 							<div class="md-list-item-text compact">
-							  <h4>{{user.display}}{{$index}}</h4>
+							  <h4>{{user.display}}</h4>
 							</div>
 						  </md-list-item>
 					  </div>
 					</md-list>
 
 				</div>
-				 
 				<div layout="column" flex class="clear">
 					<div layout="row" layout-align="end center">
 						<md-button aria-label="next" class="md-fab size-24" ng-click="mdCtrl.goTo(2)">
