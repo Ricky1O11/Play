@@ -27,9 +27,10 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    #in_files = [f for f in listdir("../../jsons") if isfile(join("../../jsons", f))]
-    #for in_file in in_files:
-        in_file = "bgg_1_500.json"
+    in_files = [f for f in listdir("../../jsons") if isfile(join("../../jsons", f))]
+    expansionsDict = {}
+    for in_file in in_files[0:5]:
+        #in_file = "bgg_1_500.json"
         file = open(join("../../jsons", in_file), "r")
         text = file.read()
 
@@ -38,7 +39,6 @@ def readBgg(self):
         #try:
         boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
 
-        expansionsDict = {}
         for i in range(int(boundaries[0]),int(boundaries[1])):
             if(str(i) in data):
 
@@ -82,12 +82,10 @@ def readBgg(self):
                         if("thumbnail" in game):
                             gamedb.thumbnail = game["thumbnail"]
 
-                        if("boardgameexpansion" in game): #if the game belogs to a family
-                            for bgFather in game["boardgameexpansion"]:
-                                if(bgFather in expansionsDict): #look if the family has already been considered
-                                    expansionsDict[bgFather].append(gamedb)
-                                else: #otherwise insert it
-                                    expansionsDict[bgFather] = [gamedb]
+                        if("boardgameexpansion" in game): #if the game has expansions
+                            expansionsDict[i] = game["boardgameexpansion"]
+
+                        #TODO: manage new expansions
                         gamedb.save()
                         
                         if("boardgamecategory" in game):
@@ -134,7 +132,18 @@ def readBgg(self):
                                 publishedbydb.publisher=  currentPublisher
                                 publishedbydb.boardgame = gamedb
                                 publishedbydb.save()
-        print expansionsDict
+        
+    for game_id in expansionsDict:
+        print game_id
+        boardgame_record = Boardgames.objects.filter(bggid = game_id)
+        for expansion_name in expansionsDict[game_id]:
+            expansion = Boardgames.objects.filter(title = expansion_name)
+            if(expansion.count() == 1):
+                expansionofdb = IsExpansionOf()
+                expansionofdb.boardgame1=  expansion[0]
+                expansionofdb.boardgame2 = boardgame_record[0]
+                expansionofdb.save()
+
         #return HttpResponse("Pro")
         #except:
         #    return HttpResponse("Seghe")
