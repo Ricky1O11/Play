@@ -9,6 +9,9 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from rest_framework.pagination import LimitOffsetPagination
+from os import listdir
+from os.path import isfile, join
+import sys
 
 from rest_framework.permissions import AllowAny,IsAuthenticated
 #from django.db.models import F, Q
@@ -24,50 +27,117 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    in_file = open("server/bgg_1_20.json", "r")
-    text = in_file.read()
+    #in_files = [f for f in listdir("../../jsons") if isfile(join("../../jsons", f))]
+    #for in_file in in_files:
+        in_file = "bgg_1_500.json"
+        file = open(join("../../jsons", in_file), "r")
+        text = file.read()
 
-    data = json.loads(text)
-    in_file.close()
-    try:
-        for i in range(1,21):
+        data = json.loads(text)
+        file.close()
+        #try:
+        boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
+
+        expansionsDict = {}
+        for i in range(int(boundaries[0]),int(boundaries[1])):
             if(str(i) in data):
+
                 game = data[str(i)]
                 gamedb = Boardgames()
+                if("rpgartist" in game or 
+                    "rpgdesigner" in game or 
+                    "rpgpublisher" in game or 
+                    "videogamedeveloper" in game or
+                    "videogamepublisher" in game):
+                    print "Not a boardgame: skipped"
+                else:
+                    if(Boardgames.objects.filter(bggid = i).count() == 0):
+                        print "Boardgame id: " + str(i)
+                        gamedb.bggid = i
+                        if("average" in game):
+                            if(game["average"] != "null"):
+                                gamedb.average = game["average"]
+                        if("description" in game):
+                            gamedb.description = game["description"]
+                        if("image" in game):
+                            gamedb.img = game["image"]
+                        if("name" in game):
+                            gamedb.title = game["name"]
+                        if("usersrated" in game):
+                            gamedb.usersrated = game["usersrated"]
+                        if("maxplayers" in game):
+                            gamedb.maxplayers = game["maxplayers"]
+                        if("maxplaytime" in game):
+                            gamedb.maxplaytime = game["maxplaytime"]
+                        if("age" in game):
+                            gamedb.minage = game["age"]
+                        if("minplayers" in game):
+                            gamedb.minplayers = game["minplayers"]
+                        if("minplaytime" in game):
+                            gamedb.minplaytime = game["minplaytime"]
+                        if("playingtime" in game):
+                            gamedb.playingtime = game["playingtime"]
+                        if("yearpublished" in game):
+                            gamedb.yearpublished = game["yearpublished"]
+                        if("thumbnail" in game):
+                            gamedb.thumbnail = game["thumbnail"]
 
-                gamedb.bggid = i
-                if("average" in game):
-                    gamedb.average = game["average"]
-                if("description" in game):
-                    gamedb.description = game["description"]
-                if("image" in game):
-                    gamedb.img = game["image"]
-                if("name" in game):
-                    gamedb.title = game["name"]
-                if("usersrated" in game):
-                    gamedb.usersrated = game["usersrated"]
-                if("maxplayers" in game):
-                    gamedb.maxplayers = game["maxplayers"]
-                if("maxplaytime" in game):
-                    gamedb.maxplaytime = game["maxplaytime"]
-                if("age" in game):
-                    gamedb.minage = game["age"]
-                if("minplayers" in game):
-                    gamedb.minplayers = game["minplayers"]
-                if("minplaytime" in game):
-                    gamedb.minplaytime = game["minplaytime"]
-                if("playingtime" in game):
-                    gamedb.playingtime = game["playingtime"]
-                if("yearpublished" in game):
-                    gamedb.yearpublished = game["yearpublished"]
-                if("thumbnail" in game):
-                    gamedb.thumbnail = game["thumbnail"]
-                gamedb.save()
+                        if("boardgameexpansion" in game): #if the game belogs to a family
+                            for bgFather in game["boardgameexpansion"]:
+                                if(bgFather in expansionsDict): #look if the family has already been considered
+                                    expansionsDict[bgFather].append(gamedb)
+                                else: #otherwise insert it
+                                    expansionsDict[bgFather] = [gamedb]
+                        gamedb.save()
+                        
+                        if("boardgamecategory" in game):
+                            for cat in game["boardgamecategory"]:
+                                categorydb = Category()
+                                category = Category.objects.filter(name = cat)
+                                if(category.count() == 0):
+                                    categorydb.name = cat
+                                    categorydb.save()
+                                    currentCategory = categorydb
+                                else:
+                                    currentCategory = category[0]
+                                belongsdb = BelongsToTheCategory()
+                                belongsdb.category =  currentCategory
+                                belongsdb.boardgame = gamedb
+                                belongsdb.save()
 
-        return HttpResponse("Correct reading")
-    except:
-        return HttpResponse("Wrong reading")
+                        if("boardgamedesigner" in game):
+                            for des in game["boardgamedesigner"]:
+                                designerdb = Designer()
+                                designer = Designer.objects.filter(name = des)
+                                if(designer.count() == 0):
+                                    designerdb.name = des
+                                    designerdb.save()
+                                    currentDesigner = designerdb
+                                else:
+                                    currentDesigner = designer[0]
+                                designedbydb = IsDesignedBy()
+                                designedbydb.designer =  currentDesigner
+                                designedbydb.boardgame = gamedb
+                                designedbydb.save()
 
+                        if("boardgamepublisher" in game):
+                            for pub in game["boardgamepublisher"]:
+                                publisherdb = Publisher()
+                                publisher = Publisher.objects.filter(name = pub)
+                                if(publisher.count() == 0):
+                                    publisherdb.name = pub
+                                    publisherdb.save()
+                                    currentPublisher = publisherdb
+                                else:
+                                    currentPublisher = publisher[0]
+                                publishedbydb = IsPublishedBy()
+                                publishedbydb.publisher=  currentPublisher
+                                publishedbydb.boardgame = gamedb
+                                publishedbydb.save()
+        print expansionsDict
+        #return HttpResponse("Pro")
+        #except:
+        #    return HttpResponse("Seghe")
 # Boardgame list
 class BoardgamesList(APIView):
     permission_classes = (AllowAny,)

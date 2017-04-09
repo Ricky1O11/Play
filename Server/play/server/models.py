@@ -31,7 +31,7 @@ class Boardgames(models.Model):
     usersrated=models.IntegerField(default=0)
 
     def __unicode__(self):
-        return str(self.id) +" - "+self.title
+        return str(self.id) +" - "+ self.title
 
 class Profile(models.Model):
     #user_id = models.AutoField(primary_key=True)
@@ -121,3 +121,59 @@ class DetailedPoints(models.Model):
     def __unicode__(self):
         return str(self.scoringField).decode('utf8') + ": " + str(self.play)
 
+
+class Designer(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, default="", blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+class IsDesignedBy(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    designer = models.ForeignKey(Designer, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.boardgame).decode('utf8') + " is designed by " + str(self.designer).decode('utf8')
+
+class Category(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, default="", blank=True)
+
+    def __unicode__(self):
+        return str(self.name).decode('utf8')
+
+class BelongsToTheCategory(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    category = models.ForeignKey(Category, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.boardgame).decode('utf8') + " belongs to " + str(self.category).decode('utf8')
+
+class Publisher(models.Model):
+    name = models.CharField(max_length=100, unique=True)
+    description = models.CharField(max_length=1000, default="", blank=True)
+
+    def __unicode__(self):
+        return self.name
+
+class IsPublishedBy(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    publisher = models.ForeignKey(Publisher, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.boardgame).decode('utf8') + " is designed by " + str(self.publisher).decode('utf8')
+
+class IsExpansionOf(models.Model):
+    boardgame1 = models.ForeignKey(Boardgames, related_name='boardgameE1', on_delete=models.CASCADE)
+    boardgame2 = models.ForeignKey(Boardgames, related_name='boardgameE2', on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.boardgame1).decode('utf8') + " is an expansion of " + str(self.boardgame2).decode('utf8')
+
+class BelongsToTheFamily(models.Model):
+    boardgame1 = models.ForeignKey(Boardgames, related_name='boardgameI1', on_delete=models.CASCADE)
+    boardgame2 = models.ForeignKey(Boardgames, related_name='boardgameI2', on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return str(self.boardgame1).decode('utf8') + " belongs to the family of " + str(self.boardgame2).decode('utf8')
