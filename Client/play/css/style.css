@@ -106,7 +106,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .height600{
 	height:600px;
 }
-
+.maxHeight130{
+	max-height: 130px;
+}
 .maxHeight150{
 	max-height: 150px;
 }

@@ -1,7 +1,7 @@
 <div class="container-fluid pad20l pad20t pad20r height100perc" layout="column">
 	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
 		<div layout="column" flex="none" class="relative" >
-			<div class="circleBase imgBoardgame hideScrollbar shadowed-box">
+			<div class="clickable circleBase imgBoardgame hideScrollbar shadowed-box"  ng-click="showImage($event, mCtrl.match.boardgame_details.img)">
 				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
 					<div class="circleBase" style="font-size:50px;"></div>
 				</div>

@@ -1,119 +1,144 @@
 <div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
 	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
 		<div layout="column" flex="none">
-			<div class="circleBase imgBoardgame hideScrollbar shadowed-box">
+			<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.img)">
 				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
 					<div class="circleBase"></div>
-				</div>
+				</div> 
 			</div>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex="100">
-			<div layout="row" class="shadowed-box whiteBg pad20l mrg10b height60">
-				<div layout="column" flex="100"   layout-align="center start">
+			<div layout="row" class="mrg10b">
+				<div layout="column" flex="100"  layout-align="center start">
 					<h1> {{bCtrl.boardgame.title}}</h1>
 				</div>
-				<div layout="column" flex="30"  layout-align="center end">
-					<div layout="row">
-						<div layout="column" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
-							<md-button class="md-primary" ng-click="goTo('designers/'+designer.pk)">
-								{{designer.name}}
-							</md-button>
-						</div>
-					</div>
-				</div>
 			</div>
-			<div layout="row">
-				<div layout="column" flex="100">
-					<div layout="row" class="size-14">
-						<div 
-							layout="column" 
-							flex="30" 
-							class="shadowed-box whiteBg pad10l height60 clickable">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-star" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Average vote</md-tooltip>
-									</i>
+			<md-tabs  md-selected="0" flex
+				md-stretch-tabs="always">
+				<md-tab label="Basic info" >
+					<md-content class="pad5l pad10t">
+						<div layout="row">
+							<div layout="column" flex="100">
+								<div layout="row" class="size-14">
+									<div 
+										layout="column" 
+										flex="30" 
+										class="shadowed-box whiteBg pad10l height60 clickable">
+										<div layout="row" class="height100perc">
+											<div layout="column" flex="20" layout-align="center center" >
+												<i class="size-18 icon-star" md-colors="{color: 'myTheme-accent'}" >
+													<md-tooltip md-direction="top" md-delay="200">Average vote</md-tooltip>
+												</i>
 
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{bCtrl.boardgame.average | number:2}}</h2>
+											</div>
+											<div layout="column" flex="80" layout-align="center center" >
+												<h2>{{bCtrl.boardgame.average | number:2}}</h2>
+											</div>
+										</div>
+										
+									</div>
+									<div 
+										layout="column" 
+										flex="30" 
+										class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+										<div layout="row" class="height100perc">
+											<div layout="column" flex="20" layout-align="center center" >
+												<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" >
+													<md-tooltip md-direction="top" md-delay="200">Publishing year</md-tooltip>
+												</i>
+											</div>
+											<div layout="column" flex="80" layout-align="center center" >
+												<h2>{{bCtrl.boardgame.yearpublished}}</h2>
+											</div>
+											
+										</div>
+									</div>
+									<div 
+										layout="column" 
+										flex="30" 
+										class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+										<div layout="row" class="height100perc">
+											<div layout="column" flex="20" layout-align="center center" >
+												<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
+													<md-tooltip md-direction="top" md-delay="200">Typical playtime</md-tooltip>
+												</i>
+											</div>
+											<div layout="column" flex="80" layout-align="center center" >
+												<h2>{{bCtrl.boardgame.playingtime}} min</h2>
+											</div>
+										</div>
+										
+									</div>
+
+									<div 
+										layout="column" 
+										flex="10" 
+										class="shadowed-box whiteBg height60 clickable mrg10l"
+										layout-align="center center">
+										<i ng-if="bCtrl.isFavourite" 
+										class="icon-heart" 
+										md-colors="{color: 'myTheme-accent'}" 
+										ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+											<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
+										</i>
+
+										<i 
+										ng-if="!bCtrl.isFavourite" 
+										class="icon-heart-o " 
+										md-colors="{color: 'myTheme-accent'}"  
+										ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+											<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
+										</i>
+									</div>
 								</div>
 							</div>
-							
 						</div>
-						<div 
-							layout="column" 
-							flex="30" 
-							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Publishing year</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{bCtrl.boardgame.yearpublished}}</h2>
-								</div>
-								
+						<div layout="row">
+							<div layout="column" flex="100" ng-repeat="category in bCtrl.boardgame.categories | filter:{ name: '!Expansion for Base-game'}">
+								<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+category.pk)">
+									{{category.name}}
+								</md-button>
 							</div>
 						</div>
-						<div 
-							layout="column" 
-							flex="30" 
-							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Typical playtime</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{bCtrl.boardgame.playingtime}} min</h2>
+					</md-content>
+				</md-tab>
+				<md-tab label="Description" class="hideScrollbar">
+					<md-content class="pad5l pad10t hideScrollbar">
+						<div layout="row">
+							<div layout="column" flex="100" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
+								<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+designer.pk)">
+									{{designer.name}}
+								</md-button>
+							</div>
+						</div>
+						<div layout="row">
+							<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
+								<div layout="row" class="size-14 maxHeight130 overflowScroll pad20t pad20b">
+									<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
 								</div>
 							</div>
-							
 						</div>
-
-						<div 
-							layout="column" 
-							flex="10" 
-							class="shadowed-box whiteBg height60 clickable mrg10l"
-							layout-align="center center">
-							<i ng-if="bCtrl.isFavourite" 
-							class="icon-heart" 
-							md-colors="{color: 'myTheme-accent'}" 
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
-								<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
-							</i>
-
-							<i 
-							ng-if="!bCtrl.isFavourite" 
-							class="icon-heart-o " 
-							md-colors="{color: 'myTheme-accent'}"  
-							ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
-								<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
-							</i>
-						</div>
-
-					</div>
-				</div>
-			</div>
-			<div layout="row" class="maxHeight150 mrg10t">
-				<div layout="column" flex="80" class=" shadowed-box whiteBg pad20l">
-					<div layout="row" class="size-14 maxHeight150 overflowScroll pad20t pad20b">
-						<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
-					</div>
-				</div>
-				<div layout="column" flex="20"  layout-align="center center" class="clickable mrg10l height150 shadowed-box whiteBg overflowScroll">
-					<div layout="row" class="size-14 maxHeight150"  
-							ng-repeat="category in bCtrl.boardgame.categories | filter:{ name: '!Expansion for Base-game'}">
-							<div layout="column" flex="100" layout-align="center center"  class="height50" ng-click="goTo('categories/'+category.pk)">
-								{{category.name}}
+					</md-content>
+				</md-tab>
+				<md-tab label="Expansions" class="hideScrollbar">
+					<md-content class="pad5l pad10t hideScrollbar">
+						<div layout="row">
+							<div layout="column" flex="100" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
+								<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+designer.pk)">
+									{{designer.name}}
+								</md-button>
 							</div>
-					</div>
-				</div>
-			</div>
+						</div>
+						<div layout="row">
+							<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
+								<div layout="row" class="size-14 maxHeight130 overflowScroll pad20t pad20b">
+									<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+								</div>
+							</div>
+						</div>
+					</md-content>
+				</md-tab>
+			</md-tabs>
 		</div>
 	</div>
 	<div layout="row" flex="none">

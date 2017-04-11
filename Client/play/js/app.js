@@ -53,6 +53,20 @@
 					//fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
 				})	
 			}
+			$rootScope.showImage = function(ev, url) {
+				$mdDialog.show({
+					locals:{url : url},
+					controller: 'imageDialogController',
+					controllerAs: 'iCtrl',
+					templateUrl: 'templates/imagedialog.html',
+					parent: angular.element(document.body),
+					targetEvent: ev,
+					scope:$rootScope,
+					preserveScope:true,	
+					clickOutsideToClose:true,
+					//fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+				})	
+			}
 
 			//randomly color the avatars of players without a profile picture
 			
@@ -80,5 +94,6 @@
 						.position('top right')
 				);
 			}
+
 		})
 })();
