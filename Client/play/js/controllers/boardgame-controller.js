@@ -7,22 +7,25 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
 	
 	controller=this;
 	//api call to get the single boardgame's details
-	Api.boardgame(controller.params.id).success(function(data){
-		controller.boardgame=data[0];
-		if(controller.boardgame.favourite.length > 0){
+	Api.boardgame(controller.params.id).then(function(response){
+		controller.boardgame=response.data[0];
+		console.log(controller.boardgame);
+		if(controller.boardgame.favourite > 0){
 			controller.isFavourite = true;
 		}
+	}, function errorCallback(response){
+		console.log(response);
 	});
 	
 	this.toggleFavourites = function(favourite, boardgame, user){
-        if(favourite.length > 0){
-          Api.favouritedelete(favourite[0].pk).then(
+        if(favourite > 0){
+          Api.favouritedelete(favourite).then(
                               function(response){
                                 //if successfull, hide the dialog and prompt a message
                               }, function errorCallback(response){
                               }
                             );
-          	controller.boardgame.favourite = [];
+          	controller.boardgame.favourite = -1;
         	controller.isFavourite = false;
         }
         else{
@@ -30,7 +33,7 @@ angular.module("play").controller('boardgameController', function(Api, $routePar
             Api.favouritepost(data).then(
                               function(response){
                                 //if successfull, hide the dialog and prompt a message
-                                controller.boardgame.favourite = [{'pk' : response.data.pk}];
+                                controller.boardgame.favourite = response.data.pk;
                               }, function errorCallback(response){
                               }
                             );

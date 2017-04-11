@@ -1,9 +1,14 @@
 //controller for the list of boardgames
-angular.module("play").controller('boardgamesController', function(Api, $scope) {
+angular.module("play").controller('boardgamesController', function(Api, $scope,$location, $routeParams) {
+	this.location=$location.path();
 	//this.boardgames=[]; //container of the list of boardgames
 	this.selectedOrderingField="-average"; //ordering field, selectable by the user
 	this.actualOrderingField="-average"; //ordering field, selectable by the user
 	this.searchKey=""; //ordering field, selectable by the user
+	this.designer = -1;
+	if(this.location.indexOf("designers") >= 0){
+		this.designer = $routeParams.id;
+	}
 	controller=this;
 
 
@@ -53,7 +58,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope) 
 			ps = this.PAGE_SIZE;
 			var pageOffset = pageNumber * this.PAGE_SIZE;
 			//api call to the list of boardgames
-			Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey).then(function(response){
+			Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey, controller.designer).then(function(response){
 				lp[pageNumber]=response.data;
 				for(i=0;i<lp[pageNumber].length;i++){
 					if(lp[pageNumber][i].favourite > 0){

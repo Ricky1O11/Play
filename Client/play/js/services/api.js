@@ -59,12 +59,20 @@ angular.module('play')
 						if(key != "")
 							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
 						else
-							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&limit='+limit+'+&offset='+offset});
+							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&limit='+limit+'&offset='+offset});
 						return l;
 					},
 		boardgame:	function(id){
 						b = $http({method: 'GET', url: BASE_URL+'/boardgames/'+id+'/?include=matches'});
 						return b;
+					},	
+		designer: function(id){
+						d = $http({method: 'GET', url: BASE_URL+'/designers/'+id+'/'});
+						return d;
+					},
+		category: function(id){
+						c = $http({method: 'GET', url: BASE_URL+'/categories/'+id+'/'});
+						return c;
 					},		
 		match:		function(id){
 						m = $http({method: 'GET', url: BASE_URL+'/matches/'+id+'/'});

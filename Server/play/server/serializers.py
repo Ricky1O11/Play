@@ -210,6 +210,75 @@ class MatchesSerializers(serializers.ModelSerializer):
         model = Matches
         fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'duration', 'plays_set', 'winner')
 
+# Json representation of designers
+class DesignersSerializers(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(DesignersSerializers, self).__init__(*args, **kwargs)
+        # Allowed params: "include"
+        includes = self.context['request'].query_params.get('include')
+        if includes:
+            fields = includes.split(',')
+            allowed = set(fields)
+
+            # Allowed values: "matches", "users", "friends", "favourite"
+            if "boardgames" not in allowed:
+                self.fields.pop("boardgames")
+    boardgames = serializers.SerializerMethodField()
+
+    def get_boardgames(self, designer):
+        boardgames = Boardgames.objects.filter(isdesignedby__designer = designer)
+        serializer = SimpleBoardgamesSerializers(boardgames , many=True)
+        return serializer.data
+    class Meta:
+        model = Designer
+        fields = ('pk', 'name', 'boardgames')
+
+# Json representation of designers
+class PublishersSerializers(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(PublishersSerializers, self).__init__(*args, **kwargs)
+        # Allowed params: "include"
+        includes = self.context['request'].query_params.get('include')
+        if includes:
+            fields = includes.split(',')
+            allowed = set(fields)
+
+            # Allowed values: "matches", "users", "friends", "favourite"
+            if "boardgames" not in allowed:
+                self.fields.pop("boardgames")
+    boardgames = serializers.SerializerMethodField()
+
+    def get_boardgames(self, publisher):
+        boardgames = Boardgames.objects.filter(ispublishedby__publisher = publisher)
+        serializer = SimpleBoardgamesSerializers(boardgames , many=True)
+        return serializer.data
+    class Meta:
+        model = Designer
+        fields = ('pk', 'name', 'boardgames')
+
+# Json representation of designers
+class CategoriesSerializers(serializers.ModelSerializer):
+    def __init__(self, *args, **kwargs):
+        super(CategoriesSerializers, self).__init__(*args, **kwargs)
+        # Allowed params: "include"
+        includes = self.context['request'].query_params.get('include')
+        if includes:
+            fields = includes.split(',')
+            allowed = set(fields)
+
+            # Allowed values: "matches", "users", "friends", "favourite"
+            if "boardgames" not in allowed:
+                self.fields.pop("boardgames")
+    boardgames = serializers.SerializerMethodField()
+
+    def get_boardgames(self, category):
+        boardgames = Boardgames.objects.filter(belongstothecategory__category = category)
+        serializer = SimpleBoardgamesSerializers(boardgames , many=True)
+        return serializer.data
+    class Meta:
+        model = Designer
+        fields = ('pk', 'name', 'boardgames')
+
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):
     # Serializer initialization: read the url params
@@ -238,6 +307,9 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     users = serializers.SerializerMethodField()
     friends = serializers.SerializerMethodField()
     favourite = serializers.SerializerMethodField()
+    designers = serializers.SerializerMethodField()
+    publishers = serializers.SerializerMethodField()
+    categories = serializers.SerializerMethodField()
 
     # Get matches played given a boardgame and a user (all matches if user is not provided)
     def get_matches(self, boardgame):
@@ -279,9 +351,33 @@ class BoardgamesSerializers(serializers.ModelSerializer):
                 return -1
         else: return -1
 
+    # Get list of designers
+    def get_designers(self, boardgame):
+        designers = Designer.objects.filter(isdesignedby__boardgame=boardgame).distinct()
+        serializer = DesignersSerializers(designers, many=True,
+                                      context={'request': self.context['request'], 'boardgame': boardgame})
+        return serializer.data
+
+    # Get list of designers
+    def get_publishers(self, boardgame):
+        publishers = Publisher.objects.filter(ispublishedby__boardgame=boardgame).distinct()
+        serializer = PublishersSerializers(publishers, many=True,
+                                      context={'request': self.context['request'], 'boardgame': boardgame})
+        return serializer.data
+
+    # Get list of designers
+    def get_categories(self, boardgame):
+        categories = Category.objects.filter(belongstothecategory__boardgame=boardgame).distinct()
+        serializer = CategoriesSerializers(categories, many=True,
+                                      context={'request': self.context['request'], 'boardgame': boardgame})
+        return serializer.data
+
     class Meta:
         model = Boardgames
-        fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite')
+        fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 
+                    'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 
+                    'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite', 'designers',
+                    'publishers', 'categories')
         ordering = ('favourite',)
 
 # Json representation of friends

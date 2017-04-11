@@ -49,6 +49,16 @@ angular.module('play')
 		controller: 'userController',
 		controllerAs: 'uCtrl'
 	})
+	.when('/designers/:id', {
+		templateUrl: 'templates/designer/index.html',
+		controller: 'designerController',
+		controllerAs: 'dCtrl'
+	})
+	.when('/categories/:id', {
+		templateUrl: 'templates/category/index.html',
+		controller: 'categoryController',
+		controllerAs: 'cCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})

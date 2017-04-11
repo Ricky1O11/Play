@@ -1,0 +1,65 @@
+<div class="container-fluid" layout-padding layout="column">
+	<div layout="row">
+		<div layout="column" flex="100">
+			<div layout="row" class="height50">
+				<div layout="column" flex="100">
+					<h3 class="blue-grey">{{dCtrl.designer.name}}</h3>
+				</div>
+			</div>
+			
+			<div layout="row" class="overflowScroll">
+				<div layout="column" flex="100">
+					<md-list flex>
+						<md-list-item
+						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
+						ng-href="#/boardgames/{{boardgame.pk}}"
+						ng-repeat="boardgame in dCtrl.designer.boardgames" ng-click="null">
+							<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.title}}" />
+							<div layout="column">
+								<div layout="row">
+									<h3>{{boardgame.title}}</h3>
+								</div>
+								<div layout="row">
+									<div layout="column" class="relative">
+										<div layout="row" class="star-container">
+											<i ng-repeat="star in bsCtrl.range(1,10)" class="icon-star-o "></i>
+										</div>
+										
+										<i>{{boardgame.average | number:2}}</i>
+										<div class="star-container">
+											<div style="width:{{boardgame.average*10}}%; overflow:hidden;">
+												<div class="star-content">
+													<span ng-repeat="star in bsCtrl.range(1,10)" class="icon-star "></span>
+												</div>
+											</div>
+										</div>
+									</div>
+									<div>
+										
+									</div>
+								</div>
+							</div>
+								 
+							<i 
+							aria-label="remove favourite"
+							ng-if="boardgame.isFavourite" 
+							class="icon-heart md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+								<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+							</i>
+							<i 
+							aria-label="add favourite"
+							ng-if="!boardgame.isFavourite" 
+							class="icon-heart-o md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+							</i>
+						</md-list-item>
+					  </md-list>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

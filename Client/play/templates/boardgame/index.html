@@ -3,14 +3,23 @@
 		<div layout="column" flex="none">
 			<div class="circleBase imgBoardgame hideScrollbar shadowed-box">
 				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
-					<div class="circleBase" style="font-size:50px;"></div>
+					<div class="circleBase"></div>
 				</div>
 			</div>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex="100">
-			<div layout="row">
-				<div layout="column" flex="100"  class="shadowed-box whiteBg pad20l mrg10b height60" layout-align="center start">
+			<div layout="row" class="shadowed-box whiteBg pad20l mrg10b height60">
+				<div layout="column" flex="100"   layout-align="center start">
 					<h1> {{bCtrl.boardgame.title}}</h1>
+				</div>
+				<div layout="column" flex="30"  layout-align="center end">
+					<div layout="row">
+						<div layout="column" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
+							<md-button class="md-primary" ng-click="goTo('designers/'+designer.pk)">
+								{{designer.name}}
+							</md-button>
+						</div>
+					</div>
 				</div>
 			</div>
 			<div layout="row">
@@ -90,12 +99,19 @@
 					</div>
 				</div>
 			</div>
-			<div layout="row" class=" shadowed-box whiteBg maxHeight150 mrg10t pad20l">
-				<div layout="column" flex="100">
+			<div layout="row" class="maxHeight150 mrg10t">
+				<div layout="column" flex="80" class=" shadowed-box whiteBg pad20l">
 					<div layout="row" class="size-14 maxHeight150 overflowScroll pad20t pad20b">
 						<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
 					</div>
-
+				</div>
+				<div layout="column" flex="20"  layout-align="center center" class="clickable mrg10l height150 shadowed-box whiteBg overflowScroll">
+					<div layout="row" class="size-14 maxHeight150"  
+							ng-repeat="category in bCtrl.boardgame.categories | filter:{ name: '!Expansion for Base-game'}">
+							<div layout="column" flex="100" layout-align="center center"  class="height50" ng-click="goTo('categories/'+category.pk)">
+								{{category.name}}
+							</div>
+					</div>
 				</div>
 			</div>
 		</div>

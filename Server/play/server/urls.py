@@ -26,6 +26,9 @@ urlpatterns = [
     url(r'^detailedpoints/(?P<pk>[0-9]+)/$', views.DetailedPointDetail.as_view(), name='detailed_pointsDetail'), #detailed point detail
     url(r'^scoringfields/$', views.ScoringFieldsList.as_view(), name='scoring_fields'), #scoring fields list
     url(r'^scoringfields/(?P<pk>[0-9]+)/$', views.ScoringFieldDetail.as_view(), name='scoring_fieldDetail'), #scoring field detail
+    url(r'^designers/(?P<pk>[0-9]+)/$', views.DesignerDetail.as_view(), name='designerDetail'), #designer detail
+    url(r'^publishers/(?P<pk>[0-9]+)/$', views.CategoryDetail.as_view(), name='publisherDetail'), #publisher detail
+    url(r'^categories/(?P<pk>[0-9]+)/$', views.CategoryDetail.as_view(), name='categoryDetail'), #category detail
     url(r'^register/', views.UserRegister.as_view(), name='user_register'),
     url(r'^auth/token/', obtain_jwt_token)
 ]

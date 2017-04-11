@@ -27,11 +27,11 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    in_files = [f for f in listdir("../../jsons") if isfile(join("../../jsons", f))]
+    in_files = [f for f in listdir("../../jsons/trial") if isfile(join("../../jsons/trial", f))]
     expansionsDict = {}
-    for in_file in in_files[0:5]:
+    for in_file in in_files:
         #in_file = "bgg_1_500.json"
-        file = open(join("../../jsons", in_file), "r")
+        file = open(join("../../jsons/trial", in_file), "r")
         text = file.read()
 
         data = json.loads(text)
@@ -136,8 +136,8 @@ def readBgg(self):
     for game_id in expansionsDict:
         print game_id
         boardgame_record = Boardgames.objects.filter(bggid = game_id)
-        for expansion_name in expansionsDict[game_id]:
-            expansion = Boardgames.objects.filter(title = expansion_name)
+        for expansion_id in expansionsDict[game_id]:
+            expansion = Boardgames.objects.filter(bggid = int(expansion_id))
             if(expansion.count() == 1):
                 expansionofdb = IsExpansionOf()
                 expansionofdb.boardgame1=  expansion[0]
@@ -573,4 +573,60 @@ class ScoringFieldDetail(APIView):
         if(auth_user.is_staff):
             scf = self.get_object(pk)
             scf.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+#Designer Detail
+class DesignerDetail(APIView):
+    def get(self, request, pk):
+        designer = Designer.objects.filter(pk = pk)
+        designerSerializers = DesignersSerializers(designer, many=True, context={'request': request})
+        return Response(designerSerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return Designer.objects.get(pk=pk)
+        except Designer.DoesNotExist:
+            return 0
+
+    def put(self, request, pk):
+        designer = self.get_object(pk)
+        designerSerializers = DesignersSerializers(designer, data=request.data, context={'request': request})
+        if designerSerializers.is_valid():
+            designerSerializers.save()
+            return Response(designerSerializers.data)
+        return Response(designerSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            designer = self.get_object(pk)
+            designer.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+#Category Detail
+class CategoryDetail(APIView):
+    def get(self, request, pk):
+        category = Category.objects.filter(pk = pk)
+        categorySerializers = CategoriesSerializers(category, many=True, context={'request': request})
+        return Response(categorySerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return Category.objects.get(pk=pk)
+        except Designer.DoesNotExist:
+            return 0
+
+    def put(self, request, pk):
+        category = self.get_object(pk)
+        categorySerializers = CategoriesSerializers(category, data=request.data, context={'request': request})
+        if categorySerializers.is_valid():
+            categorySerializers.save()
+            return Response(categorySerializers.data)
+        return Response(categorySerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            category = self.get_object(pk)
+            category.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
