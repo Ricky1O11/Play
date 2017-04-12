@@ -1,5 +1,5 @@
 <div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
-	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
+	<div layout="row" flex="none" class="height350 mrg10b mrg10r">
 		<div layout="column" flex="none">
 			<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.img)">
 				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
@@ -8,9 +8,25 @@
 			</div>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex="100">
-			<div layout="row" class="mrg10b">
-				<div layout="column" flex="100"  layout-align="center start">
+			<div layout="row" class="mrg10b height60">
+				<div layout="column" flex="50"  layout-align="center start" class="">
 					<h1> {{bCtrl.boardgame.title}}</h1>
+				</div>
+				<div layout="column" flex="50" layout-align="center end">
+					<div layout="row" ng-if="bCtrl.boardgame.expands.length>0">
+						<div layout="column" layout-align="center end">
+							<p>IS THE EXPANSION OF</p>
+						</div>
+						<div layout="column" class="clickable pad10l" flex="none" ng-repeat="exp in bCtrl.boardgame.expands"
+						ng-click="goTo('boardgames/'+exp.pk)">
+							<div class="circleBase imgExpansion hideScrollbar shadowed-box">
+								<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.img}}">
+									<div class="circleBase" style="font-size:50px;"></div>
+								</div>
+							</div>
+							<md-tooltip md-direction="bottom" md-delay="200">{{exp.title}}</md-tooltip>
+						</div>
+					</div>
 				</div>
 			</div>
 			<md-tabs  md-selected="0" flex
@@ -100,27 +116,27 @@
 								</md-button>
 							</div>
 						</div>
-					</md-content>
-				</md-tab>
-				<md-tab label="Description" class="hideScrollbar">
-					<md-content class="pad5l pad10t hideScrollbar">
-						<div layout="row">
-							<div layout="column" flex="100" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
-								<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+designer.pk)">
-									{{designer.name}}
-								</md-button>
-							</div>
-						</div>
-						<div layout="row">
-							<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
-								<div layout="row" class="size-14 maxHeight130 overflowScroll pad20t pad20b">
-									<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+						<div layout="row" layout-wrap>
+							<div layout="column" flex="50" layout-align="center start">
+								<div layout="row" ng-if="bCtrl.boardgame.expansions.length>0">
+									<div layout="column" layout-align="center end">
+										<p>EXPANSIONS</p>
+									</div>
+									<div layout="column" class="clickable pad10l" flex="none" ng-repeat="exp in bCtrl.boardgame.expansions"
+									ng-click="goTo('boardgames/'+exp.pk)">
+										<div class="circleBase imgExpansion hideScrollbar shadowed-box">
+											<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.img}}">
+												<div class="circleBase" style="font-size:50px;"></div>
+											</div>
+										</div>
+										<md-tooltip md-direction="bottom" md-delay="200">{{exp.title}}</md-tooltip>
+									</div>
 								</div>
 							</div>
 						</div>
 					</md-content>
 				</md-tab>
-				<md-tab label="Expansions" class="hideScrollbar">
+				<md-tab label="Description" class="hideScrollbar">
 					<md-content class="pad5l pad10t hideScrollbar">
 						<div layout="row">
 							<div layout="column" flex="100" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">

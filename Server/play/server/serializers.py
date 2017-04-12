@@ -200,6 +200,8 @@ class MatchesSerializers(serializers.ModelSerializer):
             # Allowed values: "matches", "users", "friends", "favourite"
             if "boardgame" not in allowed:
                 self.fields.pop("boardgame")
+        else:
+            self.fields.pop("boardgame")
 
     def get_boardgame_details(self, match):
         boardgame = Boardgames.objects.get(matches=match)
@@ -223,6 +225,8 @@ class DesignersSerializers(serializers.ModelSerializer):
             # Allowed values: "matches", "users", "friends", "favourite"
             if "boardgames" not in allowed:
                 self.fields.pop("boardgames")
+        else:
+            self.fields.pop("boardgames")
     boardgames = serializers.SerializerMethodField()
 
     def get_boardgames(self, designer):
@@ -246,6 +250,8 @@ class PublishersSerializers(serializers.ModelSerializer):
             # Allowed values: "matches", "users", "friends", "favourite"
             if "boardgames" not in allowed:
                 self.fields.pop("boardgames")
+        else:
+            self.fields.pop("boardgames")
     boardgames = serializers.SerializerMethodField()
 
     def get_boardgames(self, publisher):
@@ -256,7 +262,7 @@ class PublishersSerializers(serializers.ModelSerializer):
         model = Designer
         fields = ('pk', 'name', 'boardgames')
 
-# Json representation of designers
+# Json representation of categories
 class CategoriesSerializers(serializers.ModelSerializer):
     def __init__(self, *args, **kwargs):
         super(CategoriesSerializers, self).__init__(*args, **kwargs)
@@ -269,6 +275,8 @@ class CategoriesSerializers(serializers.ModelSerializer):
             # Allowed values: "matches", "users", "friends", "favourite"
             if "boardgames" not in allowed:
                 self.fields.pop("boardgames")
+        else:
+            self.fields.pop("boardgames")
     boardgames = serializers.SerializerMethodField()
 
     def get_boardgames(self, category):
@@ -310,6 +318,8 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     designers = serializers.SerializerMethodField()
     publishers = serializers.SerializerMethodField()
     categories = serializers.SerializerMethodField()
+    expansions = serializers.SerializerMethodField()
+    expands = serializers.SerializerMethodField()
 
     # Get matches played given a boardgame and a user (all matches if user is not provided)
     def get_matches(self, boardgame):
@@ -372,12 +382,26 @@ class BoardgamesSerializers(serializers.ModelSerializer):
                                       context={'request': self.context['request'], 'boardgame': boardgame})
         return serializer.data
 
+    # Get list of expansions
+    def get_expansions(self, boardgame):
+        boardgames = Boardgames.objects.filter(boardgameE1__boardgame2=boardgame)
+        serializer = SimpleBoardgamesSerializers(boardgames, many=True,
+                                      context={'request': self.context['request'], 'boardgame': boardgame})
+        return serializer.data
+
+    # Get father game
+    def get_expands(self, boardgame):
+        boardgames = Boardgames.objects.filter(boardgameE2__boardgame1=boardgame)
+        serializer = SimpleBoardgamesSerializers(boardgames, many=True,
+                                      context={'request': self.context['request'], 'boardgame': boardgame})
+        return serializer.data
+
     class Meta:
         model = Boardgames
         fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 
                     'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 
                     'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite', 'designers',
-                    'publishers', 'categories')
+                    'publishers', 'categories', 'expansions', 'expands')
         ordering = ('favourite',)
 
 # Json representation of friends

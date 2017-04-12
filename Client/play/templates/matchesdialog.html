@@ -20,6 +20,7 @@
 				
 						<md-autocomplete
 						  md-selected-item="mdCtrl.selectedValues.boardgame"
+						  md-selected-item-change="mdCtrl.showExpansions(boardgame)"
 						  md-search-text="mdCtrl.boardgameSearchText"
 						  md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.boardgameSearchText)"
 						  md-item-text="boardgame.display"
@@ -35,6 +36,28 @@
 								No boardgame matching "{{mdCtrl.boardgameSearchText}}" were found.
 							</md-not-found>
 					  </md-autocomplete>
+					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t" ng-if="mdCtrl.expansions.length>0">		
+						AVAILABLE EXPANSIONS
+					</div>  
+					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
+						<div layout="column" ng-repeat="exp in mdCtrl.expansions" class="pad10l relative" ng-click="mdCtrl.toggleExp(exp.pk)">
+							<div class="circleBase imgProfile hideScrollbar shadowed-box">
+								<div class="circleBase imgProfile" layout-align="center center" back-img="{{exp.thumbnail}}">
+									<div class="circleBase" style="font-size:50px;"></div>
+								</div>
+								<md-tooltip md-direction="bottom" md-delay="200">{{exp.title}}</md-tooltip>
+							</div>
+							<md-button 
+							aria-label="Edit match info" 
+							class="md-fab md-mini absolute1 md-primary"
+							ng-if="mdCtrl.isExpansionSelected(exp.pk)"
+							id="{{exp.pk}}">
+								<i class="icon-check-2"></i>
+							<md-tooltip md-direction="bottom" md-delay="200">Remove expansion</md-tooltip>
+						</md-button>
+						</div>
+						
+					</div>  
 					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
 						<div layout="column" flex-gt-sm="100">  
 						  <md-input-container>

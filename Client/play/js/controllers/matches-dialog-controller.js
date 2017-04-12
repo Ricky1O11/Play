@@ -12,6 +12,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.selectedValues.templates=[]; //list that holds the list of templates available in the db
 	self.selectedValues.dictionary=[]; //list that holds the list of templates available in the db
 	self.selectedValues.matchId = 0; //will contain the id of the inserted match
+	self.selectedValues.expansions = []; //will contain the id of the selected expansions
 	
 	self.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
 	self.postValues.match={};
@@ -23,6 +24,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
+	self.expansions = [];
 	
 	self.users=[];  //list of users to display in the dropdown menu
 	self.nplayers=1; //holds the selected amount of players
@@ -57,7 +59,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	Api.users().success(function(data){
 		for (i=0; i<data.length; i++){
 			if(data[i].pk != user_pk){
-				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img})
+				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.imgimg})
 			}
 			else{
 				 self.selectedValues.players[0] = {display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img};
@@ -77,7 +79,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		return Api.boadgames(0, 500, "title", query).then(function(response){
 			self.boardgames = [];
 			for (i=0; i<response.data.length; i++){
-				self.boardgames[i]={display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail}
+				self.boardgames[i]={display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail, expansions:response.data[i].expansions}
 			}
 			return self.boardgames;
 		});
@@ -228,6 +230,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 						self.postPlay(step);
 					}, 
 					function errorCallback(response) {
+						console.log(response);
 					}
 			);
 		}
@@ -392,5 +395,25 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 	this.dismiss = function(){
 		$mdDialog.hide();
+	}
+
+	this.showExpansions = function(boardgame){
+		if(boardgame != undefined){
+			self.expansions = boardgame.expansions;
+		}
+	}
+
+	this.toggleExp = function(pk){
+		i = self.selectedValues.expansions.indexOf(pk);
+		if(i < 0)
+			self.selectedValues.expansions.push(pk);
+		else
+			self.selectedValues.expansions.splice(i, 1);
+		console.log(self.selectedValues.expansions);
+	}
+	this.isExpansionSelected = function(pk){
+		i = self.selectedValues.expansions.indexOf(pk);
+		console.log(i)
+		return i >= 0;
 	}
 });

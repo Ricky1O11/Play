@@ -75,6 +75,9 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .height60{
 	height:60px;
 }
+.height80{
+	height:80px !important;
+}
 .height100{
 	height:100px;
 }
@@ -444,6 +447,12 @@ text-align:center;
 	margin-top: 8px;
 	margin-right: 16px;
 	margin-bottom: 8px;
+}
+
+.imgExpansion{
+	height:60px;
+	width: 60px;
+	overflow:hidden;
 }
 
 .imgBoardgame{

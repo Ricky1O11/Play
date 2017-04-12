@@ -67,15 +67,15 @@ angular.module('play')
 						return b;
 					},	
 		designer: function(id){
-						d = $http({method: 'GET', url: BASE_URL+'/designers/'+id+'/'});
+						d = $http({method: 'GET', url: BASE_URL+'/designers/'+id+'/?include=boardgames'});
 						return d;
 					},
 		category: function(id){
-						c = $http({method: 'GET', url: BASE_URL+'/categories/'+id+'/'});
+						c = $http({method: 'GET', url: BASE_URL+'/categories/'+id+'/?include=boardgames'});
 						return c;
 					},		
 		match:		function(id){
-						m = $http({method: 'GET', url: BASE_URL+'/matches/'+id+'/'});
+						m = $http({method: 'GET', url: BASE_URL+'/matches/'+id+'/?include=boardgame'});
 						return m;
 					},	
 		matches:	function(user_id){
@@ -83,15 +83,15 @@ angular.module('play')
 						return ms;
 					},	
 		matchpost:	function(match){
-						mp = $http({method: 'POST', url: BASE_URL+'/matches/', data:match});
+						mp = $http({method: 'POST', url: BASE_URL+'/matches/?include=boardgame', data:match});
 						return mp;
 					},
 		matchput:	function(match,id){
-						mpu = $http({method: 'PUT', url: BASE_URL+'/matches/'+id+'/', data:match});
+						mpu = $http({method: 'PUT', url: BASE_URL+'/matches/'+id+'/?include=boardgame', data:match});
 						return mpu;
 					},
 		matchdelete:function(id){
-						md = $http({method: 'DELETE', url: BASE_URL+'/matches/'+id+'/'});
+						md = $http({method: 'DELETE', url: BASE_URL+'/matches/?include=boardgame'+id+'/'});
 						return md;
 					},
 					

@@ -582,51 +582,9 @@ class DesignerDetail(APIView):
         designerSerializers = DesignersSerializers(designer, many=True, context={'request': request})
         return Response(designerSerializers.data)
 
-    def get_object(self, pk):
-        try:
-            return Designer.objects.get(pk=pk)
-        except Designer.DoesNotExist:
-            return 0
-
-    def put(self, request, pk):
-        designer = self.get_object(pk)
-        designerSerializers = DesignersSerializers(designer, data=request.data, context={'request': request})
-        if designerSerializers.is_valid():
-            designerSerializers.save()
-            return Response(designerSerializers.data)
-        return Response(designerSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        auth_user = self.request.user
-        if(auth_user.is_staff):
-            designer = self.get_object(pk)
-            designer.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
-
 #Category Detail
 class CategoryDetail(APIView):
     def get(self, request, pk):
         category = Category.objects.filter(pk = pk)
         categorySerializers = CategoriesSerializers(category, many=True, context={'request': request})
         return Response(categorySerializers.data)
-
-    def get_object(self, pk):
-        try:
-            return Category.objects.get(pk=pk)
-        except Designer.DoesNotExist:
-            return 0
-
-    def put(self, request, pk):
-        category = self.get_object(pk)
-        categorySerializers = CategoriesSerializers(category, data=request.data, context={'request': request})
-        if categorySerializers.is_valid():
-            categorySerializers.save()
-            return Response(categorySerializers.data)
-        return Response(categorySerializers.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        auth_user = self.request.user
-        if(auth_user.is_staff):
-            category = self.get_object(pk)
-            category.delete()
-            return Response(status=status.HTTP_204_NO_CONTENT)
