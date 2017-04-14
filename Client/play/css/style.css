@@ -47,7 +47,32 @@ md-sidenav.md-closed.md-locked-open-add-active {
 }
 /*end SIDENAV MANAGMENT*/
 
+@media (max-width:600px){
+	.height500xs{
+		height:500px !important;
+	}
+	.height500xs{
+		height:500px !important;
+	}
+	.height750xs{
+		min-height:750px !important;
+	}
 
+	.maxHeight300xs{
+		max-height: 300px !important;
+	}
+
+	.pad0lxs{
+		padding-left: 0px !important;
+	}
+	.pad10txs{
+		padding-top: 10px !important;
+	}
+	.mrg0lxs{
+		margin-left: 0px !important;
+	}
+
+}
 /*HEIGHT MANAGEMENT*/
 .height100perc{
 	height:100%;
@@ -306,6 +331,10 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .blue-grey{
 	color: #37474F;
 }
+
+.dark54perc{
+	color: rgba(0,0,0,0.54);
+}
 /*end COLORS MANAGEMENT*/
 
 /*SCROLL BAR MANAGEMENT*/
@@ -450,14 +479,14 @@ text-align:center;
 }
 
 .imgExpansion{
-	height:60px;
-	width: 60px;
+	height:48px;
+	width: 48px;
 	overflow:hidden;
 }
 
 .imgBoardgame{
-    height: 18em;
-    width: 18em;
+    height: 15em;
+    width: 15em;
     overflow:hidden;
 }
 .imgBoardgameProfile{
@@ -539,6 +568,11 @@ figcaption{
 	position:absolute;
 	bottom:-10;
 	right:-10;
+}
+.absolute2{
+	position:absolute;
+	bottom:0;
+	left:0;
 }
 
 #dialog md-tabs-wrapper{

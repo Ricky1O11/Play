@@ -76,10 +76,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
-		return Api.boadgames(0, 500, "title", query).then(function(response){
+		return Api.boadgames(0, 100, "title", query).then(function(response){
 			self.boardgames = [];
 			for (i=0; i<response.data.length; i++){
-				self.boardgames[i]={display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail, expansions:response.data[i].expansions}
+				if(response.data[i].expands.length == 0)
+					self.boardgames.push({display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail, expansions:response.data[i].expansions})
 			}
 			return self.boardgames;
 		});

@@ -1,64 +1,65 @@
-<div class="container-fluid pad20l pad20t pad20r height100perc" layout="column">
-	<div layout="row" flex="none" class="height300 mrg10b mrg10r">
-		<div layout="column" flex="none" class="relative" >
-			<div class="clickable circleBase imgBoardgame hideScrollbar shadowed-box"  ng-click="showImage($event, mCtrl.match.boardgame_details.img)">
-				<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
-					<div class="circleBase" style="font-size:50px;"></div>
+<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
+	<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
+	<div layout="column" flex="none" layout-align="center center">
+			<div layout="row" flex="none" class="relative" >
+				<div class="clickable circleBase imgBoardgame hideScrollbar shadowed-box"  ng-click="showImage($event, mCtrl.match.boardgame_details.img)">
+					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
+						<div class="circleBase" style="font-size:50px;"></div>
+					</div>
 				</div>
+				<md-fab-speed-dial	
+						md-open = "mCtrl.fabOpen"
+						md-direction="left"
+						class="absolute md-scale"
+						ng-class="{'md-scale':!mCtrl.editMode}">
+			        <md-fab-trigger>
+			          <md-button ng-if="!mCtrl.editMode"
+			          	ng-click="mCtrl.startEditMode($event)"
+			          	aria-label="Edit match info" 
+			          	class="md-fab">
+			            <i class="icon-pencil">
+			            </i>
+			            <md-tooltip md-direction="bottom" md-delay="200">Edit match stats and user points</md-tooltip>
+			          </md-button>
+			          <md-button 
+			        	  ng-if="mCtrl.editMode"
+			          		aria-label="Confirm changes" 
+			          		class="md-fab md-raised md-primary" 
+							ng-click="mCtrl.endEditMode(true)">
+			            <i class="icon-check-2"></i>
+			          </md-button>
+			        </md-fab-trigger>
+
+			        <md-fab-actions>
+			        	<md-button 
+			          		aria-label="Discard changes" 
+			          		class="md-fab md-raised md-mini" 
+							ng-click="mCtrl.endEditMode(false)">
+			            <i class="icon-close-round blue-grey"></i>
+			          </md-button>
+			          <md-button 
+			          		aria-label="Delete match"
+			          		class="md-fab md-raised md-mini md-accent"
+							ng-click="mCtrl.deleteMatchPopup($event)">
+			            	<i class="icon-trash"></i>
+			          </md-button>
+					</md-fab-actions>
+				</md-fab-speed-dial>
 			</div>
-
-			<md-fab-speed-dial	
-					md-open = "mCtrl.fabOpen"
-					md-direction="left"
-					class="absolute md-scale"
-					ng-class="{'md-scale':!mCtrl.editMode}">
-		        <md-fab-trigger>
-		          <md-button ng-if="!mCtrl.editMode"
-		          	ng-click="mCtrl.startEditMode($event)"
-		          	aria-label="Edit match info" 
-		          	class="md-fab">
-		            <i class="icon-pencil">
-		            </i>
-		            <md-tooltip md-direction="bottom" md-delay="200">Edit match stats and user points</md-tooltip>
-		          </md-button>
-		          <md-button 
-		        	  ng-if="mCtrl.editMode"
-		          		aria-label="Confirm changes" 
-		          		class="md-fab md-raised md-primary" 
-						ng-click="mCtrl.endEditMode(true)">
-		            <i class="icon-check-2"></i>
-		          </md-button>
-		        </md-fab-trigger>
-
-		        <md-fab-actions>
-		        	<md-button 
-		          		aria-label="Discard changes" 
-		          		class="md-fab md-raised md-mini" 
-						ng-click="mCtrl.endEditMode(false)">
-		            <i class="icon-close-round blue-grey"></i>
-		          </md-button>
-		          <md-button 
-		          		aria-label="Delete match"
-		          		class="md-fab md-raised md-mini md-accent"
-						ng-click="mCtrl.deleteMatchPopup($event)">
-		            	<i class="icon-trash"></i>
-		          </md-button>
-				</md-fab-actions>
-			</md-fab-speed-dial>
 		</div>
-		<div layout="column" class="blue-grey pad20l" flex="100">
-			<div layout="row" class="shadowed-box whiteBg pad20l mrg10b height60">
-				<div ng-if="!mCtrl.editMode" layout="column" flex="70"  layout-align="center start">
+		<div layout="column" class="blue-grey pad20l pad0lxs" flex="100">
+			<div layout="row" class="mrg10b" flex layout-wrap>
+				<div ng-if="!mCtrl.editMode" layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
 					<h2 ng-if="mCtrl.match.name.length == 0"> Match {{mCtrl.match.pk}}</h2>
 					<h2 ng-if="mCtrl.match.name.length > 0">{{mCtrl.match.name}}</h2>
 				</div>
-				<div ng-if="mCtrl.editMode" layout="column" flex="70">
+				<div ng-if="mCtrl.editMode" layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
 					<md-input-container>
 							<label class="size-18">Match name</label>
 							<input ng-model="mCtrl.match.name">
 					</md-input-container>
 				</div>
-				<div layout="column" flex="30"  layout-align="center end">
+				<div layout="column" flex-gt-xs="30" flex-xs="100" layout-align-xs="center center"  layout-align="center end">
 					<div layout="row">
 						<md-button 
 						ng-if="mCtrl.is('programmed')" 
@@ -88,11 +89,12 @@
 			</div>
 			<div layout="row" id="info_container">
 				<div layout="column" flex="100">
-					<div layout="row" class="size-14 mrg10b">
+					<div layout="row" class="size-14" layout-wrap>
 						<div 
 							layout="column" 
-							flex="50" 
-							class="shadowed-box whiteBg pad10l height60 clickable" 
+							flex-gt-xs 
+							flex-xs="100" 
+							class="shadowed-box whiteBg pad10l height60 clickable  mrg10b" 
 							ng-click="goTo('boardgames/'+mCtrl.match.boardgame)">
 							<div layout="row" class="height100perc">
 								
@@ -106,8 +108,9 @@
 						</div>
 
 						<div layout="column" 
-							flex="50" 
-							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							flex-gt-xs
+							flex-xs="100" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l mrg0lxs  mrg10b">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
 									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
@@ -118,10 +121,11 @@
 							</div>
 						</div>
 					</div>
-					<div layout="row" class="size-14 mrg10b">
+					<div layout="row" class="size-14" layout-wrap>
 						<div layout="column" 
-							flex="50" 
-							class="shadowed-box whiteBg pad10l height60 clickable">
+							flex-gt-xs
+							flex-xs="100"  
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10b">
 							<div layout="row" class="height100perc">
 								<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
 									<h3>{{mCtrl.match.time | date: "short"}}</h3>
@@ -138,8 +142,9 @@
 							</div>
 						</div>
 						<div layout="column" 
-							flex="50" 
-							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							flex-gt-xs
+							flex-xs="100" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l mrg0lxs mrg10b">
 							<div layout="row" class="height100perc">
 								<div layout="column" flex="20" layout-align="center center" >
 									<i class="size-18 icon-pin" md-colors="{color: 'myTheme-accent'}" ></i>
