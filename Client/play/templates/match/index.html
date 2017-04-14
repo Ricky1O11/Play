@@ -161,6 +161,22 @@
 							</div>
 						</div>
 					</div>
+					<div layout="row" layout-wrap>
+						<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="mCtrl.match.played_expansions_details.length > 0">
+							<div class="absolute2 pad5 size-12 dark54perc">PLAYED EXPANSIONS</div>
+							<div layout="row">
+								<div layout="column" class="clickable pad10l" flex="none" ng-repeat="exp in mCtrl.match.played_expansions_details"
+								ng-click="goTo('boardgames/'+exp.boardgame_details.pk)">
+									<div class="circleBase imgExpansion hideScrollbar shadowed-box">
+										<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.boardgame_details.img}}">
+											<div class="circleBase" style="font-size:50px;"></div>
+										</div>
+									</div>
+									<md-tooltip md-direction="bottom" md-delay="200">{{exp.boardgame_details.title}}</md-tooltip>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</div>
 		</div>

@@ -68,6 +68,13 @@ class Matches(models.Model):
     def __unicode__(self):
         return "Match " + str(self.id) + " - game: " + str(self.boardgame).decode('utf8')
 
+class PlayedExpansions(models.Model):
+    boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    match = models.ForeignKey(Matches, on_delete=models.CASCADE)
+
+    def __unicode__(self):
+        return "The expansion " + str(self.pk).decode('utf8') + " has been played during the match: " + str(self.match)
+
 class Friends(models.Model) :
     user1 = models.ForeignKey(User, related_name='user1', on_delete=models.CASCADE, null=True)
     user2 = models.ForeignKey(User, related_name='user2', on_delete=models.CASCADE, null=True)

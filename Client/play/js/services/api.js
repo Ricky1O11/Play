@@ -86,6 +86,10 @@ angular.module('play')
 						mp = $http({method: 'POST', url: BASE_URL+'/matches/?include=boardgame', data:match});
 						return mp;
 					},
+		expansionpost:	function(exp){
+						mp = $http({method: 'POST', url: BASE_URL+'/playedExp/', data:exp});
+						return mp;
+					},
 		matchput:	function(match,id){
 						mpu = $http({method: 'PUT', url: BASE_URL+'/matches/'+id+'/?include=boardgame', data:match});
 						return mpu;

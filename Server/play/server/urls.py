@@ -13,6 +13,8 @@ urlpatterns = [
     url(r'^profiles/(?P<pk>[0-9]+)/$', views.ProfileDetail.as_view()), #user's detail
     url(r'^matches/$', views.MatchesList.as_view(), name='matches'), #matches list
     url(r'^matches/(?P<pk>[0-9]+)/$', views.MatchDetail.as_view(), name='matchDetail'), #match's detail
+    url(r'^playedExp/$', views.PlayedExpansionsList.as_view(), name='playedExpansions'), #played expansions list
+    url(r'^playedExp/(?P<pk>[0-9]+)/$', views.PlayedExpansionDetail.as_view(), name='playedExpansionDetail'), #played expansion's detail
     url(r'^friends/$', views.FriendsList.as_view(), name='friends'), #friends list
     url(r'^friends/(?P<pk>[0-9]+)/$', views.FriendDetail.as_view(), name='friendDetail'), #friends' detail
     url(r'^favourites/$', views.FavouritesList.as_view(), name='favourites'), #favourites list

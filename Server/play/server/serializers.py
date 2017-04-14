@@ -184,10 +184,24 @@ class PlaysSerializers(serializers.ModelSerializer):
         model = Plays
         fields = ('pk', 'match', 'user', 'user_details', 'points', 'detailedPoints')
 
+# Json representation of the expansions used in a certain match
+class PlayedExpansionsSerializers(serializers.ModelSerializer):
+    boardgame_details = serializers.SerializerMethodField()
+
+    def get_boardgame_details(self, exp):
+        boardgame = Boardgames.objects.get(playedexpansions=exp)
+        serializer = SimpleBoardgamesSerializers(boardgame)
+        return serializer.data
+        
+    class Meta:
+        model = PlayedExpansions
+        fields = ( 'pk','boardgame', 'match', 'boardgame_details')
+
 # Json representation of single matches
 class MatchesSerializers(serializers.ModelSerializer):
     plays_set = PlaysSerializers(many=True, read_only=True)
     boardgame_details = serializers.SerializerMethodField()
+    played_expansions_details = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
         super(MatchesSerializers, self).__init__(*args, **kwargs)
@@ -208,9 +222,14 @@ class MatchesSerializers(serializers.ModelSerializer):
         serializer = SimpleBoardgamesSerializers(boardgame)
         return serializer.data
 
+    def get_played_expansions_details(self, match):
+        pl_exp = PlayedExpansions.objects.filter(match=match)
+        serializer = PlayedExpansionsSerializers(pl_exp, many=True)
+        return serializer.data
+
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'duration', 'plays_set', 'winner')
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'played_expansions_details', 'duration', 'plays_set', 'winner')
 
 # Json representation of designers
 class DesignersSerializers(serializers.ModelSerializer):
@@ -286,6 +305,8 @@ class CategoriesSerializers(serializers.ModelSerializer):
     class Meta:
         model = Designer
         fields = ('pk', 'name', 'boardgames')
+
+
 
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):

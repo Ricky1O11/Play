@@ -491,6 +491,47 @@ class DictionaryDetail(APIView):
             dictionary.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+class PlayedExpansionsList(APIView):
+    def get(self, request):
+        playedExpansion = PlayedExpansions.objects.all()
+        playedExpansionsSerializers = PlayedExpansionsSerializers(playedExpansion, many=True, context={'request': request})
+        return Response(playedExpansionsSerializers.data)
+
+    def post(self, request):
+        playedExpansion = PlayedExpansionsSerializers(data=request.data, many=True, context={'request': request})
+        if playedExpansion.is_valid():
+            playedExpansion.save()
+            return Response(playedExpansion.data, status=status.HTTP_201_CREATED)
+        return Response(playedExpansion.errors, status=status.HTTP_400_BAD_REQUEST)        
+
+#Detailed Points Detail
+class PlayedExpansionDetail(APIView):
+    def get(self, request, pk):
+        playedExpansion = PlayedExpansions.objects.filter(pk = pk)
+        playedExpansionsSerializers = PlayedExpansionsSerializers(playedExpansion, many=True, context={'request': request})
+        return Response(playedExpansionsSerializers.data)
+
+    def get_object(self, pk):
+        try:
+            return PlayedExpansions.objects.get(pk=pk)
+        except PlayedExpansions.DoesNotExist:
+            return 0
+    
+    def put(self, request, pk):
+        playedExpansion = self.get_object(pk)
+        detailedPointsSerializers = PlayedExpansionsSerializers(playedExpansion, data=request.data, context={'request': request})
+        if playedExpansionsSerializers.is_valid():
+            playedExpansionsSerializers.save()
+            return Response(playedExpansionsSerializers.data)
+        return Response(playedExpansionsSerializers.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+    def delete(self, request, pk):
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            playedExpansion = self.get_object(pk)
+            playedExpansion.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
 # Detailed points list
 class DetailedPointsList(APIView):
     def get(self, request):

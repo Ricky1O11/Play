@@ -16,6 +16,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	self.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
 	self.postValues.match={};
+	self.postValues.expansions=[];
 	self.postValues.plays=[];
 	self.postValues.templates=[];
 	self.postValues.scoringFields=[];
@@ -48,12 +49,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 		return input;
 	};
-	//api call to the list of boardgames
-	//Api.boadgames().success(function(data){
-	//	for (i=0; i<data.length; i++){
-	//		self.boardgames[i]={display:data[i].title, value:data[i].title.toLowerCase(), id:data[i].pk, thumbnail:data[i].thumbnail}
-	//	}
-	//});
 	
 	//api call to the list of users
 	Api.users().success(function(data){
@@ -206,11 +201,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-
-
-
-
-	
 	//Post function
 	this.postMatch=function(step){
 		//if some player are selected
@@ -220,6 +210,34 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					function(response){
 						//get the id of the new match
 						self.selectedValues.matchId = response.data.pk;
+						//for each player
+						for (i=0; i<self.selectedValues.expansions.length; i++){
+							if(self.selectedValues.expansions[i] != null){
+								//prepare the "expansion" row to be inserted in the play table
+								row={match:self.selectedValues.matchId, boardgame:self.selectedValues.expansions[i]};
+								self.postValues.expansions.push(row);
+							}
+						}
+						self.postExpansion(step);
+					}, 
+					function errorCallback(response) {
+						console.log(response);
+					}
+			);
+		}
+		else{
+			$rootScope.showToast("Select at least one player");
+		}
+	}
+
+	//Post function
+	this.postExpansion=function(step){
+		//if some player are selected
+		if(self.postValues.expansions!=[]){
+			//post match
+			Api.expansionpost(self.postValues.expansions).then(
+					function(response){
+						console.log(response);
 						//for each player
 						for (i=0; i<self.selectedValues.players.length; i++){
 							if(self.selectedValues.players[i] != null){
@@ -236,16 +254,22 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			);
 		}
 		else{
-			$rootScope.showToast("Select at least one player");
+			for (i=0; i<self.selectedValues.players.length; i++){
+				if(self.selectedValues.players[i] != null){
+					//prepare the "play" row to be inserted in the play table
+					row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
+					self.postValues.plays.push(row);
+				}
+			}
+			self.postPlay(step);
 		}
 	}
 
 	this.postPlay = function(step){
-		
-
 		//post play
 		Api.playpost(self.postValues.plays).then(
 			function(response){
+						console.log(response);
 				//get the list of posted plays
 				self.selectedValues.play = response.data;
 				if(step == "selectTemplate"){
