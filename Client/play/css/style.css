@@ -6,6 +6,10 @@
 	background-color:#CFD8DC;
 }
 
+.bold{
+	font-weight:bold !important;
+}
+
 
 [ng\:cloak], [ng-cloak], [data-ng-cloak], [x-ng-cloak], .ng-cloak, .x-ng-cloak {
   display: none !important;
@@ -450,7 +454,7 @@ text-align:center;
 .detailedPointsContainer input{
 	text-align:right;
 }
-#container .md-errors-spacer{
+#container .md-errors-spacer, .detailedPointsContainer .md-errors-spacer{
 	display:none !important;
 }
 

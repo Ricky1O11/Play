@@ -177,7 +177,7 @@
 					</div>
 				</div>
 				<div layout="row" class="mrg10t">
-					<div layout="column" class="size-14 center-align" flex="100" layout-align="center center">Unfortunately we don't know the rules of every game available in the market and we don't have any template for this game, but we will very thankfull if you could contribute by adding one on your own!
+					<div layout="column" class="size-14 center-align" flex="100" layout-align="center center">Unfortunately we don't know the rules of every game available in the market and we don't have any template for this game, but we will be very thankfull if you could contribute by adding one on your own!
 					</div>
 				</div>
 				<div layout="row"  class="mrg20t">
@@ -226,27 +226,51 @@
 		<md-tab label="add template">
 		  <md-content class="md-padding">
 				<div class="md-dialog-content">
-					<md-input-container class="md-block">
-						<input type="number" ng-model="mdCtrl.nwords" aria-label="red" aria-controls="red-slider"  min="1">
-						<label>How many ways do you have to score points?</label>
-					</md-input-container>
-					<div ng-repeat="i in mdCtrl.range(0, mdCtrl.nwords-1)" class="mrg10t">
-						<md-autocomplete 
-							md-selected-item="mdCtrl.selectedValues.dictionary[i]"
-							md-search-text="mdCtrl.dictionarySearchText[i]"
-							md-items="dict in mdCtrl.querySearchWord(mdCtrl.dictionarySearchText[i]) | orderBy:'display'"
-							md-select-on-match= "true"
-							md-item-text="dict.display"
-							md-min-length="0"
-							md-autofocus = "false"
-							placeholder="Select a field or type a new one">
-								<md-item-template>
-								  <span md-highlight-text="mdCtrl.dictionarySearchText[i]" md-highlight-flags="^i">{{dict.display}}</span>
-								</md-item-template>
-								<md-not-found>
-								  No word matching "{{mdCtrl.dictionarySearchText[i]}}" were found.
-								</md-not-found>
-						</md-autocomplete>
+					<div layout="row" class="size-16 blue-grey center-align" layout-align="center center">
+						Here you can tell us all the possible ways to score points. 
+						Next to each row you can tell how many points it is worth.<br>
+						For example: each city in "Catan" scores 2 points.
+					</div>
+					<div layout="row" class="mrg20t">
+						<div layout="column" flex="100">
+							<md-input-container class="md-block">
+								<input type="number" ng-model="mdCtrl.nwords" aria-label="red" aria-controls="red-slider"  min="1">
+								<label>How many ways do you have to score points?</label>
+							</md-input-container>
+						</div>
+					</div>
+					<div layout="row" ng-repeat="i in mdCtrl.range(0, mdCtrl.nwords-1)" class="mrg10t height80" >
+						<div class="column" flex="50" layout-align="center start">
+							<md-autocomplete 
+								md-selected-item="mdCtrl.selectedValues.dictionary[i]"
+								md-search-text="mdCtrl.dictionarySearchText[i]"
+								md-items="dict in mdCtrl.querySearchWord(mdCtrl.dictionarySearchText[i]) | orderBy:'display'"
+								md-select-on-match= "true"
+								md-item-text="dict.display"
+								md-min-length="0"
+								md-autofocus = "false"
+								placeholder="Select a field or type a new one">
+									<md-item-template>
+									  <span md-highlight-text="mdCtrl.dictionarySearchText[i]" md-highlight-flags="^i">{{dict.display}}</span>
+									</md-item-template>
+									<md-not-found>
+									  No word matching "{{mdCtrl.dictionarySearchText[i]}}" were found.
+									</md-not-found>
+							</md-autocomplete>
+						</div>
+						<div class="column" flex="50">
+							<div layout="row">
+								<div layout="column" flex="30" layout-align="center end">
+								Value:
+								</div>
+								<div layout="column" flex="70" layout-align="center start">
+									<md-input-container class="detailedPointsContainer md-block" >
+										<input type="number" ng-model="mdCtrl.points[i]" aria-label="red" aria-controls="red-slider">
+									</md-input-container>
+								</div>
+							</div>
+							
+						</div>
 					</div>
 				</div>
 				 

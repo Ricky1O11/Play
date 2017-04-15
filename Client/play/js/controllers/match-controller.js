@@ -31,7 +31,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.sumPoints = function(detailedPoints){
 		sum = 0;
 		for(k = 0; k< detailedPoints.length; k++){
-			sum += detailedPoints[k].detailed_points;
+			sum += detailedPoints[k].detailed_points*detailedPoints[k].scoringField_details.bonus;
 		}
 		return sum;
 	}
@@ -78,7 +78,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			}
 			controller.allVisible = false;
 			controller.managePlays();
-			console.log(controller.getWinner());
 			row={
 				duration:controller.match.duration,
 				boardgame:controller.match.boardgame,

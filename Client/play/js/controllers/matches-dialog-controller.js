@@ -36,6 +36,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+	self.points=[]; //holds the values for the corresponding scoring field
 
 	self.adding = false;
 	self.selecting = false;
@@ -310,10 +311,12 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//clean selectedValues array removing all null entries
 		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
 		for (i=0; i<self.selectedValues.dictionary.length; i++){
+			console.log(self.points[i]);
 			//prepare the "template" row to be inserted in the templates table
 			row={	
 					template:self.selectedValues.templates.pk,
-					word: self.selectedValues.dictionary[i].id
+					word: self.selectedValues.dictionary[i].id,
+					bonus: self.points[i]
 				};
 			self.postValues.scoringFields.push(row);
 		}

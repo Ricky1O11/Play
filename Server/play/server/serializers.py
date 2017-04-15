@@ -137,7 +137,7 @@ class ScoringFieldsSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = ScoringFields
-        fields = ('pk', 'template', 'word', 'word_details')
+        fields = ('pk', 'template', 'word', 'word_details', 'bonus')
 
 # Json representation of the template of a boardgames
 class TemplatesSerializers(serializers.ModelSerializer):
