@@ -1,39 +1,257 @@
 //controller for the single match page
-angular.module("play").controller('matchController', function(Api, $routeParams) {
+angular.module("play").controller('matchController', function(Api, $window, $timeout, $routeParams, $location, $mdDialog, $rootScope, $scope) {
+	this.fabOpen = false;
+	this.editMode = false;
+	this.anim = "md-scale";
+	this.statusColor = "";
+
 	//read the requested match'id
 	this.params=$routeParams;
 	this.match={};
+	this.allVisible=false;
+	this.timer;
 	controller=this;
-
 	//api call to get the single match's details
-	Api.match(controller.params.id).success(function(data){
-		controller.match=data[0];
-		console.log(controller.match);
-		for(i = 0; i< controller.match.plays_set.length;i++){
-			if (controller.match.plays_set[i].points == 999999){
-				controller.match.plays_set[i].points = "N.A";
+	Api.match(controller.params.id).then(
+		function(response){
+			if(response.data.length > 0){
+				controller.match=response.data[0];
+				controller.setup();
+			}
+			else{
+				$rootScope.showToast("You are not allowed to see this match!");
+		   		$location.path("matches/");	
+			}
+		}, function errorCallback(response){
+			$rootScope.showToast("You are not allowed to see this match!");
+		    //$location.path("matches/");			
+		}
+	);
+	
+	this.sumPoints = function(detailedPoints){
+		sum = 0;
+		for(k = 0; k< detailedPoints.length; k++){
+			sum += detailedPoints[k].detailed_points*detailedPoints[k].scoringField_details.bonus;
+		}
+		return sum;
+	}
+
+	this.setVisible = function(pk){
+		controller.allVisible = false;
+		for(i = 0; i<controller.match.plays_set.length; i++){
+			if(controller.match.plays_set[i].pk == pk){
+				controller.match.plays_set[i].visible = !controller.match.plays_set[i].visible;
 			}
 		}
-		console.log(controller.match.plays_set[0].detailedPoints);
-	});
+	}
+
+	this.startEditMode = function($event){
+		controller.editMode = true;
+		controller.fabOpen = true;
+		controller.allVisible = true;
+	}
+
+	this.endEditMode = function(wantToSave){
+		controller.editMode = !controller.editMode;
+		if(wantToSave){
+
+			for(i = 0; i<controller.match.plays_set.length; i++){
+				play_pk = controller.match.plays_set[i].pk;
+				for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
+					old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
+					new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+					if(old_points != new_points){
+						scoringField_pk = controller.match.plays_set[i].detailedPoints[j].scoringField;
+						detailedPoints = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+						row = {
+							play:play_pk,
+							scoringField:scoringField_pk,
+							detailed_points:detailedPoints
+						};
+						Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
+						}, 
+						function errorCallback(response) {
+							return;
+						});
+					}
+				}
+			}
+			controller.allVisible = false;
+			controller.managePlays();
+			row={
+				duration:controller.match.duration,
+				boardgame:controller.match.boardgame,
+				location:controller.match.location,
+				time:controller.match.time,
+				name:controller.match.name,
+				status:controller.match.status,
+				winner: controller.getWinner()
+				}
+
+			Api.matchput(row, controller.match.pk).then(function(data){
+				controller.match.old_location = controller.match.location;
+				controller.match.old_duration = controller.match.duration;
+				controller.match.old_time = controller.match.time;
+				controller.match.old_name = controller.match.name;
+			}, 
+			function errorCallback(response) {
+			});
 
 
+			$rootScope.showToast("Match successfully edited!");
+		}
+		else{
+			controller.match.location = controller.match.old_location;
+			controller.match.time = controller.match.old_time;
+			controller.match.name = controller.match.old_name;
+			for(i = 0; i<controller.match.plays_set.length; i++){
+				play_pk = controller.match.plays_set[i].pk;
+				for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
+					old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
+					new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+					if(old_points != new_points){
+						controller.match.plays_set[i].detailedPoints[j].detailed_points = old_points;
+					}
+				}
+			}
+			controller.allVisible = false;
+			controller.managePlays();
+		}
+		controller.detectStatus();
+	}
 
+	this.deleteMatchPopup = function(ev){
+		var confirm = $mdDialog.confirm()
+          .title('Would you like to delete this match?')
+          .targetEvent(ev)
+          .ok('Yes!')
+          .cancel('No');
 
+	    $mdDialog.show(confirm).then(function() {
+	    	Api.matchdelete(controller.match.pk).then(function(data){
+	    			$rootScope.showToast("Match successfully removed!");
+	    			$location.path("matches/");
+				}, 
+				function errorCallback(response) {
+					return;
+				});
+	    }, function() {
+	      $scope.status = 'You decided to keep your debt.';
+	    });
+	}
 
+	this.setup = function(){
+		controller.match.old_location = controller.match.location;
+		controller.match.old_duration = controller.match.duration;
+		controller.match.time = new Date(controller.match.time);
+		controller.match.old_time = new Date(controller.match.time);
+		controller.match.old_name = controller.match.name;
+		if(controller.match.location == ""){
+			controller.match.location = "No location";
+		}
+		controller.managePlays();
+		controller.detectStatus();
+		startTime();
+	}
 
-
-	//randomly color the avatars of players without a profile picture
-	this.getRandomColor = function(){
-		rnd = Math.floor(Math.random()*5);
-		switch (rnd){
-			case 0: return {'background-color':'#448AFF'}; //blue
-			case 1: return {'background-color':'#FF5252'}; //red
-			case 2: return {'background-color':'#7C4DFF'}; //deep purple
-			case 3: return {'background-color':'#4DB6AC'}; //teal
-			default: return {'background-color':'#FFD740'}; //amber
+	this.managePlays = function(){
+		for(i = 0; i< controller.match.plays_set.length;i++){
+			controller.match.plays_set[i].visible = false;
+			for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
+				controller.match.plays_set[i].detailedPoints[j].old_detailed_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+			}
+			controller.match.plays_set[i].points = controller.sumPoints(controller.match.plays_set[i].detailedPoints);
 		}
 	}
-	this.randomColor = this.getRandomColor();
 
+	this.detectStatus = function(){
+		var now = new Date();
+		if(now < new Date(controller.match.time)){
+			controller.statusColor = "md-primary";
+			controller.match.statusMessage = "programmed";
+		}
+		else if(controller.match.status == 0){
+			controller.statusColor = "md-accent";
+			controller.match.statusMessage = "in progress";
+		}
+		else if(controller.match.status == 1){
+			$timeout.cancel(controller.timer);
+			controller.match.statusMessage = "completed";
+		}
+		else{
+			console.log(controller.match.statusMessage);
+		}
+	}
+
+	this.setCompletionStatus = function(id){
+		if(id != controller.match.status){
+			row={
+				boardgame:controller.match.boardgame,
+				duration:controller.match.duration,
+				status:id,
+				winner: controller.getWinner()
+				}
+
+			Api.matchput(row, controller.match.pk).then(function(data){
+					controller.match.status = id;
+					controller.detectStatus();
+					startTime();
+				}, 
+				function errorCallback(response) {
+					console.log(response);
+				});
+		}
+	}
+
+	this.getWinner = function(){
+		winner_pk = null;
+		winner_points = 0;
+		for(i = 0; i<controller.match.plays_set.length; i++){
+			if(controller.match.plays_set[i].points >winner_points){
+				winner_pk = controller.match.plays_set[i].user;
+				winner_points = controller.match.plays_set[i].points;
+			}	
+		}
+		return winner_pk;
+	}
+
+
+	this.is = function(message){
+		return controller.match.statusMessage == message;
+	}
+
+	this.updateDuration = function(){
+		$timeout.cancel(controller.timer);
+	    if(controller.match.old_duration != controller.match.duration){
+			row={
+				boardgame:controller.match.boardgame,
+				duration:controller.match.duration,
+				status:controller.match.status
+				}
+
+			Api.matchput(row, controller.match.pk).then(function(data){	
+				}, 
+				function errorCallback(response) {
+					console.log(response);
+				});
+		}
+	}
+
+	function startTime() {
+		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){
+		    controller.match.duration ++;
+		    controller.timer = $timeout(startTime, 1000);
+		}
+	}
+
+	function checkTime(i) {
+	    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+	    return i;
+	}
+
+	$window.onbeforeunload =  controller.updateDuration;
+
+	$scope.$on('$destroy', function(){
+	    controller.updateDuration();
+	});
 });

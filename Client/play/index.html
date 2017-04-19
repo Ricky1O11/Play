@@ -4,9 +4,7 @@
 		<meta charset="UTF-8">
 		<link rel="stylesheet" href="css/angular-material.min.css">
 		<link rel="stylesheet" href="css/style.css">
-		<link href="css/icons.css" rel="stylesheet">
-		<link rel="stylesheet" href="css/foundation-icons.css" />
-		<link rel="stylesheet" href="css/font-awesome/css/font-awesome.min.css" />
+		<link rel="stylesheet" href="css/icons.css">
 		<link rel="stylesheet" href="css/animate.css" />
 		<link rel="stylesheet" href="css/animations.css" />
 		
@@ -17,100 +15,123 @@
 		<script src="js/includes/angular-animate.min.js"></script>
 		<script src="js/includes/angular-aria.min.js"></script>
 		<script src="js/includes/angular-messages.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.5.0/angular-sanitize.js"></script>
+		<script src="js/includes/angular-cookies.min.js"></script>
+		<script src="js/includes/angular-sanitize.min.js"></script>
+		<script src="js/includes/angular-jwt/dist/angular-jwt.js"></script>
 
 		<script src="js/app.js"></script>
 		
 		<!-- Angular Material Library -->
 		<script src="js/includes/angular-material.min.js"></script>
 		<script src="js/services/api.js"></script>
+		<script src="js/services/seconds-to-time.js"></script>
 		<script src="js/routes.js"></script>
 		
 		<script src="js/directives/back-img.js"></script>
 		
 		<script src="js/controllers/boardgame-controller.js"></script>
 		<script src="js/controllers/boardgames-controller.js"></script>
-		<script src="js/controllers/favourites-controller.js"></script>
+		<script src="js/controllers/category-controller.js"></script>
+		<script src="js/controllers/designer-controller.js"></script>
+		<script src="js/controllers/friends-dialog-controller.js"></script>
 		<script src="js/controllers/home-controller.js"></script>
-		<script src="js/controllers/recents-controller.js"></script>
-		<script src="js/controllers/sidebar-controller.js"></script>
-		<script src="js/controllers/sidebar-controller.js"></script>
-		<script src="js/controllers/matches-dialog-controller.js"></script>
+		<script src="js/controllers/image-dialog-controller.js"></script>
+		<script src="js/controllers/login-controller.js"></script>
 		<script src="js/controllers/match-controller.js"></script>
 		<script src="js/controllers/matches-controller.js"></script>
+		<script src="js/controllers/matches-dialog-controller.js"></script>
+		<script src="js/controllers/profile-controller.js"></script>
+		<script src="js/controllers/recents-controller.js"></script>
+		<script src="js/controllers/register-controller.js"></script>
+		<script src="js/controllers/sidebar-controller.js"></script>
+		<script src="js/controllers/user-controller.js"></script>
 		
 	</head>
 	
-	<body ng-app="play" layout="column" flex ng-cloak>
-		<div layout="row" id="container" ng-controller="sidebarController as sCtrl">
+	<body ng-app="play" layout="column" flex ng-cloak="" class="ng-cloak">
+		<div layout="row" id="container">
 			<md-sidenav
+				ng-if="isLogged"
 				md-colors="{background: 'myTheme-primary'}"
-				class="md-sidenav-left md-whiteframe-z2 height100perc"
+				class="md-sidenav-left height100perc"
 				md-is-locked-open="$mdMedia('gt-sm')"
 				id="sidebar" 				
 				>
-				<div>
-					<div layout="row"   layout-padding  class="height150">
-						<div layout="column" flex="100">
-							<div layout="row" class="height100">	
+				<div ng-controller="sidebarController as sCtrl">
+					<div layout="row" layout-padding  class="height150">
+						<div layout="column" flex="100" class="greyBg blue-grey shadowed-box" layout-padding>
+							<div layout="row" class="height100 clickable" ng-click="goTo('profile/')">	
 								<div layout="column" flex="50" layout-align="center start">
-									<div id="imgProfile" class="circleBase borderWhite" layout-align="center center">
-										<img ng-src="{{sCtrl.img}}" alt="profileImage" class="size-90" />
+									<div class="imgProfile circleBase borderWhite" layout-align="center center">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{username.substring(0,1).toUpperCase()}}</div>
+										</div>
 									</div>
 								</div>						
 									
 								<div layout="column" id="username" class="size-18" flex="50" layout-align="center start">
-									{{sCtrl.username}}											
+									{{username}}											
 								</div>
 							</div>
 							
 							<div layout="row">
-								<div layout="column" flex="60">
+								<div layout="column" flex="50">
 									<div layout="row">
-										<div layout="column" layout-align="end start" flex="100">
-											<a href="#/" class="size-24 icon-home decoNone"></a>										
+										<div layout="column" flex="100" layout-align="center start">
+											<a md-colors="{color: 'myTheme-accent'}" ng-click="sCtrl.logout()" class="clickable size-18 icon-log-out decoNone blue-grey">
+												<md-tooltip md-direction="down">Logout</md-tooltip>
+											</a>										
 										</div>
 									</div>
 								</div>
-								<div layout="column" flex="20">
+								<div layout="column" flex="25">
 									<div layout="row">
-										<div layout="column" layout-align="start center" flex="50">
-											<i class="size-24 icon-puzzle"></i>
+										<div layout="column" flex="50" layout-align="center end">
+											<i md-colors="{color: 'myTheme-accent'}" class="size-24 icon-puzzle"></i>
 										</div>
-										<div layout="column" layout-align="end start" flex="50" class="size-18">{{sCtrl.match_played}}</div>
+										<div layout="column" flex="50" class="size-18" layout-align="start center">{{match_played}}</div>
+										<md-tooltip md-direction="top">Match played</md-tooltip>
 									</div>
 								</div>
-								<div layout="column" flex="20">
+								<div layout="column" flex="25">
 									<div layout="row">
-										<div layout="column" layout-align="center end" flex="50">
-											<i class="size-24 icon-trophy-2"></i>
+										<div layout="column" flex="50" class="pad1t"  layout-align="center end">
+											<i md-colors="{color: 'myTheme-accent'}" class="size-21 icon-trophy-2"></i>
 										</div>
-										<div layout="column" layout-align="end center" flex="50" class="size-18">{{sCtrl.match_won}}</div>
+										<div layout="column" flex="50" class="size-18" layout-align="start center">{{match_won}}</div>
+										<md-tooltip md-direction="top">Match won</md-tooltip>
 									</div>
 								</div>
 							</div>
 						</div>
 					</div>
-					<md-divider ></md-divider> <!--md-inset-->
+					 <md-divider ></md-divider> <!--md-inset-->
 					<div layout="row" class="height125">
-						<div layout="column" flex="100"  class="pad10l pad5t">
+						<div layout="column" flex="100"  class="pad10l pad10t">
 							<div layout="row"><h5>BORDGAMES</h5></div>
 							<div layout="row">
 								<div layout="column" flex="100" >
-									<a layout="row"  class="pad5t decoNone" href="#/boardgames">
-										<div layout="column" flex="15" layout-align="center center">
+									<a 
+									layout="row"  
+									class="pad10t decoNone" 
+									href="#/boardgames"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/boardgames') >= 0)}">
 											<i class="size-18 icon-list-bullet"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
-									<a layout="row"  class="pad10t decoNone" href="#/favourites">
-										<div layout="column" flex="15" layout-align="center center">
+									<a layout="row"  class="pad15t decoNone" href="#/favourites">
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/favourites') >= 0)}">
 											<i class="icon-heart"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">Favourites</div>
 									</a>
-									<a layout="row"  class="pad10t decoNone" href="#/recents">
-										<div layout="column" flex="15" layout-align="center center">
+									<a layout="row"  class="pad15t decoNone" href="#/recents">
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/recents') >= 0)}">
 											<i class="size-18 icon-clock-o"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">Recents</div>
@@ -120,28 +141,39 @@
 						</div>
 					</div>
 					<md-divider></md-divider>
-					<div layout="row" class="height125">
-						<div layout="column" flex="100"  class="pad10l pad5t">
+					<div layout="row" class="height100">
+						<div layout="column" flex="100"  class="pad10l pad10t">
 							<div layout="row" ><h5>MATCHES</h5></div>
 							<div layout="row">
 								<div layout="column" flex="100" >
-									<a layout="row"  class="pad5t decoNone" href="#/matches">
-										<div layout="column" flex="15" layout-align="center center">
+									<a layout="row"  class="pad10t decoNone" href="#/matches">
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/matches') >= 0)}">
 											<i class="size-18 icon-list-bullet"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
-									<a layout="row"  class="pad10t decoNone clickable" ng-click="matchesPopup($event)">
+									<a layout="row"  class="pad15t decoNone clickable" ng-click="showPopup($event, user_pk, 'matches')">
 										<div layout="column" flex="15" layout-align="center center">
 											<i class="icon-plus-1"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">New Match</div>
 									</a>
-									<a layout="row"  class="pad10t decoNone" href="#/todo">
+								</div>
+							</div>
+						</div>
+					</div>
+					<md-divider></md-divider>
+					<div layout="row" class="height100">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row" ><h5>COMMUNITY</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad10t decoNone" href="#/">
 										<div layout="column" flex="15" layout-align="center center">
-											<i class="size-18 icon-clock-o"></i>
+											<i class="size-18 icon-list-bullet"></i>
 										</div>
-										<div layout="column" flex="85" layout-align="center start">to do</div>
+										<div layout="column" flex="85" layout-align="center start">Will come soon</div>
 									</a>
 								</div>
 							</div>
@@ -149,11 +181,150 @@
 					</div>
 					<md-divider></md-divider>
 					<div layout="row" class="height100">ee</div>
-					<md-divider></md-divider>
-					<div layout="row" class="height100">ee</div>
 				</div> 
 			</md-sidenav>
-			<md-content layout="column" flex ng-view></md-content>
+			<md-content ng-if="isLogged" layout="column" flex ng-view></md-content>
+		</div>
+		<div id="tabs" ng-if="!isLogged">
+			<md-tabs  md-selected="currentTab"
+			md-stretch-tabs="always" class="height100perc" >
+				<md-tab label="login">
+					<md-content
+					ng-controller="loginController as lCtrl"
+					id="login" 
+					md-colors="{background: 'myTheme-primary'}"
+					class="height100perc" 
+					>
+						<div layout="row" layout-align="center center">
+							<form name="loginForm" layout="column">
+								<div layout="row"  layout-align="center center" flex="none">
+										<img ng-src="img/play.png"  id="logo" flex="none"/>
+								</div>
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Username</label>
+											<input name="username" ng-model="lCtrl.login.username" required>
+											<div ng-messages="loginForm.username.$error">
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+										   </div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password</label>
+											<input type="password" name="password" ng-model="lCtrl.login.password" required minlength="8">
+											<div ng-messages="loginForm.password.$error">
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column">
+										<md-button 
+										class="md-fab size-24" 
+										ng-click="lCtrl.submit()"
+										aria-label="login">
+											<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+												<div layout="row" class="icon-angle-right" aria-hidden="true" >
+												</div>
+											</div>
+										</md-button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</md-content>
+				</md-tab>
+				<md-tab label="register">
+					<md-content
+					id="login" 
+					md-colors="{background: 'myTheme-accent'}"
+					ng-controller="registerController as rCtrl"
+					class="height100perc" >
+						<div layout="row" class="height100perc" layout-align="center center">
+							<form name="registerForm" layout="column" flex="40">
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container >
+											<label>Email</label>
+											<input name="email" ng-model="rCtrl.register.email" required type="email"  minlength="10" maxlength="100" ng-pattern="/^.+@.+\..+$/" >
+											<div ng-messages="registerForm.email.$error" role="alert">
+												<div class="whiteTxt" ng-message ="minlength">
+												Your email must have at least 10 characters.
+												</div>
+												<div class="whiteTxt" ng-message ="required">
+												This field is required.
+												</div>														
+												<div class="whiteTxt" ng-message ="pattern">
+												Please insert a valid email-address
+												</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row"  layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Username</label>
+											<input name="username" ng-model="rCtrl.register.username" required>
+											<div ng-messages="registerForm.username.$error">
+												<div 
+												ng-message="required" class="whiteTxt"
+												>
+													This field is required.
+												</div>
+										   </div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password</label>
+											<input type="password" name="password" ng-model="rCtrl.register.password" required minlength="8">
+											<div ng-messages="registerForm.password.$error">
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column" flex="100">
+										<md-input-container>
+											<label>Password again</label>
+											<input type="password" name="password2" ng-model="rCtrl.register.password2" required minlength="8">
+											<div ng-messages="registerForm.password2.$error">
+												<div class="whiteTxt" ng-message="required">This field is required.</div>
+												<div class="whiteTxt" ng-message="minlength">The password is too short</div>
+											</div>
+										</md-input-container>
+									</div>
+								</div>
+								<div layout="row" layout-align="center center">
+									<div layout="column">
+										<md-button 
+										class="md-fab size-24 md-primary" 
+										ng-click="rCtrl.signin()"
+										aria-label="register"
+										>
+											<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+												<div layout="row" class="icon-angle-right" aria-hidden="true" >
+												</div>
+											</div>
+										</md-button>
+									</div>
+								</div>
+							</form>
+						</div>
+					</md-content>
+				</md-tab>
+			</md-tabs>
 		</div>
 	</body>
 </html>

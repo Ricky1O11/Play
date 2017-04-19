@@ -1,0 +1,143 @@
+<div class="container-fluid  pad20t height100perc" layout="column" ng-cloak>
+	<div layout="row" flex="none" class="height250 pad20l pad20r mrg10b mrg10r">
+		<div layout="column" flex="none" layout-align="center center">
+			<div layout="row" class="relative" flex="none">
+				<div class="circleBase imgUser hideScrollbar shadowed-box" >
+					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[uCtrl.user.pk] || getRandomColor(uCtrl.user.pk)" alt="profile image">
+						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{uCtrl.user.username.substring(0,1).toUpperCase()}}</div>
+					</div>
+				</div>
+				<md-button 
+					aria-label="Edit match info" 
+					class="md-fab md-primary absolute"
+					ng-click="uCtrl.addFriend()"
+					ng-if="uCtrl.user.friendship == 0">
+					<i class="icon-user-add size-18"></i>
+					<md-tooltip md-direction="bottom" md-delay="200">Add friend</md-tooltip>
+				</md-button>
+				<md-button 
+					aria-label="Edit match info" 
+					class="md-fab md-accent absolute"
+					ng-click="uCtrl.removeFriend()"
+					ng-if="uCtrl.user.friendship > 0">
+					<i class="icon-close-round size-18"></i>
+					<md-tooltip md-direction="bottom" md-delay="200">Remove friend</md-tooltip>
+				</md-button>
+			</div>
+			<div layout="row" class="mrg10t blue-grey">
+				<h1> {{uCtrl.user.username}}</h1>
+			</div>
+		</div>
+		<div layout="column" class="blue-grey pad20l" flex="100">
+			<div layout="row">
+				<div layout="column" flex="100">
+					<div layout="row" class="height30">
+						<div layout="column" flex="90" layout-align="center start">
+							<h3 class="blue-grey">Your stats</h3>
+						</div>
+						<div layout="column" flex="10" layout-align="center end">
+							<h5 
+								class="clickable" 
+								md-colors="{color: 'myTheme-accent'}">
+								VIEW ALL
+							</h5>
+						</div>
+					</div>
+					<div layout="row" class="size-14">
+						<div 
+							layout="column" 
+							flex="33" 
+							class="shadowed-box whiteBg pad10l height60 clickable">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="10" layout-align="center center" >
+									<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
+									</i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{uCtrl.user.match_played}} match played</h2>
+								</div>
+							</div>
+						</div>
+						<div 
+							layout="column" 
+							flex="33" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-21 icon-trophy-2" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
+									</i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{uCtrl.user.match_won}} match won</h2>
+								</div>
+								
+							</div>
+						</div>
+						<div 
+							layout="column" 
+							flex="33" 
+							class="shadowed-box whiteBg pad10l height60 clickable mrg10l">
+							<div layout="row" class="height100perc">
+								<div layout="column" flex="20" layout-align="center center" >
+									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+									</i>
+								</div>
+								<div layout="column" flex="80" layout-align="center center" >
+									<h2>{{bCtrl.boardgame.playingtime}} minute played</h2>
+								</div>
+							</div>	
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<md-tabs  md-selected="1" flex
+	md-stretch-tabs="always">
+		<md-tab label="Favourites" >
+			<md-content class="pad5l pad10t">
+				<div layout="row" layout-wrap>
+					<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="f in uCtrl.favourites"
+					ng-click="goTo('boardgames/'+f.pk)">
+						<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
+							<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{f.img}}">
+								<div class="circleBase" style="font-size:50px;"></div>
+							</div>
+						</div>
+						<md-tooltip md-direction="bottom" md-delay="200">{{f.title}}</md-tooltip>
+					</div>
+					<div layout="column" layout-align="center center" ng-if="uCtrl.favourites.length == 0" flex="100">
+					  	<div layout="row" class="size-72 mrg20b">:(</div>
+					  	<div layout="row" class="mrg20b"><h1>He doesn't have any favourite game</h1></div>
+					</div>
+				</div>
+			</md-content>
+		</md-tab>
+		<md-tab label="Recents" >
+			<md-content class="pad5l pad10t">
+				<div layout="row" layout-wrap>
+					<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="r in uCtrl.recents" 
+					ng-click="goTo('boardgames/'+r.pk)">
+						<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
+							<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{r.img}}">
+								<div class="circleBase" style="font-size:50px;"></div>
+							</div>
+						<md-tooltip md-direction="bottom" md-delay="200">{{r.title}}</md-tooltip>
+						</div>
+					</div>
+					<div layout="column" layout-align="center center" ng-if="uCtrl.recents.length == 0" flex="100">
+					  	<div layout="row" class="size-72 mrg20b">:(</div>
+					  	<div layout="row" class="mrg20b"><h1>This user didn't played any game.</h1></div>
+					  	<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches')"><h2><i class="icon-plus-1 mrg10r"></i>Play with him!</h2></div>
+				</div>
+			</md-content>
+		</md-tab>
+		<md-tab label="Stats">
+			<md-content>
+			</md-content>
+		</md-tab>
+	</md-tabs>
+</div>

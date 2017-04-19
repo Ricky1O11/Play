@@ -242,15 +242,48 @@
 .icon-marker:before {
   content: "\26";
 }
-.icon-check:before {
-  content: "\27";
-}
 .icon-plus:before {
   content: "\28";
 }
 .icon-plus-1:before {
   content: "\29";
 }
-.icon-check-1:before {
+.icon-times:before {
+  content: "\2b";
+}
+.icon-trash:before {
+  content: "\2c";
+}
+.icon-close-round:before {
+  content: "\2d";
+}
+.icon-check-2:before {
+  content: "\2e";
+}
+.icon-sort-alpha-asc:before {
+  content: "\27";
+}
+.icon-sort-alpha-desc:before {
   content: "\2a";
+}
+.icon-sort-amount-asc:before {
+  content: "\2f";
+}
+.icon-sort-amount-desc:before {
+  content: "\3a";
+}
+.icon-sort-numeric-asc:before {
+  content: "\3b";
+}
+.icon-sort-numeric-desc:before {
+  content: "\3c";
+}
+.icon-log-out:before {
+  content: "\3e";
+}
+.icon-user-add:before {
+  content: "\3d";
+}
+.icon-cog:before {
+  content: "\3f";
 }

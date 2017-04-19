@@ -1,23 +1,28 @@
-angular.module("play").controller('sidebarController', function(Api, $mdDialog, $scope) {
-	this.img="";
-	this.match_played=0;
-	this.match_won=0;
-	this.username="";
+angular.module("play").controller('sidebarController', function($scope, $cookies, $window, Api, $mdDialog, $scope, $cookies, jwtHelper) {
+	$scope.img="";
+	$scope.match_played=0;
+	$scope.match_won=0;
+	$scope.username="";
+	
 	
 	controllerSidebar=this;
-	Api.user().success(function(data){
-		controllerSidebar.match_played = data.match_played;
-		controllerSidebar.match_won = data.match_won;
-		controllerSidebar.username = data.username;
-		controllerSidebar.img = data.img;
+	Api.user($scope.user_pk).success(function(data){
+		$scope.match_played = data.match_played;
+		$scope.match_won = data.match_won;
+		$scope.username = data.username;
+		$scope.img = data.profile_details.img;
+		$scope.user_pk = data.pk;
 	});
 
 	this.checkImg = function(){
-	
-		console.log (controllerSidebar.img);
-		if(controllerSidebar.img=="") 
+		if($scope.img=="") 
 			return false;
 		else
 			return true;
+	}
+
+	this.logout = function(){
+		$cookies.remove('tok');
+		$window.location.reload();
 	}
 });

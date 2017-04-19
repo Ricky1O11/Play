@@ -1,41 +1,42 @@
 <div class="container-fluid" layout-padding layout="column">
-	<div layout="row">
+	<div  layout="row"> 
 		<div layout="column" flex="100">
 			<div layout="row" class="height50">
 				<div layout="column" flex="100">
-					<h3 class="blue-grey">Boardgames ({{bsCtrl.boardgames.length}})</h3>
-					
+					<h3 class="blue-grey">Boardgames</h3>
 				</div>
 			</div>
-			
 			<div layout="row" class="height100" >
 				<div layout="column" flex="90" >
 					<md-input-container class="md-block md-accent">
 					  <label>Search</label>
-					  <input ng-model="query">
+					  <input ng-model="bsCtrl.searchKey" ng-change="bsCtrl.search()">
 					</md-input-container>
 				</div>
 				<div layout="column" flex="10" layout-align="center center">
 					<md-menu>
-						<md-button class="md-fab md-mini" ng-click="$mdOpenMenu(ev)">
-							<i class="fa fa-sort-amount-desc"></i>
+						<md-button 
+						class="md-fab md-mini" 
+						ng-click="$mdOpenMenu(ev)"
+						aria-label="select list ordering">
+							<i class="icon-sort-amount-desc"></i>
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['title', '-average'])">
-									<i class="fa fa-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
+								<md-button ng-click="bsCtrl.setOrderingField('title')">
+									<i class="icon-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
 									Alphabetical order
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['-average', 'title'])">
-									<i class="fa fa-star-o" md-colors="{color: 'myTheme-accent'}"></i>
+								<md-button ng-click="bsCtrl.setOrderingField('-average')">
+									<i class="icon-star-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Average order
 								</md-button>
 							</md-menu-item>
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField(['-favourite', 'title'])">
-									<i class="fa fa-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
+								<md-button ng-click="bsCtrl.setOrderingField('favourite')">
+									<i class="icon-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Favourite order
 								</md-button>
 							</md-menu-item>
@@ -46,12 +47,12 @@
 			
 			<div layout="row" class="overflowScroll">
 				<div layout="column" flex="100">
-					<md-list flex>
-					
+					<md-virtual-repeat-container class="height100perc" flex>
+					<!--  | filter:{title:query} | orderBy:bsCtrl.getOrderingField() -->
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 						ng-href="#/boardgames/{{boardgame.pk}}"
-						ng-repeat="boardgame in bsCtrl.boardgames | filter:{title:query} | orderBy:bsCtrl.getOrderingField()" ng-click="null">
+						md-virtual-repeat="boardgame in bsCtrl.boardgames" ng-click="null" md-on-demand>
 							<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.title}}" />
 							<div layout="column">
 								<div layout="row">
@@ -60,14 +61,14 @@
 								<div layout="row">
 									<div layout="column" class="relative">
 										<div layout="row" class="star-container">
-											<i ng-repeat="star in bsCtrl.range(1,10)" class="fa fa-star-o "></i>
+											<i ng-repeat="star in bsCtrl.range(1,10)" class="icon-star-o "></i>
 										</div>
 										
 										<i>{{boardgame.average | number:2}}</i>
 										<div class="star-container">
 											<div style="width:{{boardgame.average*10}}%; overflow:hidden;">
 												<div class="star-content">
-													<span ng-repeat="star in bsCtrl.range(1,10)" class="fa fa-star "></span>
+													<span ng-repeat="star in bsCtrl.range(1,10)" class="icon-star "></span>
 												</div>
 											</div>
 										</div>
@@ -78,10 +79,24 @@
 								</div>
 							</div>
 								 
-							<i ng-if="bsCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
-							<i ng-if="!bsCtrl.isFavourite(boardgame.favourite)" class="fa fa-heart-o md-secondary" md-colors="{color: 'myTheme-accent'}"></i>
+							<i 
+							aria-label="remove favourite"
+							ng-if="boardgame.isFavourite" 
+							class="icon-heart md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+								<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+							</i>
+							<i 
+							aria-label="add favourite"
+							ng-if="!boardgame.isFavourite" 
+							class="icon-heart-o md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+							</i>
 						</md-list-item>
-				  </md-list>
+				  </md-virtual-repeat-container>
 				</div>
 			</div>
 		</div>

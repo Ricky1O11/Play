@@ -1,5 +1,5 @@
 //controller for the home page screen
-angular.module("play").controller('homeController', function(Api, $mdDialog) {
+angular.module("play").controller('homeController', function(Api, $mdDialog, $scope) {
 
 	//hold the number of favourites for the current user
 	this.favourites = 0;
@@ -7,7 +7,6 @@ angular.module("play").controller('homeController', function(Api, $mdDialog) {
 	this.recents = 0;
 	
 	controller=this;
-
 	//api call to the list of favourites boardgames
 	Api.favourites().success(function(data){
 		if(data.length >=4)
@@ -50,5 +49,4 @@ angular.module("play").controller('homeController', function(Api, $mdDialog) {
 		  //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
 		})
 	}
-
 });

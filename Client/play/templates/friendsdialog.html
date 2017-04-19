@@ -1,0 +1,78 @@
+ <md-dialog aria-label="Add Match" flex="50" id="dialog">
+  <form ng-cloak>
+	<md-toolbar class="md-accent">
+	  <div class="md-toolbar-tools">
+		<h3>{{fdCtrl.title}}</h3>
+		<span flex></span>
+		<md-button class="md-icon-button" ng-click="fdCtrl.dismiss()" aria-label="close dialog">
+		  <i class="icon-close-round"></i>
+		</md-button>
+	  </div>
+	</md-toolbar>
+	<md-dialog-content>
+	  <md-tabs md-dynamic-height md-selected="fdCtrl.currentTab">
+		<md-tab label="add friends">
+		  <md-content class="md-padding">
+				<div class="md-dialog-content">
+					<md-list class="fixedRows pad0">
+					  <md-subheader class="md-no-sticky">Friends</md-subheader>
+
+					  <div class="maxHeight150 overflowScroll">
+							<md-list-item class="md-1-line contact-item" ng-repeat="friend in fdCtrl.friends"
+						   >
+							   <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+									<div class="circleBase" layout-align="center center" " ng-style="randomColors[friend.id] || getRandomColor(friend.id)" alt="{{friend.display}}" >
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.display.substring(0,1).toUpperCase()}}</div>
+									</div>
+								</div>
+								<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
+								<div class="md-list-item-text compact">
+								  <h4>{{friend.display}}</h4>
+								</div>
+								<div class="md-secondary" ng-click="fdCtrl.togglePlayer('remove', friend, $index)">
+								  <i class="icon-close-round" ></i>
+								</div>
+						  </md-list-item>
+						 </div>
+					</md-list>
+
+					<md-list class="fixedRows clear pad0">
+					  <md-subheader class="md-no-sticky">All users</md-subheader>
+					  <div class="maxHeight200 overflowScroll">
+						  <md-list-item class="md-1-line contact-item" ng-repeat="user in fdCtrl.users | orderBy:'-friendship'"
+						  ng-click="fdCtrl.togglePlayer('select', user, $index)" 
+						  >
+						 	 <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+								<div class="circleBase" layout-align="center center" " ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}">
+									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{user.display.substring(0,1).toUpperCase()}}</div>
+								</div>
+							</div>
+							<!--<img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}" />-->
+							<div class="md-list-item-text compact">
+							  <h4>{{user.display}}</h4>
+							</div>
+						  </md-list-item>
+					  </div>
+					</md-list>
+
+				</div>
+				 
+				<div layout="column" flex class="clear">
+					<div layout="row" layout-align="end center">
+						<md-button aria-label="next" class="md-fab size-24" ng-click="fdCtrl.saveFriends()">
+							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+								<div layout="row" class="icon-check-2" aria-hidden="true" >
+								</div>
+							</div>
+						</md-button>
+						
+					</div>
+				</div>
+		  </md-content>
+		</md-tab>
+		
+	  </md-tabs>
+	</md-dialog-content>
+	  
+  </form>
+</md-dialog>

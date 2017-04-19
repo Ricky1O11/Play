@@ -1,4 +1,4 @@
-angular.module("play").controller('recentsController', function(Api) {
+angular.module("play").controller('recentsController', function($scope, Api) {
 	this.recents = 0;
 	
 	controller=this;
