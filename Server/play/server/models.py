@@ -99,6 +99,7 @@ class Plays(models.Model):
 
 class Templates (models.Model):
     boardgame = models.ForeignKey(Boardgames, on_delete=models.CASCADE)
+    hasExpansions = models.BooleanField(default=False)
     vote=models.IntegerField(default=0)
 
     def __unicode__(self):

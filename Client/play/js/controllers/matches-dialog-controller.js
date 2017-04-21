@@ -291,8 +291,10 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	this.postTemplate = function(){
 		//prepare the "template" row to be inserted in the templates table
 		row={	
-				boardgame:self.postValues.match.boardgame
+				boardgame:self.postValues.match.boardgame,
+				hasExpansions: (self.selectedValues.expansions.length > 0)
 			};
+		console.log(row);
 		self.postValues.templates.push(row);
 		
 		//post template
@@ -311,7 +313,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//clean selectedValues array removing all null entries
 		self.selectedValues.dictionary = self.selectedValues.dictionary.filter(function(n){return n != null});
 		for (i=0; i<self.selectedValues.dictionary.length; i++){
-			console.log(self.points[i]);
 			//prepare the "template" row to be inserted in the templates table
 			row={	
 					template:self.selectedValues.templates.pk,

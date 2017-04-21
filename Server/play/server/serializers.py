@@ -150,7 +150,7 @@ class TemplatesSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Templates
-        fields = ('pk', 'boardgame', 'vote', 'scoringField_details')
+        fields = ('pk', 'boardgame', 'vote', 'hasExpansions', 'scoringField_details')
 
 # Json representation of the detailed points of a single play
 class DetailedPointsSerializers(serializers.ModelSerializer):
