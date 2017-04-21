@@ -5,6 +5,7 @@ angular.module('play')
 	}
 	var b,d,dpp,dppu,f,fp,fr,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,u,us;
 	var BASE_URL = "http://127.0.0.1:8000/server"
+	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
 		register:	function(data){
 						reg = $http({method: 'POST', url: BASE_URL+'/register/', data:data});
