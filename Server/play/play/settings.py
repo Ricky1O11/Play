@@ -58,6 +58,11 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = (
     'localhost',
+    'playapi.pythonanywhere.com', 
+    'localhost', '127.0.0.1', 
+    'http://www.rankyourworld.it', 
+    'www.rankyourworld.it', 
+    'rankyourworld.it'
 )
 
 REST_FRAMEWORK = {
