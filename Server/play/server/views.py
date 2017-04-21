@@ -27,11 +27,11 @@ def index(request):
 
 # Retrieve data from json representation of boardgamegeek database
 def readBgg(self):
-    in_files = [f for f in listdir("../../jsons/trial") if isfile(join("../../jsons/trial", f))]
+    in_files = [f for f in listdir("jsons/trial") if isfile(join("jsons/trial", f))]
     expansionsDict = {}
     for in_file in in_files:
         #in_file = "bgg_1_500.json"
-        file = open(join("../../jsons/trial", in_file), "r")
+        file = open(join("jsons/trial", in_file), "r")
         text = file.read()
 
         data = json.loads(text)
