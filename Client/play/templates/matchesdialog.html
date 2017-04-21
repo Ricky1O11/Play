@@ -198,8 +198,8 @@
 				<md-list flex>
 						<md-list-item
 						class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-						ng-repeat-start="template in mdCtrl.selectedValues.templates"
-						ng-click="mdCtrl.setVisible($index)">
+						ng-repeat-start="template in mdCtrl.selectedValues.templates | filter:{hasExpansions:mdCtrl.selectedValues.expansions.length > 0}"
+						ng-click="mdCtrl.setVisible(template.pk)">
 							<div layout="column">
 								<div layout="row">
 									<h3>Template {{$index+1}}</h3>

@@ -352,7 +352,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					self.postTemplate();
 				},
 				function errorCallback(response){
-					console.log(response);
 				}
 			);
 		}
@@ -390,8 +389,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 
-	this.setVisible = function(id){
-		self.selectedValues.templates[id].visible = !self.selectedValues.templates[id].visible;
+	this.setVisible = function(pk){
+		for(i=0;i<self.selectedValues.templates.length;i++){
+			if(self.selectedValues.templates[i].pk == pk)
+				self.selectedValues.templates[i].visible = !self.selectedValues.templates[i].visible;
+		}
 	}
 
 	function containsObject(obj, list) {
