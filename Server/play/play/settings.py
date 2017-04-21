@@ -26,7 +26,7 @@ SECRET_KEY = 'ed3-_@n+^10&9$6hlq4kqm2-onc@wwam)&faoc0-uy*&kqz+h$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['playapi.pythonanywhere.com', 'localhost', '127.0.0.1', 'http://www.rankyourworld.it']
+ALLOWED_HOSTS = ['playapi.pythonanywhere.com', 'localhost', '127.0.0.1', 'http://www.rankyourworld.it', 'www.rankyourworld.it', 'rankyourworld.it']
 
 
 # Application definition
