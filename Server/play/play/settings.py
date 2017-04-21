@@ -105,11 +105,11 @@ WSGI_APPLICATION = 'play.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'play',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
-        'PORT': '3306',
+        'NAME': 'playapi$play',
+        'USER': 'playapi',
+        'PASSWORD': 'playBoardgames',
+        'HOST': 'playapi.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
+        #'PORT': '3306',
   }
 }
 
@@ -150,4 +150,5 @@ DATA_UPLOAD_MAX_NUMBER_FIELDS = 10000
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.10/howto/static-files/
 
+STATIC_ROOT = "/home/playapi/Play/static"
 STATIC_URL = '/static/'
