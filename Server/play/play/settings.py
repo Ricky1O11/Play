@@ -107,7 +107,7 @@ DATABASES = {
     'ENGINE': 'django.db.backends.mysql',
         'NAME': 'playapi$play',
         'USER': 'playapi',
-        'PASSWORD': 'playBoardgames',
+        'PASSWORD': '',
         'HOST': 'playapi.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
         #'PORT': '3306',
   }
