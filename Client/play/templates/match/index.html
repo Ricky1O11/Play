@@ -210,42 +210,24 @@
 						</md-list-item>
 						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible || mCtrl.allVisible"
 						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-								<div layout="column" flex="60">
+								<div layout="column" flex="90">
 									{{dp.scoringField_details.word_details.word}}
 								</div>
-								<div  ng-if="!mCtrl.editMode" layout="column" flex="40">
+								<div  ng-if="!mCtrl.editMode" layout="column" flex="10">
 									<div layout="row">
-										<div layout="column" flex="80" layout-align="center end">
+										<div layout="column" flex="100" layout-align="center end">
 											{{dp.detailed_points}}
-										</div>
-										<div layout="column"  flex="20" >
-											<div layout="row">
-												<div layout="column" flex="80"  layout-align="center end">
-													x {{dp.scoringField_details.bonus}} points = 
-												</div>
-												<div layout="column"  flex="20" class="bold" layout-align="center end">
-													{{dp.detailed_points*dp.scoringField_details.bonus}}
-												</div>
-											</div>
+											<md-tooltip md-direction="bottom" md-delay="200">value:  {{dp.scoringField_details.bonus}} points </md-tooltip>
 										</div>
 									</div>
 								</div>
-								<div ng-if="mCtrl.editMode" layout="column" flex="40">
+								<div ng-if="mCtrl.editMode" layout="column" flex="10">
 									<div layout="row">
-										<div layout="column" flex="80" layout-align="center end">
+										<div layout="column" flex="100" layout-align="center end">
 											<md-input-container class="detailedPointsContainer md-block" >
 													<input type="number" ng-model="dp.detailed_points" aria-label="red" aria-controls="red-slider">
+													<md-tooltip md-direction="bottom" md-delay="200"> value: {{dp.scoringField_details.bonus}} points </md-tooltip>
 											</md-input-container>
-										</div>
-										<div layout="column"  flex="20" >
-											<div layout="row">
-												<div layout="column" flex="80"  layout-align="center end">
-													x {{dp.scoringField_details.bonus}} points = 
-												</div>
-												<div layout="column"  flex="20" class="bold" layout-align="center end">
-													{{dp.detailed_points*dp.scoringField_details.bonus}}
-												</div>
-											</div>
 										</div>
 									</div>
 								</div>

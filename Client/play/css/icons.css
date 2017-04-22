@@ -287,3 +287,12 @@
 .icon-cog:before {
   content: "\3f";
 }
+.icon-500px:before {
+  content: "\40";
+}
+.icon-thumbs-down:before {
+  content: "\5b";
+}
+.icon-thumbs-up:before {
+  content: "\5d";
+}
