@@ -103,7 +103,15 @@ class Templates (models.Model):
     vote=models.IntegerField(default=0)
 
     def __unicode__(self):
-        return str(self.boardgame).decode('utf8')
+        return str(self.pk).decode('utf8')
+
+class TemplateVotes(models.Model):
+    template = models.ForeignKey(Templates, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    vote=models.IntegerField(default=0)
+
+    def __unicode__(self):
+        return "Template " + str(self.template).decode('utf8')+ "voted by " + str(self.user).decode('utf8')
 
 class Dictionary(models.Model):
     word = models.CharField(max_length=100)

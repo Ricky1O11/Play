@@ -196,7 +196,7 @@
 					class="height100perc" 
 					>
 						<div layout="row" layout-align="center center">
-							<form name="loginForm" layout="column">
+							<form name="loginForm" layout="column" ng-submit="lCtrl.submit()">
 								<div layout="row"  layout-align="center center" flex="none">
 										<img ng-src="img/play.png"  id="logo" flex="none"/>
 								</div>
@@ -226,8 +226,8 @@
 								<div layout="row" layout-align="center center">
 									<div layout="column">
 										<md-button 
+										type="submit"
 										class="md-fab size-24" 
-										ng-click="lCtrl.submit()"
 										aria-label="login">
 											<div layout="column" class="pad3l pad2b" flex layout-align="center center">
 												<div layout="row" class="icon-angle-right" aria-hidden="true" >
@@ -247,7 +247,7 @@
 					ng-controller="registerController as rCtrl"
 					class="height100perc" >
 						<div layout="row" class="height100perc" layout-align="center center">
-							<form name="registerForm" layout="column" flex="40">
+							<form name="registerForm" layout="column" flex="40" ng-submit="rCtrl.signin()">
 								<div layout="row"  layout-align="center center">
 									<div layout="column" flex="100">
 										<md-input-container >
@@ -310,7 +310,7 @@
 									<div layout="column">
 										<md-button 
 										class="md-fab size-24 md-primary" 
-										ng-click="rCtrl.signin()"
+										type="submit"
 										aria-label="register"
 										>
 											<div layout="column" class="pad3l pad2b" flex layout-align="center center">

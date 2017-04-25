@@ -198,13 +198,13 @@
 				<md-list flex>
 						<md-list-item
 						class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-						ng-repeat-start="template in mdCtrl.selectedValues.templates | filter:{hasExpansions:mdCtrl.selectedValues.expansions.length > 0}"
+						ng-repeat-start="template in mdCtrl.selectedValues.templates"
 						ng-click="mdCtrl.setVisible(template.pk)">
 							<div layout="column" flex="15">
 								<div layout="row">
 									<div layout="column" flex="40" layout-align="center center">
 										<md-button aria-label="select template" class="md-icon-button md-primary"
-											ng-click="mdCtrl.selectTemplate(template)">
+											ng-click="mdCtrl.updateVote(template, 1)">
 											<i class="icon-thumbs-up"></i>
 										</md-button>
 									</div>
@@ -215,13 +215,13 @@
 									</div>
 									<div layout="column" flex="40" layout-align="center center">
 										<md-button aria-label="select template" class="md-icon-button"
-											ng-click="mdCtrl.selectTemplate(template)">
+											ng-click="mdCtrl.updateVote(template, -1)">
 											<i class="icon-thumbs-down"></i>
 										</md-button>
 									</div>
 								</div>
 							</div>
-							<div layout="column" flex="75">
+							<div layout="column" flex="65">
 								<div layout="row">
 									<h3>Template {{$index+1}}</h3>
 								</div>
@@ -232,6 +232,10 @@
 									<i class="icon-angle-right"></i>
 								</md-button>
 							</div>
+							<div layout="column" flex="10" ng-if="template.hasExpansions">
+								<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
+							</div>
+							 
 						</md-list-item>
 						<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
 						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
@@ -239,8 +243,8 @@
 								{{scoringField.word_details.word}}
 							</div>
 						</md-list-item>
-				  </md-list>
-				  <div layout="row" class="mrg20t" layout-align="end center">
+				</md-list>
+				<div layout="row" class="mrg20t" layout-align="end center">
 					<md-button aria-label="add template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
 						Add new template
 					</md-button>

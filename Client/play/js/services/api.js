@@ -3,7 +3,7 @@ angular.module('play')
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
 	}
-	var b,d,dpp,dppu,f,fp,fr,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,u,us;
+	var b,d,dpp,dppu,f,fp,fr,l,m,md,mp,mpu,ms,pp,r,reg, sfp,t,tok,ts,tp,tpu,u,us;
 	var BASE_URL = "http://127.0.0.1:8000/server"
 	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
@@ -124,6 +124,10 @@ angular.module('play')
 						tp = $http({method: 'POST', url: BASE_URL+'/templates/', data:templates});
 						return tp;
 					},
+		templateput:	function(template, id){
+						tpu = $http({method: 'PUT', url: BASE_URL+'/templates/'+id+'/', data:template});
+						return tpu;
+					},				
 		dpPost:	function(dp){
 						dpp = $http({method: 'POST', url: BASE_URL+'/detailedpoints/', data:dp});
 						return dpp;

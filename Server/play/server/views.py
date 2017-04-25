@@ -424,8 +424,8 @@ class TemplatesList(APIView):
 #Template Detail
 class TemplateDetail(APIView):
     def get(self, request, pk):
-        template = Templates.objects.filter(pk = pk)
-        templatesSerializers = TemplatesSerializers(template, many=True, context={'request': request})
+        template = get_object_or_404(Templates, pk = pk)
+        templatesSerializers = TemplatesSerializers(template, context={'request': request})
         return Response(templatesSerializers.data)
 
     def get_object(self, pk):

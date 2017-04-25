@@ -238,7 +238,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			//post match
 			Api.expansionpost(self.postValues.expansions).then(
 					function(response){
-						console.log(response);
 						//for each player
 						for (i=0; i<self.selectedValues.players.length; i++){
 							if(self.selectedValues.players[i] != null){
@@ -270,7 +269,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//post play
 		Api.playpost(self.postValues.plays).then(
 			function(response){
-						console.log(response);
 				//get the list of posted plays
 				self.selectedValues.play = response.data;
 				if(step == "selectTemplate"){
@@ -294,7 +292,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				boardgame:self.postValues.match.boardgame,
 				hasExpansions: (self.selectedValues.expansions.length > 0)
 			};
-		console.log(row);
 		self.postValues.templates.push(row);
 		
 		//post template
@@ -409,7 +406,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	this.togglePlayer = function(act, user, id){
 		if(act == "select"){
 			self.selectedValues.players.push(user);
-			console.log(id);
 			for(i=0;i<self.users.length;i++){
 				if(self.users[i].id == id)
 					self.users.splice(i, 1);
@@ -440,11 +436,19 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			self.selectedValues.expansions.push(pk);
 		else
 			self.selectedValues.expansions.splice(i, 1);
-		console.log(self.selectedValues.expansions);
 	}
 	this.isExpansionSelected = function(pk){
 		i = self.selectedValues.expansions.indexOf(pk);
-		console.log(i)
 		return i >= 0;
+	}
+
+	this.updateVote = function(template, val){
+		row = {vote : template.vote + val, boardgame: template.boardgame};
+		Api.templateput(row, template.pk).then(function(response){
+				template.vote = response.data.vote;
+				console.log(response.data);
+			}, function errorCallback(response){
+				console.log(response.data);
+			});		
 	}
 });
