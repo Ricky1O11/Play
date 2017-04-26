@@ -1,7 +1,7 @@
 from django.db.models import Q
 from rest_framework import serializers
 from .models import *
-from django.db.models import Count, Max
+from django.db.models import Count, Max, Sum
 
 # Json representation of the dictionary
 class DictionarySerializers(serializers.ModelSerializer):
@@ -150,6 +150,7 @@ class TemplateVoteSerializers(serializers.ModelSerializer):
 class TemplatesSerializers(serializers.ModelSerializer):
     scoringField_details = serializers.SerializerMethodField()
     user_vote = serializers.SerializerMethodField()
+    votes = serializers.SerializerMethodField()
 
     def get_scoringField_details(self, template):
         score = ScoringFields.objects.filter(template=template)
@@ -164,9 +165,15 @@ class TemplatesSerializers(serializers.ModelSerializer):
         else:
             return 0
 
+    def get_votes(self, template):
+        votes = TemplateVotes.objects.filter(template = template).aggregate(votes=Sum('vote'))["votes"]
+        if (votes is None):
+            votes = 0
+        return votes
+
     class Meta:
         model = Templates
-        fields = ('pk', 'boardgame', 'vote', 'hasExpansions', 'scoringField_details', 'user_vote')
+        fields = ('pk', 'boardgame', 'votes', 'hasExpansions', 'scoringField_details', 'user_vote')
 
 
 

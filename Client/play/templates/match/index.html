@@ -1,6 +1,6 @@
 <div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
 	<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
-	<div layout="column" flex="none" layout-align="center center">
+		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" flex="none" class="relative" >
 				<div class="clickable circleBase imgBoardgame hideScrollbar shadowed-box"  ng-click="showImage($event, mCtrl.match.boardgame_details.img)">
 					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{mCtrl.match.boardgame_details.img}}">
@@ -183,57 +183,57 @@
 	</div>
 	<div layout="row" flex="none">
 		<div layout="column" flex="100">
-			<div layout="row" flex-sm="none">
+			<div layout="row" flex-sm="none" class="height60">
 				<h3 class="blue-grey">Leaderboard ({{mCtrl.match.plays_set.length}})</h3>
 			</div>	
-			<div layout="row" class="overflowScroll">			
-					<md-list flex>
-						<md-list-item
-						class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-						ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
-						ng-click="mCtrl.setVisible(play.pk)">
-							<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
-								<div class="circleBase" layout-align="center center" "  ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}">
-									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{play.user_details.username.substring(0,1).toUpperCase()}}</div>
-								</div>
+			<div layout="row">			
+				<md-list flex>
+					<md-list-item
+					class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+					ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
+					ng-click="mCtrl.setVisible(play.pk)">
+						<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+							<div class="circleBase" layout-align="center center" "  ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}">
+								<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{play.user_details.username.substring(0,1).toUpperCase()}}</div>
 							</div>
-							<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
-							<div layout="column">
+						</div>
+						<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
+						<div layout="column">
+							<div layout="row">
+								<h3>{{play.user_details.username}}</h3>
+							</div>
+						</div>
+						<div class="md-secondary">
+							<strong>{{mCtrl.sumPoints(play.detailedPoints)}}</strong>
+						</div>
+						
+					</md-list-item>
+					<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible || mCtrl.allVisible"
+					class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+							<div layout="column" flex="90">
+								{{dp.scoringField_details.word_details.word}}
+							</div>
+							<div  ng-if="!mCtrl.editMode" layout="column" flex="10">
 								<div layout="row">
-									<h3>{{play.user_details.username}}</h3>
-								</div>
-							</div>
-							<div class="md-secondary">
-								<strong>{{mCtrl.sumPoints(play.detailedPoints)}}</strong>
-							</div>
-							
-						</md-list-item>
-						<md-list-item layout="row" ng-repeat-end ng-repeat="dp in play.detailedPoints" ng-if="play.visible || mCtrl.allVisible"
-						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-								<div layout="column" flex="90">
-									{{dp.scoringField_details.word_details.word}}
-								</div>
-								<div  ng-if="!mCtrl.editMode" layout="column" flex="10">
-									<div layout="row">
-										<div layout="column" flex="100" layout-align="center end">
-											{{dp.detailed_points}}
-											<md-tooltip md-direction="bottom" md-delay="200">value:  {{dp.scoringField_details.bonus}} points </md-tooltip>
-										</div>
+									<div layout="column" flex="100" layout-align="center end">
+										{{dp.detailed_points}}
+										<md-tooltip md-direction="bottom" md-delay="200">value:  {{dp.scoringField_details.bonus}} points </md-tooltip>
 									</div>
 								</div>
-								<div ng-if="mCtrl.editMode" layout="column" flex="10">
-									<div layout="row">
-										<div layout="column" flex="100" layout-align="center end">
-											<md-input-container class="detailedPointsContainer md-block" >
-													<input type="number" ng-model="dp.detailed_points" aria-label="red" aria-controls="red-slider">
-													<md-tooltip md-direction="bottom" md-delay="200"> value: {{dp.scoringField_details.bonus}} points </md-tooltip>
-											</md-input-container>
-										</div>
+							</div>
+							<div ng-if="mCtrl.editMode" layout="column" flex="10">
+								<div layout="row">
+									<div layout="column" flex="100" layout-align="center end">
+										<md-input-container class="detailedPointsContainer md-block" >
+												<input type="number" ng-model="dp.detailed_points" aria-label="red" aria-controls="red-slider">
+												<md-tooltip md-direction="bottom" md-delay="200"> value: {{dp.scoringField_details.bonus}} points </md-tooltip>
+										</md-input-container>
 									</div>
 								</div>
-						</md-list-item>
-				  </md-list>
-				</div>
+							</div>
+					</md-list-item>
+				</md-list>
+			</div>
 		</div>
 	</div>
 </div>

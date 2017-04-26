@@ -1,4 +1,4 @@
- <div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
+<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
 	<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
@@ -155,35 +155,35 @@
 			</div>
 		</div>
 	</div>
-	<div layout="row"  flex="noshrink">
+	<div layout="row" flex="none">
 		<div layout="column" flex="100">
-			<div layout="row" flex-sm="none">
+			<div layout="row" flex-sm="none" class="height60">
 				<h3 class="blue-grey">Match played ({{bCtrl.boardgame.matches.length}})</h3>
 			</div>	
-			<div layout="row" class="overflowScroll height270">
-						<md-list flex ng-if="bCtrl.boardgame.matches.length > 0">
-							<md-list-item
-							class=" md-2-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
-							ng-href="#/matches/{{match.pk}}"
-							ng-repeat="match in bCtrl.boardgame.matches | filter:{location:query}" ng-click="null">
-								<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.title}}" />
-								<div layout="column">
-									<div layout="row">
-										<h3 ng-if="match.name.length == 0">Match {{match.pk}}</h3>
-										<h3 ng-if="match.name.length > 0">{{match.name}}</h3>
-									</div>
-									<div layout="row" class="size-14">
-										<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
-									</div>
-								</div>
-								
-							</md-list-item>
-					  </md-list>
-					  <div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
-					  	<div layout="row" class="size-72 mrg20b">:(</div>
-					  	<div layout="row" class="mrg20b"><h1 class="center-align">Do you like this game? Play it!</h1></div>
-					  	<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches')"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
-					  </div>
+			<div layout="row">
+				<md-list flex ng-if="bCtrl.boardgame.matches.length > 0">
+					<md-list-item
+					class=" md-2-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
+					ng-href="#/matches/{{match.pk}}"
+					ng-repeat="match in bCtrl.boardgame.matches | filter:{location:query}" ng-click="null">
+						<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.title}}" />
+						<div layout="column">
+							<div layout="row">
+								<h3 ng-if="match.name.length == 0">Match {{match.pk}}</h3>
+								<h3 ng-if="match.name.length > 0">{{match.name}}</h3>
+							</div>
+							<div layout="row" class="size-14">
+								<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
+							</div>
+						</div>
+						
+					</md-list-item>
+				</md-list>
+				<div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
+					<div layout="row" class="size-72 mrg20b">:(</div>
+					<div layout="row" class="mrg20b"><h1 class="center-align">Do you like this game? Play it!</h1></div>
+					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches')"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
+				</div>
 			</div>
 		</div>
 	</div>

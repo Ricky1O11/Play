@@ -124,6 +124,18 @@ angular.module('play')
 						tp = $http({method: 'POST', url: BASE_URL+'/templates/', data:templates});
 						return tp;
 					},
+		templatevotes:	function(template, user){
+						ts = $http({method: 'GET', url: BASE_URL+'/templatevotes/?template_id='+template+'&user_id='+user});
+						return ts;
+					},
+		templatevotespost:	function(templatevote){
+						tp = $http({method: 'POST', url: BASE_URL+'/templatevotes/', data:templatevote});
+						return tp;
+					},
+		templatevotesdelete:	function(templatevote){
+						tp = $http({method: 'DELETE', url: BASE_URL+'/templatevotes/'+templatevote+'/'});
+						return tp;
+					},
 		templateput:	function(template, id){
 						tpu = $http({method: 'PUT', url: BASE_URL+'/templates/'+id+'/', data:template});
 						return tpu;

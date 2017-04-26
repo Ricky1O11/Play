@@ -1,4 +1,4 @@
- //controller for the popup dialog used to insert a new match
+//controller for the popup dialog used to insert a new match
 angular.module("play").controller('matchesDialogController', function($scope, Api, $rootScope, $mdDialog, $location, user_pk) {
 
 	// list of `state` value/display objects
@@ -92,7 +92,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			results= self.users;
 		}
 		for(i=0;i<results.length;i++){
-			if(!containsObject(results[i], self.selectedValues.players)){
+			if(!self.containsObject(results[i], self.selectedValues.players)){
 				returned.push(results[i]);
 			}
 		}
@@ -357,6 +357,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
+	//post the detailed points to the server
 	this.postDetailedPoints = function(){
 		for (i=0; i<self.selectedValues.play.length; i++){	
 			//get the current play id
@@ -372,7 +373,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			}
 		}
 
-		//post detailedPoints
+		//call the server API
 		Api.dpPost(self.postValues.dp).then(
 			function(response){
 				//if successfull, hide the dialog and prompt a message
@@ -385,7 +386,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		);
 	}
 
-
 	this.setVisible = function(pk){
 		for(i=0;i<self.selectedValues.templates.length;i++){
 			if(self.selectedValues.templates[i].pk == pk)
@@ -393,7 +393,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-	function containsObject(obj, list) {
+	this.containsObject = function(obj, list) {
 		var i;
 		for (i = 0; i < list.length; i++) {
 			if (list[i] === obj) {
@@ -420,6 +420,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	this.back = function(){
 		self.currentTab--;
 	}
+
 	this.dismiss = function(){
 		$mdDialog.hide();
 	}
@@ -437,18 +438,30 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		else
 			self.selectedValues.expansions.splice(i, 1);
 	}
+
 	this.isExpansionSelected = function(pk){
 		i = self.selectedValues.expansions.indexOf(pk);
 		return i >= 0;
 	}
 
 	this.updateVote = function(template, val){
-		row = {vote : template.vote + val, boardgame: template.boardgame};
-		Api.templateput(row, template.pk).then(function(response){
-				template.vote = response.data.vote;
-				console.log(response.data);
+		if(template.user_vote != 0){
+			Api.templatevotes(template.pk, self.user_pk).then(function(response){
+					Api.templatevotesdelete(response.data[0].pk).then(function(response){
+						}, function errorCallback(response){
+							console.log(response);
+					});
+				}, function errorCallback(response){
+					console.log(response);
+			});
+		}
+
+		row = [{vote : val, template: template.pk, user: self.user_pk}];
+		Api.templatevotespost(row).then(function(response){
+				template.votes = parseInt(template.votes)-parseInt(template.user_vote)+parseInt(response.data[0].vote);
+				template.user_vote = response.data[0].vote;
 			}, function errorCallback(response){
 				console.log(response.data);
-			});		
+		});
 	}
 });
