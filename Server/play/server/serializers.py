@@ -207,7 +207,7 @@ class PlaysSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Plays
-        fields = ('pk', 'match', 'user', 'user_details', 'points', 'detailedPoints')
+        fields = ('pk', 'match', 'user', 'user_details', 'points', 'detailedPoints', 'turn')
 
 # Json representation of the expansions used in a certain match
 class PlayedExpansionsSerializers(serializers.ModelSerializer):
