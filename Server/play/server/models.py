@@ -93,6 +93,7 @@ class Plays(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     match = models.ForeignKey(Matches, on_delete=models.CASCADE)
     points = models.IntegerField(default=999999)
+    turn = models.IntegerField(default=0)
 
     def __unicode__(self):
         return str(self.match).decode('utf8') + " and User id " + str(self.user)

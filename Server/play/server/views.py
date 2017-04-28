@@ -449,6 +449,43 @@ class TemplateDetail(APIView):
             template.delete()
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+
+# Template list
+class TemplateVoteList(APIView):
+    def get(self, request):
+        template_id = self.request.query_params.get('template_id', None)
+        user_id = self.request.query_params.get('user_id', None)
+        if (template_id is not None and user_id is not None):
+            templatevote = TemplateVotes.objects.filter(template=template_id, user=user_id)
+            templateVoteSerializers = TemplateVoteSerializers(templatevote, many=True, context={'request': request})
+            return Response(templateVoteSerializers.data)
+        else:
+            return Response("error: insert template and user id")
+
+
+    def post(self, request):
+        templatevote = TemplateVoteSerializers(data=request.data, many=True, context={'request': request})
+        if templatevote.is_valid():
+            templatevote.save()
+            return Response(templatevote.data, status=status.HTTP_201_CREATED)
+        return Response(templatevote.errors, status=status.HTTP_400_BAD_REQUEST)
+
+#Template Detail
+class TemplateVoteDetail(APIView):
+
+    def get_object(self, pk):
+        try:
+            return TemplateVotes.objects.get(pk=pk)
+        except TemplateVotes.DoesNotExist:
+            return 0
+    
+    def delete(self, request, pk):
+        auth_user = self.request.user
+        if(auth_user.is_staff):
+            templatevote = self.get_object(pk)
+            templatevote.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
 # Word list
 class DictionaryList(APIView):
     def get(self, request):

@@ -1,4 +1,4 @@
- <md-dialog aria-label="Add Match" flex="50" id="dialog">
+<md-dialog aria-label="Add Match" flex="50" id="dialog">
   <form ng-cloak>
 	<md-toolbar class="md-accent">
 	  <div class="md-toolbar-tools">
@@ -198,23 +198,25 @@
 				<md-list flex>
 						<md-list-item
 						class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-						ng-repeat-start="template in mdCtrl.selectedValues.templates"
+						ng-repeat-start="template in mdCtrl.selectedValues.templates | orderBy:'-votes'"
 						ng-click="mdCtrl.setVisible(template.pk)">
 							<div layout="column" flex="15">
 								<div layout="row">
 									<div layout="column" flex="40" layout-align="center center">
-										<md-button aria-label="select template" class="md-icon-button md-primary"
+										<md-button aria-label="select template" class="md-icon-button blue-grey" 
+											ng-class="{'md-primary': template.user_vote == '1'}"
 											ng-click="mdCtrl.updateVote(template, 1)">
 											<i class="icon-thumbs-up"></i>
 										</md-button>
 									</div>
 									<div layout="column" flex="20" layout-align="center center">
 										<div layout="row">
-											<h4>{{template.vote}}</h4>
+											<h4>{{template.votes}}</h4>
 										</div>
 									</div>
 									<div layout="column" flex="40" layout-align="center center">
-										<md-button aria-label="select template" class="md-icon-button"
+										<md-button aria-label="select template" class="md-icon-button blue-grey"
+											ng-class="{'md-accent': template.user_vote == '-1'}"
 											ng-click="mdCtrl.updateVote(template, -1)">
 											<i class="icon-thumbs-down"></i>
 										</md-button>
@@ -227,7 +229,7 @@
 								</div>
 							</div>
 							<div layout="column" flex="10">
-								<md-button aria-label="select template" class="md-fab md-fab md-mini"
+								<md-button aria-label="select template" class="md-fab md-mini"
 									ng-click="mdCtrl.selectTemplate(template)">
 									<i class="icon-angle-right"></i>
 								</md-button>
