@@ -1,5 +1,5 @@
 (function(){
-	angular.module('play',["ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt"])
+	angular.module('play',["ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter'])
 	.config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
 		$mdThemingProvider.theme('myTheme')

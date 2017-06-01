@@ -20,18 +20,27 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			}
 			else{
 				$rootScope.showToast("You are not allowed to see this match!");
-		   		$location.path("matches/");	
+				$location.path("matches/");	
 			}
 		}, function errorCallback(response){
 			$rootScope.showToast("You are not allowed to see this match!");
-		    //$location.path("matches/");			
+			//$location.path("matches/");			
 		}
 	);
-	
-	this.sumPoints = function(detailedPoints){
+
+	this.sumPointsPerPlay = function(detailedPoints){
 		sum = 0;
 		for(k = 0; k< detailedPoints.length; k++){
 			sum += detailedPoints[k].detailed_points*detailedPoints[k].scoringField_details.bonus;
+		}
+		return sum;
+	}
+	this.sumPointsPerUser = function(detailedPoints){
+
+		sum = 0;
+		for(dp in detailedPoints){
+			console.log(dp);
+			sum += detailedPoints[dp].detailed_points*detailedPoints[dp].bonus;
 		}
 		return sum;
 	}
@@ -155,12 +164,35 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	}
 
 	this.managePlays = function(){
+		controller.match.totalTurns = 0;
+		controller.match.leaderboard = {};
 		for(i = 0; i< controller.match.plays_set.length;i++){
-			controller.match.plays_set[i].visible = false;
-			for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
-				controller.match.plays_set[i].detailedPoints[j].old_detailed_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+			play = controller.match.plays_set[i];
+			if(!(play.user in controller.match.leaderboard)){
+				controller.match.leaderboard[play.user] = {visible: false, username: play.user_details.username, detailedPoints:{}}
 			}
-			controller.match.plays_set[i].points = controller.sumPoints(controller.match.plays_set[i].detailedPoints);
+
+			if(play.turn > controller.match.totalTurns){
+				controller.match.totalTurns = play.turn;
+			}
+
+			play.visible = false;
+
+			for(j = 0; j<play.detailedPoints.length; j++){
+				if(!(play.detailedPoints[j].scoringField_details.word_details.word in controller.match.leaderboard[play.user]["detailedPoints"])){
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word] = {}
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["detailed_points"] = play.detailedPoints[j].detailed_points;
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["bonus"] = play.detailedPoints[j].scoringField_details.bonus;
+				}
+				else{
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["detailed_points"] += play.detailedPoints[j].detailed_points;
+				}
+
+				play.detailedPoints[j].old_detailed_points = play.detailedPoints[j].detailed_points;
+			}
+
+			play.points = controller.sumPointsPerPlay(play.detailedPoints);
+			controller.match.leaderboard[play.user].points = controller.sumPointsPerUser(controller.match.leaderboard[play.user].detailedPoints);
 		}
 	}
 
@@ -237,6 +269,23 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		}
 	}
 
+	//create ordered list of numbers
+	this.range = function(a, b, step) {
+		step = step || 1;
+		var input = [];
+		if(a>b){
+		  for (var i = a; i >= b; i -= step) {
+			input.push(i);
+		  }
+		}
+		else{
+		  for (var i = a; i <= b; i += step) {
+			input.push(i);
+		  }
+		}
+		return input;
+	};
+
 	function startTime() {
 		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){
 		    controller.match.duration ++;
@@ -248,6 +297,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
 	    return i;
 	}
+
 
 	$window.onbeforeunload =  controller.updateDuration;
 
