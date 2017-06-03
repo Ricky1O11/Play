@@ -185,6 +185,9 @@ class IsExpansionOf(models.Model):
     boardgame1 = models.ForeignKey(Boardgames, related_name='boardgameE1', on_delete=models.CASCADE)
     boardgame2 = models.ForeignKey(Boardgames, related_name='boardgameE2', on_delete=models.CASCADE)
 
+    class Meta:
+        unique_together = ["boardgame1", "boardgame2"]
+
     def __unicode__(self):
         return str(self.boardgame1).decode('utf8') + " is an expansion of " + str(self.boardgame2).decode('utf8')
 

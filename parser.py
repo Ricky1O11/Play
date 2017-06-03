@@ -8,9 +8,9 @@ import json
 import os
 
 beg = 1
-end = 500
-div = 2
-breakpoint = 0
+end = 250000
+div = 500
+breakpoint = 173500
 rate = end/div
 os.system('cls')
 print '{0}\r'.format("Completion: 0%"),
@@ -59,4 +59,3 @@ for i in range(0,div):
 								xmldict[id][leaf.tag] = leaf.text
 		file = open("jsons/bgg_"+str(int(beg*rate*i+1))+"_"+str(int(beg*rate*i+rate))+".json", "w")
 		file.write(json.dumps(xmldict))
-#print data

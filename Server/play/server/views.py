@@ -26,12 +26,12 @@ def index(request):
     return HttpResponse("Home")
 
 # Retrieve data from json representation of boardgamegeek database
-def readBgg(self):
-    in_files = [f for f in listdir("jsons/trial") if isfile(join("jsons/trial", f))]
+def addGamesFromBgg(self):
+    in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]
     expansionsDict = {}
     for in_file in in_files:
         #in_file = "bgg_1_500.json"
-        file = open(join("jsons/trial", in_file), "r")
+        file = open(join("jsons", in_file), "r")
         text = file.read()
 
         data = json.loads(text)
@@ -82,9 +82,6 @@ def readBgg(self):
                         if("thumbnail" in game):
                             gamedb.thumbnail = game["thumbnail"]
 
-                        if("boardgameexpansion" in game): #if the game has expansions
-                            expansionsDict[i] = game["boardgameexpansion"]
-
                         #TODO: manage new expansions
                         gamedb.save()
                         
@@ -132,21 +129,46 @@ def readBgg(self):
                                 publishedbydb.publisher=  currentPublisher
                                 publishedbydb.boardgame = gamedb
                                 publishedbydb.save()
-        
-    for game_id in expansionsDict:
-        print game_id
-        boardgame_record = Boardgames.objects.filter(bggid = game_id)
-        for expansion_id in expansionsDict[game_id]:
-            expansion = Boardgames.objects.filter(bggid = int(expansion_id))
-            if(expansion.count() == 1):
-                expansionofdb = IsExpansionOf()
-                expansionofdb.boardgame1=  expansion[0]
-                expansionofdb.boardgame2 = boardgame_record[0]
-                expansionofdb.save()
 
-        #return HttpResponse("Pro")
-        #except:
-        #    return HttpResponse("Seghe")
+# Retrieve data from json representation of boardgamegeek database
+def addExpansionsFromBgg(self):
+    in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]
+    expansionsDict = {}
+    for in_file in in_files:
+        #in_file = "bgg_1_500.json"
+        file = open(join("jsons", in_file), "r")
+        text = file.read()
+
+        data = json.loads(text)
+        file.close()
+        #try:
+        boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
+
+        for i in range(int(boundaries[0]),int(boundaries[1])):
+
+            if(str(i) in data):
+                game = data[str(i)]
+                gamedb = Boardgames()
+                if("rpgartist" in game or 
+                    "rpgdesigner" in game or 
+                    "rpgpublisher" in game or 
+                    "videogamedeveloper" in game or
+                    "videogamepublisher" in game):
+                    continue
+                else:
+                    if("boardgameexpansion" in game): #if the game has expansions
+                        boardgame_record = Boardgames.objects.filter(bggid = i)
+                        print "Boardgame id: " + str(i) + " with expansions"
+                        for expansion_id in game["boardgameexpansion"]:
+                            expansion = Boardgames.objects.filter(bggid = expansion_id)
+                            if(expansion.count() == 1):
+                                exprelation = IsExpansionOf.objects.filter(boardgame1 = expansion[0], boardgame2 = boardgame_record[0])
+                                if(exprelation.count() != 1):
+                                    expansionofdb = IsExpansionOf()
+                                    expansionofdb.boardgame1=  expansion[0]
+                                    expansionofdb.boardgame2 = boardgame_record[0]
+                                    expansionofdb.save()
+
 # Boardgame list
 class BoardgamesList(APIView):
     permission_classes = (AllowAny,)
@@ -165,8 +187,6 @@ class BoardgamesList(APIView):
         boardgamesSerializers = BoardgamesSerializers(result_page, many=True, context={'request': request})
         return Response(boardgamesSerializers.data)
 
-# @csrf_exempt
-# @api_view(['POST'])
 
 # Boardgame list with filters. Allowed: "favourites", "recents"
 class BoardgamesListFiltered(APIView):

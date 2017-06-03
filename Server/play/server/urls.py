@@ -4,7 +4,8 @@ from rest_framework.urlpatterns import format_suffix_patterns
 from rest_framework_jwt.views import obtain_jwt_token
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^read[bB]gg/$', views.readBgg, name='readBgg'), #read boardgamegeek
+    url(r'^add[gG]amesFromBgg/$', views.addGamesFromBgg, name='addGamesFromBgg'), #read boardgamegeek to add games to the db
+    url(r'^add[eE]xpansions/$', views.addExpansionsFromBgg, name='addExpansionsFromBgg'), #read boardgamegeek to add relationships between main games and expansions
     url(r'^boardgames/$', views.BoardgamesList.as_view(), name='boardgames'), #boardgames list
     url(r'^boardgames/(?P<filter>[a-z]+)/$', views.BoardgamesListFiltered.as_view()), #single boardgame's details with filters managed in the views file
     url(r'^boardgames/(?P<pk>[0-9]+)/$', views.BoardgameDetail.as_view()), #single boardgame's details
