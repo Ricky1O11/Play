@@ -191,22 +191,62 @@
 							<md-list flex>
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="play in mCtrl.match.plays_set | orderBy:'-points' "
+								ng-repeat-start="(user, details) in mCtrl.match.leaderboard"
+								ng-click="mCtrl.setVisible(user)">
+									<div layout="column">
+										<md-button 	ng-click="goTo('users/'+user)" class="md-fab md-mini" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" >
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{details.username.substring(0,1).toUpperCase()}}</div>
+										</md-button>
+									</div>
+									<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
+									<div layout="column" flex="95">
+										<div layout="row">
+											<h3>{{details.username}}</h3>
+										</div>
+									</div>
+									<div layout="column" flex="5" layout-align="center end">
+										<strong>{{details.points}}</strong>
+									</div>
+									
+								</md-list-item>
+								<md-list-item layout="row" ng-repeat-end ng-repeat="(word, points) in details.detailedPoints" ng-if="details.visible || mCtrl.allVisible"
+								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+										<div layout="column" flex="90">
+											{{word}}
+										</div>
+										<div layout="column" flex="10">
+											<div layout="row">
+												<div layout="column" flex="100" layout-align="center end">
+													{{points}}
+													<md-tooltip md-direction="bottom" md-delay="200">value:  {{dp.scoringField_details.bonus}} points </md-tooltip>
+												</div>
+											</div>
+										</div>
+								</md-list-item>
+							</md-list>
+						</div>
+					</md-content>
+				</md-tab>
+				<md-tab label="Round {{turn+1}}" ng-repeat="turn in mCtrl.range(0,mCtrl.match.totalTurns)">
+					<md-content class="pad5l pad10t">
+						<div layout="row">			
+							<md-list flex>
+								<md-list-item
+								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+								ng-repeat-start="play in mCtrl.match.plays_set | filter:{turn:turn} | orderBy:'-points' "
 								ng-click="mCtrl.setVisible(play.pk)">
 									<div layout="column">
 										<md-button 	ng-click="goTo('users/'+friend.pk)" class="md-fab md-mini" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{play.user_details.username.substring(0,1).toUpperCase()}}</div>
-
 										</md-button>
 									</div>
-									<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
 									<div layout="column" flex="95">
 										<div layout="row">
 											<h3>{{play.user_details.username}}</h3>
 										</div>
 									</div>
 									<div layout="column" flex="5" layout-align="center end">
-										<strong>{{mCtrl.sumPoints(play.detailedPoints)}}</strong>
+										<strong>{{mCtrl.sumPointsPerPlay(play.detailedPoints)}}</strong>
 									</div>
 									
 								</md-list-item>

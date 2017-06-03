@@ -2,6 +2,8 @@
 	<head>
 		<title>Play</title>
 		<meta charset="UTF-8">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="css/angular-material.min.css">
 		<link rel="stylesheet" href="css/style.css">
 		<link rel="stylesheet" href="css/icons.css">
@@ -18,11 +20,11 @@
 		<script src="js/includes/angular-cookies.min.js"></script>
 		<script src="js/includes/angular-sanitize.min.js"></script>
 		<script src="js/includes/angular-jwt/dist/angular-jwt.js"></script>
-		
 		<!--uploading profile images 
 		<script src="ng-file-upload-shim(.min).js"></script> ( for no html5 browsers support )
 		<script src="ng-file-upload(.min).js"></script>
 		-->
+		<script src="js/includes/angular-filter.js"></script>
 		<script src="js/app.js"></script>
 		
 		<!-- Angular Material Library -->
@@ -126,28 +128,8 @@
 										</div>
 										<div layout="column" flex="85" layout-align="center start">List</div>
 									</a>
-									<a layout="row"  class="pad15t decoNone" href="#/favourites">
-										<div layout="column" flex="15" layout-align="center center"
-										ng-class="{'active': (path.indexOf('/favourites') >= 0)}">
-											<i class="icon-heart"></i>
-										</div>
-										<div layout="column" flex="85" layout-align="center start">Favourites</div>
-									</a>
-									<a layout="row"  class="pad15t decoNone" href="#/recents">
-										<div layout="column" flex="15" layout-align="center center"
-										ng-class="{'active': (path.indexOf('/recents') >= 0)}">
-											<i class="size-18 icon-clock-o"></i>
-										</div>
-										<div layout="column" flex="85" layout-align="center start">Recents</div>
-									</a>
 								</div>
 							</div>
-						</div>
-					</div>
-					<md-divider></md-divider>
-					<div layout="row" class="height100">
-						<div layout="column" flex="100"  class="pad10l pad10t">
-							<div layout="row" ><h5>MATCHES</h5></div>
 							<div layout="row">
 								<div layout="column" flex="100" >
 									<a layout="row"  class="pad10t decoNone" href="#/matches">
@@ -155,7 +137,7 @@
 										ng-class="{'active': (path.indexOf('/matches') >= 0)}">
 											<i class="size-18 icon-list-bullet"></i>
 										</div>
-										<div layout="column" flex="85" layout-align="center start">List</div>
+										<div layout="column" flex="85" layout-align="center start">Matches</div>
 									</a>
 									<a layout="row"  class="pad15t decoNone clickable" ng-click="showPopup($event, user_pk, 'matches')">
 										<div layout="column" flex="15" layout-align="center center">
