@@ -10,36 +10,41 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.match={};
 	this.allVisible=false;
 	this.timer;
+	this.loadedLeaderboard = false;
 	controller=this;
+
+
 	//api call to get the single match's details
-	Api.match(controller.params.id).then(
-		function(response){
-			if(response.data.length > 0){
-				controller.match=response.data[0];
-				controller.setup();
-			}
-			else{
+	this.callApi = function(){
+		Api.match(controller.params.id).then(
+			function(response){
+				if(response.data.length > 0){
+					controller.match=response.data[0];
+					controller.setup();
+				}
+				else{
+					$rootScope.showToast("You are not allowed to see this match!");
+					$location.path("matches/");	
+				}
+			}, function errorCallback(response){
 				$rootScope.showToast("You are not allowed to see this match!");
-				$location.path("matches/");	
+				//$location.path("matches/");			
 			}
-		}, function errorCallback(response){
-			$rootScope.showToast("You are not allowed to see this match!");
-			//$location.path("matches/");			
-		}
-	);
+		);
+	}
+	this.callApi();
 
 	this.sumPointsPerPlay = function(detailedPoints){
 		sum = 0;
 		for(k = 0; k< detailedPoints.length; k++){
-			sum += detailedPoints[k].detailed_points*detailedPoints[k].scoringField_details.bonus;
+			sum += detailedPoints[k].detailed_points*controller.match.scoringFieldObj[detailedPoints[k].scoringField].bonus;
 		}
 		return sum;
 	}
-	this.sumPointsPerUser = function(detailedPoints){
 
+	this.sumPointsPerUser = function(detailedPoints){
 		sum = 0;
 		for(dp in detailedPoints){
-			console.log(dp);
 			sum += detailedPoints[dp].detailed_points*detailedPoints[dp].bonus;
 		}
 		return sum;
@@ -52,6 +57,11 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 				controller.match.plays_set[i].visible = !controller.match.plays_set[i].visible;
 			}
 		}
+	}
+
+	this.setLeaderboardVisible = function(user){
+		controller.allVisible = false;
+		controller.match.leaderboard[user].visible = !controller.match.leaderboard[user].visible;
 	}
 
 	this.startEditMode = function($event){
@@ -158,8 +168,19 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		if(controller.match.location == ""){
 			controller.match.location = "No location";
 		}
+		controller.match.scoringFieldObj = {}
+		for(sf in controller.match.scoring_fields_details){
+			controller.match.scoringFieldObj[controller.match.scoring_fields_details[sf].pk] = controller.match.scoring_fields_details[sf];
+		}
+		for(play in controller.match.plays_set){
+			controller.match.plays_set[play].detailedPointsObj = {}
+			for(dp in controller.match.plays_set[play].detailedPoints){
+				controller.match.plays_set[play].detailedPointsObj[controller.match.plays_set[play].detailedPoints[dp].scoringField] = controller.match.plays_set[play].detailedPoints[dp];
+			}
+		}
 		controller.managePlays();
 		controller.detectStatus();
+		controller.loadedLeaderboard = true;
 		startTime();
 	}
 
@@ -169,7 +190,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			play = controller.match.plays_set[i];
 			if(!(play.user in controller.match.leaderboard)){
-				controller.match.leaderboard[play.user] = {visible: false, username: play.user_details.username, detailedPoints:{}}
+				controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
 			}
 
 			if(play.turn > controller.match.totalTurns){
@@ -178,17 +199,23 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 
 			play.visible = false;
 
+
 			for(j = 0; j<play.detailedPoints.length; j++){
-				if(!(play.detailedPoints[j].scoringField_details.word_details.word in controller.match.leaderboard[play.user]["detailedPoints"])){
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word] = {}
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["detailed_points"] = play.detailedPoints[j].detailed_points;
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["bonus"] = play.detailedPoints[j].scoringField_details.bonus;
+				if(!(play.detailedPoints[j].scoringField in controller.match.leaderboard[play.user]["detailedPoints"])){
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField] = {}
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] = play.detailedPoints[j].detailed_points;
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["bonus"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].bonus;
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["word_value"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].word_value;
 				}
 				else{
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField_details.word_details.word]["detailed_points"] += play.detailedPoints[j].detailed_points;
+					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] += play.detailedPoints[j].detailed_points;
 				}
-
 				play.detailedPoints[j].old_detailed_points = play.detailedPoints[j].detailed_points;
+			}
+
+			controller.match.leaderboardArray= []
+			for(user in controller.match.leaderboard) {
+			    controller.match.leaderboardArray.push(controller.match.leaderboard[user]);
 			}
 
 			play.points = controller.sumPointsPerPlay(play.detailedPoints);
@@ -285,6 +312,56 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		}
 		return input;
 	};
+
+	this.postPlay = function(){
+		console.log(controller.match);
+		controller.match.totalTurns++;
+		plays = [];
+		for(user in controller.match.leaderboard){
+			plays.push({match:controller.match.pk, user:user, turn:controller.match.totalTurns})
+		}
+		console.log(plays);
+		//post play
+		Api.playpost(plays).then(
+			function(response){
+				controller.play = response.data;
+				controller.postDetailedPoints();
+			},
+			function errorCallback(response){
+			}
+		);
+	}
+
+	//post the detailed points to the server
+	this.postDetailedPoints = function(){
+		dp = [];
+		for (i=0; i<controller.play.length; i++){	
+			//get the current play id
+			controller.playId = controller.play[i].pk;
+			//for each template entry
+				console.log(controller.match.plays_set[0].detailedPoints);
+			for (j=0; j<controller.match.plays_set[0].detailedPoints.length; j++){
+				console.log("hei");
+				//get its id and prepare the "detailedPoints" row to be inserted in the detailedPoints table
+				row = {}
+				row.play = controller.playId;
+				row.scoringField = controller.match.plays_set[0].detailedPoints[j].scoringField;
+				row.detailed_points = 0;
+				dp.push(row);
+			}
+		}
+
+		//call the server API
+		Api.dpPost(dp).then(
+			function(response){
+				//if successfull, hide the dialog and prompt a message
+				controller.callApi();
+			}, 
+			function errorCallback(response){
+				console.log(response)
+			}
+		);
+	}
 
 	function startTime() {
 		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){

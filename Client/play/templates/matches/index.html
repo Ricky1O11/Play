@@ -8,7 +8,7 @@
 					  <input ng-model="query">
 					</md-input-container>
 				</div>
-				<div layout="column" flex="10" layout-align="center center">
+				<div layout="column" flex="10" layout-align="center center"> 
 					<md-menu>
 						<md-button class="md-fab md-mini" ng-click="$mdOpenMenu(ev)">
 							<i class="icon-sort-amount-desc" aria-label="select list ordering"></i>
@@ -64,7 +64,7 @@
 												</i>
 												<i 
 												ng-if="!boardgame.isFavourite" 
-												aria-label="remove favourite"
+												aria-label="add favourite"
 												class="icon-heart-o md-secondary" 
 												md-colors="{color: 'myTheme-accent'}"
 												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
@@ -124,7 +124,7 @@
 												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
 												<i 
 												ng-if="!boardgame.isFavourite" 
-												aria-label="remove favourite"
+												aria-label="add favourite"
 												class="icon-heart-o md-secondary"  
 												md-colors="{color: 'myTheme-accent'}"
 												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
@@ -146,7 +146,7 @@
 													</div>
 												</div>
 											</md-list-item>
-									  </md-list>
+										</md-list>
 									</div>
 								</div>
 							</md-content>

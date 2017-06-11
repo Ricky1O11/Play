@@ -17,8 +17,13 @@
 	.run(function($rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
 			$rootScope.isLogged = false;
 			$rootScope.match = {};
-			$rootScope.goTo = function(url) {
-					$location.path(url);
+
+			$rootScope.goTo = function(url, id) {
+				if(id >=0){
+					url += id
+				}
+				console.log(url)
+				$location.path(url);
 			};
 			
 			$rootScope.currentTab = 0;

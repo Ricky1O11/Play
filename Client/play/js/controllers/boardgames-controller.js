@@ -9,7 +9,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	if(this.location.indexOf("designers") >= 0){
 		this.designer = $routeParams.id;
 	}
-	controller=this;
+	controller=this; 
 
 
 	var DynamicItems = function() {

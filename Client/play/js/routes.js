@@ -9,6 +9,11 @@ angular.module('play')
 		controller: 'homeController',
 		controllerAs: 'hCtrl'*/
 	})
+	.when('/profile/:id', {
+		templateUrl: 'templates/profile/index.html',
+		controller: 'profileController',
+		controllerAs: 'pCtrl'
+	})
 	.when('/home', {
 		templateUrl: 'templates/home/index.html',
 		controller: 'homeController',

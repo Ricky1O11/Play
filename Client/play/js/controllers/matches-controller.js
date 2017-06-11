@@ -10,14 +10,8 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 		controller.games=data;
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
-			console.log(controller.games[i]);
 			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
-			if(controller.games[i].favourite.length > 0){
-				controller.games[i].isFavourite = true;
-			}
-			else{
-				controller.games[i].isFavourite = false;
-			}
+			controller.games[i].isFavourite = (controller.games[i].favourite > 0);
 			controller.games[i].listId = i;
 		}
 		controller.loaded = true;
@@ -59,20 +53,20 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 	}
 
 	this.toggleFavourites = function(favourite, boardgame, user, id){
-        if(favourite.length > 0){
-          Api.favouritedelete(favourite[0].pk).then(
+        if(favourite > 0){
+          Api.favouritedelete(favourite).then(
                               function(response){
                               }, function errorCallback(response){
                               }
                             );
-          	controller.games[id].favourite = [];
+          	controller.games[id].favourite = -1;
         	controller.games[id].isFavourite = false;
         }
         else{
             data = {'user': user, 'boardgame': boardgame};
             Api.favouritepost(data).then(
                               function(response){
-                                controller.games[id].favourite = [{'pk' : response.data.pk}];
+                                controller.games[id].favourite = response.data.pk;
                               }
             );
         	controller.games[id].isFavourite = true;
@@ -95,5 +89,5 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 			return true;
 		}
     	return false;
-	};
+	}; 
 });

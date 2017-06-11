@@ -7,11 +7,14 @@
 				</div>
 			</div>
 			<div layout="row" class="height100" >
-				<div layout="column" flex="90" >
-					<md-input-container class="md-block md-accent">
-					  <label>Search</label>
-					  <input ng-model="bsCtrl.searchKey" ng-change="bsCtrl.search()">
-					</md-input-container>
+				<div layout="column" flex="90">
+					<form name="registerForm" layout="column" flex="40" ng-submit="bsCtrl.search()">
+						<md-input-container class="md-block md-accent md-icon-float md-icon-right">
+							<label>Search</label>
+						  	<input ng-model="bsCtrl.searchKey">
+							<md-icon  class="icon-sort-alpha-asc clickable"  md-colors="{color: 'myTheme-accent'}"  ng-click="bsCtrl.search()"></md-icon>
+						</md-input-container>
+					</form>
 				</div>
 				<div layout="column" flex="10" layout-align="center center">
 					<md-menu>

@@ -14,8 +14,8 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 	controllerSidebar=this;
 	Api.user(controller.params.id).then(function(response){
 		controller.user = response.data		
+		console.log(controller.user)
 		if(controller.user.profile_details.visibility_group == 0 || (controller.user.profile_details.visibility_group == 1 && controller.user.friendship > 0)){
-
 			if(controller.user.profile_details.fav_setting){
 				//api call to the list of favourites boardgames
 				Api.favourites(controller.params.id).success(function(data){

@@ -1,5 +1,5 @@
 //controller for the list of favourites boardgames
-angular.module("play").controller('profileController', function(Api, $rootScope, $scope) {
+angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
 	this.user = {};
 	this.friends = [];
 	//hold the number of favourites for the current user
@@ -9,7 +9,14 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 
 	this.infoChanged = false;
 	this.settingsChanged = false;
-
+	this.params=$routeParams;
+	console.log(this.params)
+	if(this.params){
+		this.currentTab = this.params.id
+	}
+	else{
+		this.currentTab = 0
+	}
 	controller = this;
 	controllerSidebar=this;
 	Api.user($scope.user_pk).then(function(response){

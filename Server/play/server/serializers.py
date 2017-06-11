@@ -14,6 +14,30 @@ class SimpleBoardgamesSerializers(serializers.ModelSerializer):
         model = Boardgames
         fields = ('pk', 'title', 'thumbnail', 'img',)
 
+class SimpleMatchesSerializers(serializers.ModelSerializer):
+    boardgame_details = serializers.SerializerMethodField()
+
+    def get_boardgame_details(self, match):
+        boardgame = Boardgames.objects.get(matches=match)
+        serializer = SimpleBoardgamesSerializers(boardgame, context={'request': self.context['request']})
+        return serializer.data
+
+    class Meta:
+        model = Matches
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'boardgame_details')
+
+class SimpleUsersSerializers(serializers.ModelSerializer):
+    img = serializers.SerializerMethodField()
+    def get_img(self, user):
+        img = Profile.objects.filter(user_id=user).values('img')
+        if (img.count() > 0):
+            return img[0]["img"]
+        else:
+            return ""
+    class Meta:
+        model = User
+        fields = ('pk', 'username', 'img')
+
 class ProfileSerializers(serializers.ModelSerializer):
     class Meta:
         model = Profile
@@ -37,7 +61,6 @@ class UserRegisterSerializers(serializers.ModelSerializer):
         user.save()
 
         return user
-
 
 # Json representation of users and statistics
 class UsersSerializers(serializers.ModelSerializer):
@@ -65,6 +88,7 @@ class UsersSerializers(serializers.ModelSerializer):
     most_played_game = serializers.SerializerMethodField()
     match_won = serializers.SerializerMethodField()
     match_played_with = serializers.SerializerMethodField()
+    match_played_with_details = serializers.SerializerMethodField()
     profile_details = serializers.SerializerMethodField()
     
     friendship = serializers.SerializerMethodField()
@@ -87,10 +111,10 @@ class UsersSerializers(serializers.ModelSerializer):
     def get_match_played(self, user):
         if ("boardgame" in self.context):
             boardgame = self.context["boardgame"]
-            plays_amount = Plays.objects.filter(match__boardgame=boardgame, user=user).count()
+            matches_amount = Matches.objects.filter(boardgame=boardgame, plays__user=user).distinct().count()
         else:
-            plays_amount = Plays.objects.filter(user=user).count()
-        return plays_amount
+            matches_amount = Matches.objects.filter(plays__user=user).distinct().count()
+        return matches_amount
 
     # Get the most played game
     def get_most_played_game(self, user):
@@ -104,8 +128,15 @@ class UsersSerializers(serializers.ModelSerializer):
     # Get the number of match that the authenticated user has played with this user
     def get_match_played_with(self, user):  
         auth_user = self.context['request'].user.pk
-        match_played_with = Matches.objects.filter(plays__user=user).filter(plays__user=auth_user).count()
+        match_played_with = Matches.objects.filter(plays__user=user).filter(plays__user=auth_user).distinct().count()
         return match_played_with
+
+    # Get the number of match that the authenticated user has played with this user
+    def get_match_played_with_details(self, user):  
+        auth_user = self.context['request'].user.pk
+        match_played_with = Matches.objects.filter(plays__user=user).filter(plays__user=auth_user).distinct()
+        serializer = SimpleMatchesSerializers(match_played_with, many=True, context={'request': self.context['request']})
+        return serializer.data
 
     # Get the amount of match won by the user, given a boardgame (total if not given)
     def get_match_won(self, user):
@@ -124,20 +155,20 @@ class UsersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = User
-        fields = ('pk', 'username', 'first_name', 'last_name', 'email', 'friendship', 'match_played', 'most_played_game', 'match_won', 'profile_details', 'match_played_with')
+        fields = ('pk', 'username', 'first_name', 'last_name', 'email', 'friendship', 'match_played', 'most_played_game', 'match_won', 'profile_details', 'match_played_with', 'match_played_with_details')
 
 # Json representation of the template of a boardgames
 class ScoringFieldsSerializers(serializers.ModelSerializer):
-    word_details = serializers.SerializerMethodField()
+    word_value = serializers.SerializerMethodField()
 
-    def get_word_details(self, scField):
+    def get_word_value(self, scField):
         word = Dictionary.objects.get(scoringfields=scField)
         serializer = DictionarySerializers(word , context={'request': self.context['request']})
-        return serializer.data
+        return word.word
 
     class Meta:
         model = ScoringFields
-        fields = ('pk', 'template', 'word', 'word_details', 'bonus')
+        fields = ('pk', 'template', 'word', 'word_value', 'bonus')
 
 # Json representation of the template of a boardgames
 class TemplateVoteSerializers(serializers.ModelSerializer):
@@ -175,20 +206,12 @@ class TemplatesSerializers(serializers.ModelSerializer):
         model = Templates
         fields = ('pk', 'boardgame', 'votes', 'hasExpansions', 'scoringField_details', 'user_vote')
 
-
-
 # Json representation of the detailed points of a single play
 class DetailedPointsSerializers(serializers.ModelSerializer):
-    scoringField_details = serializers.SerializerMethodField()
-
-    def get_scoringField_details(self, dtPoints):
-        score = ScoringFields.objects.get(detailedpoints=dtPoints)
-        serializer = ScoringFieldsSerializers(score, context={'request': self.context['request']})
-        return serializer.data
 
     class Meta:
         model = DetailedPoints
-        fields = ( 'pk','play', 'detailed_points', 'scoringField_details', 'scoringField', 'notes')
+        fields = ( 'pk','play', 'detailed_points', 'scoringField', 'notes')
 
 # Json representation of single plays
 class PlaysSerializers(serializers.ModelSerializer):
@@ -197,7 +220,7 @@ class PlaysSerializers(serializers.ModelSerializer):
 
     def get_user_details(self, play):
         user = User.objects.get(plays=play)
-        serializer = UsersSerializers(user, context={'request': self.context['request']})
+        serializer = SimpleUsersSerializers(user, context={'request': self.context['request']})
         return serializer.data
 
     def get_detailedPoints(self, play):
@@ -227,6 +250,7 @@ class MatchesSerializers(serializers.ModelSerializer):
     plays_set = PlaysSerializers(many=True, read_only=True)
     boardgame_details = serializers.SerializerMethodField()
     played_expansions_details = serializers.SerializerMethodField()
+    scoring_fields_details = serializers.SerializerMethodField()
 
     def __init__(self, *args, **kwargs):
         super(MatchesSerializers, self).__init__(*args, **kwargs)
@@ -252,9 +276,14 @@ class MatchesSerializers(serializers.ModelSerializer):
         serializer = PlayedExpansionsSerializers(pl_exp, many=True)
         return serializer.data
 
+    def get_scoring_fields_details(self, match):
+        sf = ScoringFields.objects.filter(detailedpoints__play__match=match).distinct()
+        serializer = ScoringFieldsSerializers(sf, many=True, context={'request': self.context['request']})
+        return serializer.data
+
     class Meta:
         model = Matches
-        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'played_expansions_details', 'duration', 'plays_set', 'winner')
+        fields = ('pk', 'boardgame', 'name', 'time', 'location', 'status', 'boardgame_details', 'played_expansions_details', 'scoring_fields_details', 'duration', 'plays_set', 'winner')
 
 # Json representation of designers
 class DesignersSerializers(serializers.ModelSerializer):
@@ -331,8 +360,6 @@ class CategoriesSerializers(serializers.ModelSerializer):
         model = Designer
         fields = ('pk', 'name', 'boardgames')
 
-
-
 # Json representation of boardgames and statistics
 class BoardgamesSerializers(serializers.ModelSerializer):
     # Serializer initialization: read the url params
@@ -371,9 +398,9 @@ class BoardgamesSerializers(serializers.ModelSerializer):
     def get_matches(self, boardgame):
         auth_user = self.context['request'].user.pk
         if auth_user:
-            matches = Matches.objects.filter(boardgame=boardgame, plays__user=auth_user)
+            matches = Matches.objects.filter(boardgame=boardgame, plays__user=auth_user).distinct()
         else:
-            matches = Matches.objects.filter(boardgame=boardgame)
+            matches = Matches.objects.filter(boardgame=boardgame).distinct()
 
         serializer = MatchesSerializers(matches, many=True, context={'request': self.context['request']})
         return serializer.data

@@ -192,14 +192,15 @@ class BoardgamesList(APIView):
 class BoardgamesListFiltered(APIView):
     permission_classes = (AllowAny,)
     def get(self, request, filter):
+        auth_user = request.user
         user_id = self.request.query_params.get('user_id', None)
         if (filter == 'favourites' or filter == 'favourites'):
-            boardgames = Boardgames.objects.filter(favourites__user=user_id)
+            boardgames = Boardgames.objects.filter(favourites__user=auth_user)
             boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
             return Response(boardgamesSerializers.data)
 
         elif (filter == 'recents'):
-            boardgames = Boardgames.objects.filter(matches__plays__user=user_id).distinct()
+            boardgames = Boardgames.objects.filter(matches__plays__user=auth_user).distinct()
             boardgames.order_by('matches__match_time')
             boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
             return Response(boardgamesSerializers.data)

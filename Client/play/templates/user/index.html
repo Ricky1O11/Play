@@ -139,5 +139,26 @@
 			<md-content>
 			</md-content>
 		</md-tab>
+		<md-tab label="Match played together">
+			<md-content>
+				<md-list flex>
+					<md-list-item 
+					class=" md-3-line whiteBg mrg5b mrg5r mrg5l shadowed-box" ng-cloak						
+					ng-repeat="match in uCtrl.user.match_played_with_details"
+					ng-href="#/matches/{{match.pk}}"
+					>
+						<img ng-src="{{match.boardgame_details.thumbnail}}" class="md-avatar" alt="match at {{match.boardgame_details.title}}" />
+						<div layout="column">
+							<div layout="row">
+								<h3>Match {{match.pk}}</h3>
+							</div>
+							<div layout="row" class="size-14">
+								<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
+							</div>
+						</div>
+					</md-list-item>
+				</md-list>
+			</md-content>
+		</md-tab>
 	</md-tabs>
 </div>
