@@ -189,6 +189,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		controller.match.leaderboard = {};
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			play = controller.match.plays_set[i];
+			console.log(play.user);
 			if(!(play.user in controller.match.leaderboard)){
 				controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
 			}
@@ -265,10 +266,10 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.getWinner = function(){
 		winner_pk = null;
 		winner_points = 0;
-		for(i = 0; i<controller.match.plays_set.length; i++){
-			if(controller.match.plays_set[i].points >winner_points){
-				winner_pk = controller.match.plays_set[i].user;
-				winner_points = controller.match.plays_set[i].points;
+		for(i = 0; i<controller.match.leaderboardArray.length; i++){
+			if(controller.match.leaderboardArray[i].points > winner_points){
+				winner_pk = controller.match.leaderboardArray[i].pk;
+				winner_points = controller.match.leaderboardArray[i].points;
 			}	
 		}
 		return winner_pk;
