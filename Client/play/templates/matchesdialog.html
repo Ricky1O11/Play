@@ -1,4 +1,4 @@
-<md-dialog aria-label="Add Match" flex="50" id="dialog">
+ <md-dialog aria-label="Add Match" flex="50" id="dialog">
   <form ng-cloak>
 	<md-toolbar class="md-accent">
 	  <div class="md-toolbar-tools">
@@ -228,21 +228,22 @@
 									<h3>Template {{$index+1}}</h3>
 								</div>
 							</div>
+														
+							<div layout="column" flex="10" ng-if="template.hasExpansions">
+								<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
+							</div>
 							<div layout="column" flex="10">
 								<md-button aria-label="select template" class="md-fab md-mini"
 									ng-click="mdCtrl.selectTemplate(template)">
 									<i class="icon-angle-right"></i>
 								</md-button>
 							</div>
-							<div layout="column" flex="10" ng-if="template.hasExpansions">
-								<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
-							</div>
 							 
 						</md-list-item>
 						<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
 						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
 							<div layout="row">
-								{{scoringField.word_details.word}}
+								{{scoringField.word_value}}
 							</div>
 						</md-list-item>
 				</md-list>
