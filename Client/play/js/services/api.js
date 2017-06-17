@@ -1,4 +1,4 @@
-angular.module('play')
+ angular.module('play')
 .factory('Api', function ApiFactory($http, $cookies){
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
@@ -34,12 +34,12 @@ angular.module('play')
 						us = $http({method: 'GET', url: BASE_URL+'/users/'});
 						return us;
 					},
-		favourites:	function(user_id){
-						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/?user_id='+user_id});
+		favourites:	function(key){
+						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/?search_key='+key});
 						return f;
 					},
 		friends:	function(){
-						fr = $http({method: 'GET', url: BASE_URL+'/friends/'});
+						fr = $http({method: 'GET', url: BASE_URL+'/friends/?include=user_stats'});
 						return fr;
 					},
 		friendspost:	function(data){

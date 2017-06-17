@@ -1,5 +1,5 @@
 (function(){
-	angular.module('play',["ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter'])
+	angular.module('play',["ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
 	.config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
 		$mdThemingProvider.theme('myTheme')
@@ -14,6 +14,17 @@
 										'hue-2': 'A700', // use shade 600 for the <code>md-hue-2</code> class)
 						});
 	})
+	.config(['ChartJsProvider', function (ChartJsProvider) {
+	    // Configure all charts
+	    ChartJsProvider.setOptions({
+	      chartColors: ['#3F51B5', '#FF6E40'],
+	      responsive: true
+	    });
+	    // Configure all line charts
+	    ChartJsProvider.setOptions('line', {
+	      showLines: true
+	    });
+	}])
 	.run(function($rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
 			$rootScope.isLogged = false;
 			$rootScope.match = {};

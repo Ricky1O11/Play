@@ -1,4 +1,4 @@
-//controller for the list of favourites boardgames
+//controller for user profile
 angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
 	this.user = {};
 	this.friends = [];
@@ -28,7 +28,6 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 		controller.user.profile_details.old_visibility_group = controller.user.profile_details.visibility_group;
 		controller.user.profile_details.old_fav_setting = controller.user.profile_details.fav_setting;
 		controller.user.profile_details.old_rec_setting = controller.user.profile_details.rec_setting;
-		console.log(controller.user);
 	}, function errorCallback(response){
 	});
 	Api.friends().success(function(data){
@@ -40,6 +39,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 				controller.friends.push(data[i].user2_details);
 			}
 		}
+		console.log(controller.friends)
 	});
 
 	//api call to the list of favourites boardgames
@@ -106,5 +106,12 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 			console.log(response);
 		});
 	}
+
+	$scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
+	$scope.series = ['Series A', 'Series B'];
+	$scope.data = [
+	  [65, 59, 80, 81, 56, 55, 40],
+	  [28, 48, 40, 19, 86, 27, 90]
+	];
 
 });

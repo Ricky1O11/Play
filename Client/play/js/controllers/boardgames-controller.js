@@ -58,21 +58,40 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 			ps = this.PAGE_SIZE;
 			var pageOffset = pageNumber * this.PAGE_SIZE;
 			//api call to the list of boardgames
-			Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey, controller.designer).then(function(response){
-				lp[pageNumber]=response.data;
-				for(i=0;i<lp[pageNumber].length;i++){
-					if(lp[pageNumber][i].favourite > 0){
-						lp[pageNumber][i].isFavourite = true;
+			if(controller.actualOrderingField == "favourite"){
+				Api.favourites(controller.searchKey).then(function(response){
+					lp[pageNumber]=response.data;
+					for(i=0;i<lp[pageNumber].length;i++){
+						if(lp[pageNumber][i].favourite > 0){
+							lp[pageNumber][i].isFavourite = true;
+						}
+						else{
+							lp[pageNumber][i].isFavourite = false;
+						}
+						lp[pageNumber][i].listId = i;
 					}
-					else{
-						lp[pageNumber][i].isFavourite = false;
-					}
-					lp[pageNumber][i].listId = i;
-				}
 
-			}, function errorCallback(response){
-				console.log(response);
-			});
+				}, function errorCallback(response){
+					console.log(response);
+				});
+			}
+			else{
+				Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey, controller.designer).then(function(response){
+					lp[pageNumber]=response.data;
+					for(i=0;i<lp[pageNumber].length;i++){
+						if(lp[pageNumber][i].favourite > 0){
+							lp[pageNumber][i].isFavourite = true;
+						}
+						else{
+							lp[pageNumber][i].isFavourite = false;
+						}
+						lp[pageNumber][i].listId = i;
+					}
+
+				}, function errorCallback(response){
+					console.log(response);
+				});
+			}
 
 		};
 
@@ -121,10 +140,25 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
 		controller.selectedOrderingField = field;
-		if(field == "favourite"){
-			controller.actualOrderingField = "title";
+		if(field == "sfavourite"){
+			Api.favourites().then(function(response){
+				lp[pageNumber]=response.data;
+				for(i=0;i<lp[pageNumber].length;i++){
+					if(lp[pageNumber][i].favourite > 0){
+						lp[pageNumber][i].isFavourite = true;
+					}
+					else{
+						lp[pageNumber][i].isFavourite = false;
+					}
+					lp[pageNumber][i].listId = i;
+				}
+
+			}, function errorCallback(response){
+				console.log(response);
+			});
 		}
-		else controller.actualOrderingField = field;
+		//else
+		controller.actualOrderingField = field;
 		this.boardgames = new DynamicItems();
 	}
 	

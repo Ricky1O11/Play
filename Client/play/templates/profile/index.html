@@ -100,7 +100,7 @@
 							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+friend.pk)">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[friend.pk] || getRandomColor(friend.pk)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
-								</div>
+								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
 							<md-button 
@@ -163,6 +163,15 @@
 			</md-tab>
 			<md-tab label="Stats">
 				<md-content>
+					<div layout="row">
+						<div layout="column" flex="50" class="pad20">
+							<canvas class="chart chart-bar" chart-data="pCtrl.user.most_played_game.data" chart-labels="pCtrl.user.most_played_game.labels" chart-click="onClick"></canvas> 
+						</div>
+						<div layout="column" flex="50" class="pad20">
+							<canvas class="chart chart-line" chart-data="data" chart-labels="labels" 
+							chart-series="series" chart-click="onClick"></canvas> 
+						</div>
+					
 				</md-content>
 			</md-tab>
 			<md-tab label="Settings" >
