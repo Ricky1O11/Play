@@ -194,7 +194,7 @@
 								ng-repeat-start="details in mCtrl.match.leaderboardArray | orderBy:'-points' "
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column">
-										<md-button 	ng-click="goTo('users/'+user)" class="md-fab md-mini" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" >
+										<md-button 	ng-click="goTo('users/'+user)" class="md-fab md-mini" ng-style="randomColors[details.pk] || getRandomColor(details.pk)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{details.username.substring(0,1).toUpperCase()}}</div>
 										</md-button>
 									</div>

@@ -18,7 +18,17 @@
 	    // Configure all charts
 	    ChartJsProvider.setOptions({
 	      chartColors: ['#3F51B5', '#FF6E40'],
-	      responsive: true
+	      responsive: true,
+	      scales : {
+		        yAxes: [{
+		            display: true,
+		            ticks: {
+		                suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+		                // OR //
+		                beginAtZero: true   // minimum value will be 0.
+		            }
+		        }]
+    		}
 	    });
 	    // Configure all line charts
 	    ChartJsProvider.setOptions('line', {

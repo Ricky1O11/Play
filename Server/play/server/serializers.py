@@ -122,7 +122,7 @@ class UsersSerializers(serializers.ModelSerializer):
 
     # Get the most played game
     def get_most_played_game(self, user):
-        games = Boardgames.objects.filter(matches__plays__user=user).annotate(amount=Count('matches')).order_by(
+        games = Boardgames.objects.filter(matches__plays__user=user).annotate(amount=Count('matches', distinct=True)).order_by(
             '-amount')
         if(len(games) !=0):
             played_games = {}
