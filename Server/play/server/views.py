@@ -26,12 +26,26 @@ def index(request):
     return HttpResponse("Home")
 
 # Retrieve data from json representation of boardgamegeek database
+<<<<<<< HEAD
 def addGamesFromBgg(self):
     in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]
+||||||| merged common ancestors
+def readBgg(self):
+    in_files = [f for f in listdir("jsons/trial") if isfile(join("jsons/trial", f))]
+=======
+def readBgg(self):
+    in_files = [f for f in listdir("/home/playapi/Play/Server/play/jsons/trial") if isfile(join("/home/playapi/Play/Server/play/jsons/trial", f))]
+>>>>>>> f33d599816c52e7aea14ee1d3496d30f87d6345d
     expansionsDict = {}
     for in_file in in_files:
         #in_file = "bgg_1_500.json"
+<<<<<<< HEAD
         file = open(join("jsons", in_file), "r")
+||||||| merged common ancestors
+        file = open(join("jsons/trial", in_file), "r")
+=======
+        file = open(join("/home/playapi/Play/Server/play/jsons/trial", in_file), "r")
+>>>>>>> f33d599816c52e7aea14ee1d3496d30f87d6345d
         text = file.read()
 
         data = json.loads(text)

@@ -26,7 +26,7 @@ SECRET_KEY = 'ed3-_@n+^10&9$6hlq4kqm2-onc@wwam)&faoc0-uy*&kqz+h$'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['playapi.pythonanywhere.com', 'localhost', '127.0.0.1']
+ALLOWED_HOSTS = ['playapi.pythonanywhere.com', 'localhost', '127.0.0.1', 'http://www.rankyourworld.it', 'www.rankyourworld.it', 'rankyourworld.it']
 
 
 # Application definition
@@ -59,6 +59,11 @@ MIDDLEWARE = [
 
 CORS_ORIGIN_WHITELIST = (
     'localhost',
+    'playapi.pythonanywhere.com', 
+    'localhost', '127.0.0.1', 
+    'http://www.rankyourworld.it', 
+    'www.rankyourworld.it', 
+    'rankyourworld.it'
 )
 
 REST_FRAMEWORK = {
@@ -106,10 +111,10 @@ WSGI_APPLICATION = 'play.wsgi.application'
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'play',
-        'USER': 'root',
-        'PASSWORD': '',
-        'HOST': 'localhost',   # Or an IP Address that your DB is hosted on
+        'NAME': 'playapi$play',
+        'USER': 'playapi',
+        'PASSWORD': 'playBoardgames',
+        'HOST': 'playapi.mysql.pythonanywhere-services.com',   # Or an IP Address that your DB is hosted on
         'PORT': '3306',
   }
 }
