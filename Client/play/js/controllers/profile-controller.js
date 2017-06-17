@@ -1,4 +1,4 @@
-//controller for user profile
+ //controller for user profile
 angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
 	this.user = {};
 	this.friends = [];
@@ -43,7 +43,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	});
 
 	//api call to the list of favourites boardgames
-	Api.favourites($scope.user_pk).success(function(data){
+	Api.favourites("").success(function(data){
 		//if(data.length >=4)
 		//	controller.favourites=data.slice(0, 4);
 		//else

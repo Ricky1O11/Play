@@ -84,7 +84,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	//Search for users
 	self.querySearchPlayers = function (query) {
-		returned = [];
+		 returned = [];
 		if(query){
 			results = self.users.filter(createFilterFor(query));
 		}
@@ -164,6 +164,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 				}
 				case 2: {
 					self.title= "Select template";
+					console.log(self.selectedValues.templates)
 					break;
 				}
 				case 3: {
