@@ -192,10 +192,18 @@ class BoardgamesList(APIView):
 class BoardgamesListFiltered(APIView):
     permission_classes = (AllowAny,)
     def get(self, request, filter):
+
+        search_key = self.request.query_params.get('search_key', None)
+
         auth_user = request.user
         user_id = self.request.query_params.get('user_id', None)
         if (filter == 'favourites' or filter == 'favourites'):
-            boardgames = Boardgames.objects.filter(favourites__user=auth_user)
+            if(search_key != None and search_key != ""):
+                print search_key
+                boardgames = Boardgames.objects.filter(favourites__user=auth_user).filter(title__icontains = search_key)
+            else:
+                boardgames = Boardgames.objects.filter(favourites__user=auth_user)
+            
             boardgamesSerializers = BoardgamesSerializers(boardgames, many=True, context={'request': request})
             return Response(boardgamesSerializers.data)
 

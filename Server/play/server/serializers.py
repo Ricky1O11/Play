@@ -79,10 +79,14 @@ class UsersSerializers(serializers.ModelSerializer):
                 self.fields.pop("match_played")
                 self.fields.pop("most_played_game")
                 self.fields.pop('match_won')
+                self.fields.pop('match_played_with')
+                self.fields.pop('match_played_with_details')
         else:
             self.fields.pop("match_played")
             self.fields.pop("most_played_game")
             self.fields.pop('match_won')
+            self.fields.pop('match_played_with')
+            self.fields.pop('match_played_with_details')
 
     match_played = serializers.SerializerMethodField()
     most_played_game = serializers.SerializerMethodField()
@@ -121,7 +125,14 @@ class UsersSerializers(serializers.ModelSerializer):
         games = Boardgames.objects.filter(matches__plays__user=user).annotate(amount=Count('matches')).order_by(
             '-amount')
         if(len(games) !=0):
-            return games[0].title
+            played_games = {}
+            played_games["labels"] = []
+            played_games["data"] = []
+            for game in games:
+                played_games[game.title] = game.amount
+                played_games["labels"].append(game.title)
+                played_games["data"].append(game.amount)
+            return played_games
         else:
             return "No game played"
 
@@ -473,7 +484,7 @@ class BoardgamesSerializers(serializers.ModelSerializer):
         model = Boardgames
         fields = ('pk', 'title','description', 'img', 'thumbnail', 'average', 'minage', 
                     'playingtime', 'minplayers', 'maxplayers', 'yearpublished', 'maxplaytime', 
-                    'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite', 'designers',
+                     'minplaytime', 'usersrated', 'matches', 'users', 'friends', 'favourite', 'designers',
                     'publishers', 'categories', 'expansions', 'expands')
         ordering = ('favourite',)
 
