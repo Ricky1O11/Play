@@ -64,6 +64,11 @@ angular.module('play')
 		controller: 'categoryController',
 		controllerAs: 'cCtrl'
 	})
+	.when('/templates', {
+		templateUrl: 'templates/templates/index.html',
+		controller: 'templatesController',
+		controllerAs: 'tCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})

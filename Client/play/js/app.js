@@ -66,12 +66,13 @@
 				}
 			});
 
-			$rootScope.showPopup = function(ev, user_pk, string) {
+			$rootScope.showPopup = function(ev, user_pk, string, additional_field) {
+				boardgame = additional_field? additional_field : -1;
 				$mdDialog.show({
-					locals:{user_pk : user_pk},
+					locals:{user_pk : user_pk, boardgame: boardgame},
 					controller: string+'DialogController',
 					controllerAs: string.substring(0,1)+'dCtrl',
-					templateUrl: 'templates/'+string+'dialog.html',
+					templateUrl: 'templates/'+string+'dialog2.html',
 					parent: angular.element(document.body),
 					targetEvent: ev,
 					scope:$rootScope,

@@ -113,6 +113,7 @@
 						return dp;
 					},
 		templates:	function(boardgame){
+						console.log(boardgame)
 						ts = $http({method: 'GET', url: BASE_URL+'/templates/?boardgame_id='+boardgame});
 						return ts;
 					},
