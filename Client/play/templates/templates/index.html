@@ -1,0 +1,101 @@
+<div class="container-fluid" layout-padding layout="column">
+	<div  layout="row"> 
+		<div layout="column" flex="100">
+			<div layout="row" class="height50">
+				<div layout="column" flex="100">
+					<h3 class="blue-grey">Help us!</h3>
+				</div>
+			</div>
+			<div layout="row" class="height100">
+				<div layout="column" flex="100">
+					Thank you for landing here! Your contibution will be really valuable to us!<br>
+					Here you are called to build a custom template for your game!
+					Let's start
+				</div>
+			</div>
+			<div layout="row" class="height100" >
+				<div layout="column" flex="100">
+					<md-autocomplete
+						  md-selected-item="tCtrl.selectedValues.boardgame"
+						  md-selected-item-change="tCtrl.getCurrentTemplates(boardgame)"
+						  md-search-text="tCtrl.boardgameSearchText"
+						  md-items="boardgame in tCtrl.querySearchBoardgames(tCtrl.boardgameSearchText)"
+						  md-item-text="boardgame.display"
+						  md-min-length="2"
+						  placeholder="Select a boardgame">
+							<md-item-template>
+								<md-list-item class="item-title">
+									<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.display}}" />
+									<span  md-highlight-text="tCtrl.boardgameSearchText" md-highlight-flags="^i">{{boardgame.display}}</span>
+								</md-list-item>
+							</md-item-template>
+							<md-not-found>
+								No boardgame matching "{{tCtrl.boardgameSearchText}}" were found.
+							</md-not-found>
+					  </md-autocomplete>
+				</div>
+			</div>
+			
+			<div layout="row" class="overflowScroll">
+				<div layout="column" flex="100">
+					<md-list flex>
+						<md-list-item
+							class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+							ng-repeat-start="template in tCtrl.selectedValues.templates | orderBy:'-votes'"
+							ng-click="tCtrl.setVisible(template.pk)">
+							<div layout="column" flex="15">
+								<div layout="row">
+									<div layout="column" flex="40" layout-align="center center">
+										<md-button aria-label="select template" class="md-icon-button blue-grey" 
+											ng-class="{'md-primary': template.user_vote == '1'}"
+											ng-click="tCtrl.updateVote(template, 1)">
+											<i class="icon-thumbs-up"></i>
+										</md-button>
+									</div>
+									<div layout="column" flex="20" layout-align="center center">
+										<div layout="row">
+											<h4>{{template.votes}}</h4>
+										</div>
+									</div>
+									<div layout="column" flex="40" layout-align="center center">
+										<md-button aria-label="select template" class="md-icon-button blue-grey"
+											ng-class="{'md-accent': template.user_vote == '-1'}"
+											ng-click="tCtrl.updateVote(template, -1)">
+											<i class="icon-thumbs-down"></i>
+										</md-button>
+									</div>
+								</div>
+							</div>
+							<div layout="column" flex="65">
+								<div layout="row">
+									<h3>Template {{$index+1}}</h3>
+								</div>
+							</div>
+														
+							<div layout="column" flex="10" ng-if="template.hasExpansions">
+								<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
+							</div>
+							<div layout="column" flex="10">
+								<md-button aria-label="select template" class="md-fab md-mini"
+									ng-click="tCtrl.selectTemplate(template)">
+									<i class="icon-angle-right"></i>
+								</md-button>
+							</div>
+						</md-list-item>
+						<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
+						class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+							<div layout="row">
+								{{scoringField.word_value}}
+							</div>
+						</md-list-item>
+					</md-list>
+					<div layout="row" class="mrg20t" layout-align="end center">
+						<md-button aria-label="add template" class="md-accent md-raised" ng-click="tCtrl.addTemplate(true)">
+							Add new template
+						</md-button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>

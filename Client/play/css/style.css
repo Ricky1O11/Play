@@ -478,8 +478,8 @@ text-align:center;
 /*end OTHER STUFF MANAGEMENT*/
 
 .imgProfile{
-	height:72px;
-	width: 72px;
+	height:5em;
+	width: 5em;
 	overflow:hidden;
 }
 
@@ -503,6 +503,20 @@ text-align:center;
     width: 15em;
     overflow:hidden;
 }
+
+.imgBoardgameMedium{
+    height: 10em;
+    width: 10em;
+    overflow:hidden;
+}
+
+.imgBoardgameSmall{
+    height: 5em;
+    width: 5em;
+    overflow:hidden;
+}
+
+
 .imgBoardgameProfile{
     height: 15em;
     width: 15em;
@@ -532,6 +546,11 @@ ng-message{
 figcaption{
 	width:100%;
 	height:100%;
+}
+
+
+.matchesDialogTab md-pagination-wrapper {
+    width:auto !important;
 }
 
 .animate-repeat {
@@ -590,7 +609,7 @@ figcaption{
 }
 
 #dialog md-tabs-wrapper{
-	display: none !important;
+	/*display: none !important;*/
 }
 
 .md-toast-content{
@@ -625,6 +644,14 @@ figcaption{
 	text-overflow: ellipsis;
     white-space: nowrap;
     overflow: hidden;
+}
+
+.matchesDialogTab .md-tab {
+  min-width: 150px;
+}
+
+.atchesDialogTab md-pagination-wrapper{
+	width:700px;
 }
 
 

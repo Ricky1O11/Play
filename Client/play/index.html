@@ -49,6 +49,7 @@
 		<script src="js/controllers/recents-controller.js"></script>
 		<script src="js/controllers/register-controller.js"></script>
 		<script src="js/controllers/sidebar-controller.js"></script>
+		<script src="js/controllers/templates-controller.js"></script>
 		<script src="js/controllers/user-controller.js"></script>
 		
 	</head>
@@ -193,6 +194,27 @@
 											<i class="size-18 icon-list-bullet"></i>
 										</div>
 										<div layout="column" flex="85" layout-align="center start">Will come soon</div>
+									</a>
+								</div>
+							</div>
+						</div>
+					</div>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row" class="pad10b">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>HELP US!</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a 
+									layout="row"  
+									class="pad10t decoNone" 
+									href="#/templates"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/templates') >= 0)}">
+											<i class="size-18 icon-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Create a template</div>
 									</a>
 								</div>
 							</div>

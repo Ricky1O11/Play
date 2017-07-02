@@ -182,7 +182,7 @@
 				<div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
 					<div layout="row" class="size-72 mrg20b">:(</div>
 					<div layout="row" class="mrg20b"><h1 class="center-align">Do you like this game? Play it!</h1></div>
-					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches')"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
+					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches', {display:bCtrl.boardgame.title, value:bCtrl.boardgame.title.toLowerCase(), id:bCtrl.boardgame.pk, thumbnail:bCtrl.boardgame.thumbnail, expansions:bCtrl.boardgame.expansions})"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
 				</div>
 			</div>
 		</div>
