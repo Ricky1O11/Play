@@ -38,7 +38,7 @@
 			
 			<div layout="row" class="overflowScroll">
 				<div layout="column" flex="100">
-					<md-list flex>
+					<md-list flex ng-if="!tCtrl.adding">
 						<md-list-item
 							class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 							ng-repeat-start="template in tCtrl.selectedValues.templates | orderBy:'-votes'"
@@ -93,6 +93,9 @@
 						<md-button aria-label="add template" class="md-accent md-raised" ng-click="tCtrl.addTemplate(true)">
 							Add new template
 						</md-button>
+					</div>
+					<div layout="row" class="overflowScroll" ng-if="tCtrl.adding">
+						
 					</div>
 				</div>
 			</div>
