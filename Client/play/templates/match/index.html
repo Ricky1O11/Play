@@ -182,8 +182,8 @@
 		</div>
 	</div>
 	<div layout="row" flex="grow">
-		<div layout="column" flex>
-			<md-tabs  md-selected="mCtrl.currentTab" ng-if="mCtrl.loadedLeaderboard"
+		<div layout="column" flex="40" class="pad20r">
+			<md-tabs  ng-if="mCtrl.loadedLeaderboard"
 			md-stretch-tabs="always" flex-gt-xs flex-xs>
 				<md-tab label="Leaderboard" flex>
 					<md-content class="pad5l pad10t" flex>
@@ -194,7 +194,7 @@
 								ng-repeat-start="details in mCtrl.match.leaderboardArray | orderBy:'-points' "
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column">
-										<md-button 	ng-click="goTo('users/'+user)" class="md-fab md-mini" ng-style="randomColors[details.pk] || getRandomColor(details.pk)" >
+										<md-button 	ng-click="goTo('users/'+details.pk)" class="md-fab md-mini" ng-style="randomColors[details.pk] || getRandomColor(details.pk)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{details.username.substring(0,1).toUpperCase()}}</div>
 										</md-button>
 									</div>
@@ -209,7 +209,7 @@
 									</div>
 									
 								</md-list-item>
-								<md-list-item layout="row" ng-repeat-end ng-repeat-end ng-repeat="sf in mCtrl.match.scoring_fields_details" ng-if="details.visible || mCtrl.allVisible"
+								<md-list-item layout="row" ng-repeat-end ng-repeat-end ng-repeat="sf in mCtrl.match.scoring_fields_details" ng-if="false"
 								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
 										<div layout="column" flex="90">
 											{{sf.word_value}}
@@ -227,6 +227,11 @@
 						</div>
 					</md-content>
 				</md-tab>
+			</md-tabs>
+		</div>
+		<div layout="column" flex="60" class="pad20l">
+			<md-tabs  md-selected="mCtrl.currentTab" ng-if="mCtrl.loadedLeaderboard"
+			md-stretch-tabs="always" flex-gt-xs flex-xs>
 				<md-tab label="Round {{turn+1}}" ng-repeat="turn in mCtrl.range(0,mCtrl.match.totalTurns)">
 					<md-content class="pad5l pad10t">
 						<div layout="row">			
@@ -252,9 +257,28 @@
 								</md-list-item>
 								<md-list-item layout="row" ng-repeat-end ng-repeat="sf in mCtrl.match.scoring_fields_details" ng-if="play.visible || mCtrl.allVisible"
 								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-										<div layout="column" flex="90">
-											{{sf.word_value}}
+										<div layout="column"  flex="100">
+											<div layout="row">
+												<div layout="column" flex="100" layout-align="center center">
+													{{sf.word_value}}
+												</div>
+											</div>
+											<div layout="row">
+												<div layout="column" flex="90">
+													<md-slider ng-model="play.detailedPointsObj[sf.pk].detailed_points" min="-100" max="100" step="{{sf.bonus}}" ng-mouseup="mCtrl.savePoints()"></md-slider>
+												</div>
+												<div layout="column" flex="10">
+													<md-input-container class="detailedPointsContainer md-block" >
+															<input type="number" ng-model="play.detailedPointsObj[sf.pk].detailed_points" aria-label="red" aria-controls="red-slider">
+															<md-tooltip md-direction="bottom" md-delay="200"> value: {{sf.bonus}} points </md-tooltip>
+													</md-input-container>
+												</div>
+											</div>
 										</div>
+										<!--
+										<div layout="column" flex="90">
+												{{sf.word_value}}
+											</div>
 										<div  ng-if="!mCtrl.editMode" layout="column" flex="10">
 											<div layout="row">
 												<div layout="column" flex="100" layout-align="center end">
@@ -273,6 +297,7 @@
 												</div>
 											</div>
 										</div>
+										-->
 								</md-list-item>
 							</md-list>
 						</div>

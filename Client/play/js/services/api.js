@@ -96,7 +96,7 @@
 						return mpu;
 					},
 		matchdelete:function(id){
-						md = $http({method: 'DELETE', url: BASE_URL+'/matches/?include=boardgame'+id+'/'});
+						md = $http({method: 'DELETE', url: BASE_URL+'/matches/'+id+'/'});
 						return md;
 					},
 					

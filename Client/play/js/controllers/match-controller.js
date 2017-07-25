@@ -73,30 +73,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.endEditMode = function(wantToSave){
 		controller.editMode = !controller.editMode;
 		if(wantToSave){
-
-			for(i = 0; i<controller.match.plays_set.length; i++){
-				play_pk = controller.match.plays_set[i].pk;
-				for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
-					old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
-					new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
-					if(old_points != new_points){
-						scoringField_pk = controller.match.plays_set[i].detailedPoints[j].scoringField;
-						detailedPoints = controller.match.plays_set[i].detailedPoints[j].detailed_points;
-						row = {
-							play:play_pk,
-							scoringField:scoringField_pk,
-							detailed_points:detailedPoints
-						};
-						Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
-						}, 
-						function errorCallback(response) {
-							return;
-						});
-					}
-				}
-			}
-			controller.allVisible = false;
-			controller.managePlays();
+			controller.savePoints();
 			row={
 				duration:controller.match.duration,
 				boardgame:controller.match.boardgame,
@@ -137,6 +114,31 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			controller.managePlays();
 		}
 		controller.detectStatus();
+	}
+
+	this.savePoints = function(){
+		for(i = 0; i<controller.match.plays_set.length; i++){
+			play_pk = controller.match.plays_set[i].pk;
+			for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
+				old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
+				new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+				if(old_points != new_points){
+					scoringField_pk = controller.match.plays_set[i].detailedPoints[j].scoringField;
+					detailedPoints = controller.match.plays_set[i].detailedPoints[j].detailed_points;
+					row = {
+						play:play_pk,
+						scoringField:scoringField_pk,
+						detailed_points:detailedPoints
+					};
+					Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
+					}, 
+					function errorCallback(response) {
+						return;
+					});
+				}
+			}
+		}
+		controller.managePlays();
 	}
 
 	this.deleteMatchPopup = function(ev){
@@ -189,7 +191,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		controller.match.leaderboard = {};
 		for(i = 0; i< controller.match.plays_set.length;i++){
 			play = controller.match.plays_set[i];
-			console.log(play.user);
 			if(!(play.user in controller.match.leaderboard)){
 				controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
 			}
@@ -197,8 +198,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			if(play.turn > controller.match.totalTurns){
 				controller.match.totalTurns = play.turn;
 			}
-
-			play.visible = false;
 
 
 			for(j = 0; j<play.detailedPoints.length; j++){

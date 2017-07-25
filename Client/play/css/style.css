@@ -553,6 +553,7 @@ figcaption{
     width:auto !important;
 }
 
+/*
 .animate-repeat {
   line-height:30px;
   list-style:none;
@@ -578,7 +579,7 @@ figcaption{
   opacity:1;
   max-height:30px;
 }
-
+*/
 .star-container{
   position:absolute;
   top:9px;

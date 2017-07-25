@@ -127,12 +127,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 
 	this.selectTemplate = function(template){
-		if(!self.selecting){
-			self.selecting = true;
-			self.selectedValues.scoringFields = template.scoringField_details;
-			console.log(self.selectedValues);
-			self.goTo(3);
-		}
+		self.selectedValues.scoringFields = template.scoringField_details;
+		self.goTo(3);
 	}
 
 	//Post function

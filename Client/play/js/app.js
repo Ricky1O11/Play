@@ -72,7 +72,7 @@
 					locals:{user_pk : user_pk, boardgame: boardgame},
 					controller: string+'DialogController',
 					controllerAs: string.substring(0,1)+'dCtrl',
-					templateUrl: 'templates/'+string+'dialog2.html',
+					templateUrl: 'templates/'+string+'dialog.html',
 					parent: angular.element(document.body),
 					targetEvent: ev,
 					scope:$rootScope,
