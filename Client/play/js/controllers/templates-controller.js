@@ -105,20 +105,19 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		}
 	}
 
-	this.selectTemplate = function(template){
-		if(!self.selecting){
-			self.selecting = true;
-			self.selectedValues.scoringFields = template.scoringField_details;
-			self.postMatch("selectTemplate");
-		}
+	this.countInsertedWords = function(){
+		nonNullWords = self.dictionarySearchText.filter(function(value) { return value !== "" }).length;
+		return nonNullWords;
 	}
 
 	this.createTemplate = function(){
-		if(!self.saving){
-			self.saving = true;
-			self.postMatch("createTemplate");
-		}
+		self.postWord();
+		//if(!self.saving){
+		//	self.saving = true;
+		//	self.postMatch("createTemplate");
+		//}
 	}
+
 
 	this.postBasicTemplate = function(){
 		//prepare the "template" row to be inserted in the templates table
@@ -144,14 +143,15 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		//prepare the "template" row to be inserted in the templates table
 		row={	
 				boardgame:self.selectedValues.boardgame.id,
-				hasExpansions: (self.selectedValues.expansions.length > 0)
+				//hasExpansions: (self.selectedValues.expansions.length > 0)
+				hasExpansions: false
 			};
 		self.postValues.templates.push(row);
 		
 		//post template
 		Api.templatespost(self.postValues.templates).then(
 			function(response){
-				self.selectedValues.templates = response.data[0];
+				self.selectedValues.templates = [response.data[0]];
 				self.postScoringFields();
 			},
 			function errorCallback(response){
@@ -186,7 +186,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		for (i=0; i<self.selectedValues.dictionary.length; i++){
 			//prepare the "template" row to be inserted in the templates table
 			row={	
-					template:self.selectedValues.templates.pk,
+					template:self.selectedValues.templates[0].pk,
 					word: self.selectedValues.dictionary[i].id,
 					bonus: self.points[i]
 				};
@@ -196,7 +196,6 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		Api.scoringfieldspost(self.postValues.scoringFields).then(
 			function(response){
 				self.selectedValues.scoringFields = response.data;
-				self.postDetailedPoints();
 			},
 			function errorCallback(response){
 			}
@@ -204,7 +203,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 	}
 
 	this.postWord = function(){
-		for (i=0; i<self.dictionarySearchText.length; i++){
+		for (i=0; i<self.dictionarySearchText.filter(function(n){return n != ""}).length; i++){
 			if( self.selectedValues.dictionary[i] == null){
 				row={
 					word:self.dictionarySearchText[i],
@@ -223,6 +222,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 					self.postTemplate();
 				},
 				function errorCallback(response){
+					console.log(response)
 				}
 			);
 		}
