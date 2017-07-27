@@ -235,6 +235,10 @@ md-sidenav.md-closed.md-locked-open-add-active {
 	padding-left: 20px;
 }
 
+.pad50{
+	padding: 50px !important;
+}
+
 .pad50b{
 	padding-bottom: 50px !important;
 }

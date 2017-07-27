@@ -1,10 +1,20 @@
  <md-dialog aria-label="Add Match" flex="50" id="dialog">
   <form ng-cloak>
 	<md-dialog-content>
-	  <md-tabs md-dynamic-height md-selected="mdCtrl.currentTab" class="matchesDialogTab">
+	  <md-tabs md-dynamic-height md-selected="mdCtrl.currentTab" class="matchesDialogTab" >
 	  	<md-tab label="select boardgame" ng-disabled="mdCtrl.currentTab < 0">
 		  	<md-content class="md-padding" md-colors="{background: 'myTheme-primary'}">
 		  		<div class="md-dialog-content">
+					<div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+						<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable">
+							<div ng-if="mdCtrl.selectedValues.boardgame != null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{mdCtrl.selectedValues.boardgame.img}}">
+								<div class="circleBase"></div>
+							</div>
+							<div ng-if="mdCtrl.selectedValues.boardgame == null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="img/puzzle.png">
+								<div class="circleBase"></div>
+							</div> 
+						</div>
+					</div>
 					<md-autocomplete
 						md-selected-item="mdCtrl.selectedValues.boardgame"
 						md-selected-item-change="mdCtrl.showExpansions(boardgame)"
@@ -12,7 +22,8 @@
 						md-items="boardgame in mdCtrl.querySearchBoardgames(mdCtrl.boardgameSearchText)"
 						md-item-text="boardgame.display"
 						md-min-length="2"
-						placeholder="Select a boardgame">
+						placeholder="Select a boardgame"
+						class="mrg20t">
 							<md-item-template>
 								<md-list-item class="item-title">
 									<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.display}}" />
@@ -24,13 +35,6 @@
 							</md-not-found>
 					</md-autocomplete>
 
-					<div layout="row" layout-xs="column" layout-sm="column" layout-align="center center" class="mrg20t" ng-if="mdCtrl.selectedValues.boardgame != null">
-						<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable">
-							<div class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{mdCtrl.selectedValues.boardgame.img}}">
-								<div class="circleBase"></div>
-							</div> 
-						</div>
-					</div>  
 					
 					<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t" ng-if="mdCtrl.expansions.length>0">		
 						PICK THE EXPANSIONS YOU WANT TO ADD
@@ -68,6 +72,16 @@
 		</md-tab>
 		<md-tab label="select players" ng-disabled="mdCtrl.currentTab < 1">
 		  <md-content class="md-padding">
+		  			<div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+						<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable">
+							<div ng-if="mdCtrl.selectedValues.boardgame != null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{mdCtrl.selectedValues.boardgame.img}}">
+								<div class="circleBase"></div>
+							</div>
+							<div ng-if="mdCtrl.selectedValues.boardgame == null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="img/puzzle.png">
+								<div class="circleBase"></div>
+							</div> 
+						</div>
+					</div>
 					<md-list class="fixedRows pad0">
 					  <md-subheader class="md-no-sticky">Players</md-subheader>
 					  <div class="maxHeight150 overflowScroll">
@@ -132,6 +146,16 @@
 		</md-tab>
 		<md-tab label="select template" ng-disabled="mdCtrl.currentTab < 2">
 			<md-content class="md-padding">
+				<div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+					<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable">
+						<div ng-if="mdCtrl.selectedValues.boardgame != null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{mdCtrl.selectedValues.boardgame.img}}">
+							<div class="circleBase"></div>
+						</div>
+						<div ng-if="mdCtrl.selectedValues.boardgame == null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="img/puzzle.png">
+							<div class="circleBase"></div>
+						</div> 
+					</div>
+				</div>
 				<md-list flex>
 					<md-list-item
 						class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
@@ -160,14 +184,14 @@
 								</div>
 							</div>
 						</div>
-						<div layout="column" flex="65">
+						<div layout="column" flex="35">
 							<div layout="row">
 								<h3>Template {{$index+1}}</h3>
 							</div>
 						</div>
 													
-						<div layout="column" flex="10" ng-if="template.hasExpansions">
-							<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
+						<div layout="column" flex="40">
+							<md-button ng-if="template.hasExpansions" ng-disabled="true" class="md-primary">WITH EXPANSIONS</md-button>
 						</div>
 						<div layout="column" flex="10">
 							<md-button aria-label="select template" class="md-fab md-mini"
@@ -192,6 +216,16 @@
 		</md-tab>
 		<md-tab label="add infos" ng-disabled="mdCtrl.currentTab < 3">
 			<md-content class="md-padding">
+				<div layout="row" layout-xs="column" layout-sm="column" layout-align="center center">
+					<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable">
+						<div ng-if="mdCtrl.selectedValues.boardgame != null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{mdCtrl.selectedValues.boardgame.img}}">
+							<div class="circleBase"></div>
+						</div>
+						<div ng-if="mdCtrl.selectedValues.boardgame == null" class="circleBase imgBoardgameMedium" layout-align="center center" back-img="img/puzzle.png">
+							<div class="circleBase"></div>
+						</div> 
+					</div>
+				</div>
 				<div layout="row" layout-xs="column" layout-sm="column" class="mrg20t">			
 					<div layout="column" flex-gt-sm="100">  
 					  <md-input-container>

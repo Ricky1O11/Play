@@ -2,7 +2,7 @@
 	<md-tabs  md-selected="tCtrl.currentTab"
 		md-stretch-tabs="always" class="height100perc">
 		<md-tab label="Start">
-			<md-content class="md-padding">
+			<md-content class="md-padding pad50">
 				<div layout="row" class="mrg50t">
 					<div layout="column" flex="100" layout-align="center center">
 						<h1 class="blue-grey">Help us!</h1>
@@ -27,7 +27,7 @@
 		<md-tab label="Select a game">
 			<md-content class="md-padding">
 				<div layout="row">
-					<div layout="column" flex="100" class="pad10">
+					<div layout="column" flex="100">
 						<md-autocomplete
 							md-selected-item="tCtrl.selectedValues.boardgame"
 							md-selected-item-change="tCtrl.getCurrentTemplates(boardgame)"
@@ -50,57 +50,30 @@
 				</div>
 				<div layout="row">
 					<div layout="column" flex="100">
-						<md-list flex ng-if="!tCtrl.adding">
-							<md-list-item
-								class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="template in tCtrl.selectedValues.templates | orderBy:'-votes'"
-								ng-click="tCtrl.setVisible(template.pk)">
-								<div layout="column" flex="15">
-									<div layout="row">
-										<div layout="column" flex="40" layout-align="center center">
-											<md-button aria-label="select template" class="md-icon-button blue-grey" 
-												ng-class="{'md-primary': template.user_vote == '1'}"
-												ng-click="tCtrl.updateVote(template, 1)">
-												<i class="icon-thumbs-up"></i>
-											</md-button>
-										</div>
-										<div layout="column" flex="20" layout-align="center center">
-											<div layout="row">
-												<h4>{{template.votes}}</h4>
-											</div>
-										</div>
-										<div layout="column" flex="40" layout-align="center center">
-											<md-button aria-label="select template" class="md-icon-button blue-grey"
-												ng-class="{'md-accent': template.user_vote == '-1'}"
-												ng-click="tCtrl.updateVote(template, -1)">
-												<i class="icon-thumbs-down"></i>
-											</md-button>
+						<div layout="row" class="height75perc overflowScroll">
+							<md-list flex ng-if="!tCtrl.adding">
+								<md-list-item
+									class=" md-1-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+									ng-repeat-start="template in tCtrl.selectedValues.templates | orderBy:'-votes'"
+									ng-click="tCtrl.setVisible(template.pk)">
+									<div layout="column" flex="50">
+										<div layout="row">
+											<h3>Template {{$index+1}}</h3>
 										</div>
 									</div>
-								</div>
-								<div layout="column" flex="65">
-									<div layout="row">
-										<h3>Template {{$index+1}}</h3>
+																
+									<div layout="column" flex="50">
+										<md-button ng-if="template.hasExpansions" ng-disabled="true" class="md-primary">WITH EXPANSIONS</md-button>
 									</div>
-								</div>
-
-								<div layout="column" flex="10" ng-if="template.hasExpansions">
-									<md-button aria-label="select template" class="md-fab md-fab md-mini">Exp</md-button>
-								</div>
-								<div layout="column" flex="10">
-									<md-button aria-label="select template" class="md-fab md-mini"
-										ng-click="tCtrl.selectTemplate(template)">
-										<i class="icon-angle-right"></i>
-									</md-button>
-								</div>
-							</md-list-item>
-							<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
-							class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-								<div layout="row">
-									{{scoringField.word_value}}
-								</div>
-							</md-list-item>
-						</md-list>
+								</md-list-item>
+								<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
+								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+									<div layout="row">
+										{{scoringField.word_value}}
+									</div>
+								</md-list-item>
+							</md-list>
+						</div>
 						<div layout="row" class="mrg20t" layout-align="end center">
 							<md-button aria-label="add template" class="md-accent md-raised" ng-click="tCtrl.currentTab = 2">
 								Add new template
@@ -112,14 +85,14 @@
 		</md-tab>
 		<md-tab label="Build your template">
 			<md-content class="md-padding">
-				<div class="md-dialog-content">
+				<div class="md-dialog-content pad50">
 					<div layout="row" class="size-16 blue-grey center-align" layout-align="center center">
 						Here you can tell us all the possible ways to score points. 
 						Next to each row you can tell how many points it is worth.<br>
 						For example: each city in "Catan" scores 2 points.
 					</div>
 
-					<div layout="row" ng-repeat="i in tCtrl.range(0,tCtrl.countInsertedWords())" class="mrg10t height80">
+					<div layout="row" ng-repeat="i in tCtrl.range(0,tCtrl.countInsertedWords())" class="mrg20t height80">
 						<div class="column" flex="50" layout-align="center start">
 							<md-autocomplete 
 								md-selected-item="tCtrl.selectedValues.dictionary[i]"
@@ -138,18 +111,17 @@
 									</md-not-found>
 							</md-autocomplete>
 						</div>
-						<div class="column" flex="50">
-							<div layout="row">
-								<div layout="column" flex="30" layout-align="center end">
-								Value:
+						<div class="column" flex="50" class="mrg10l">
+							<div layout="row"  class="mrg10l">
+								<div layout="column" flex="90"  class="mrg10l">
+									<md-slider ng-model="tCtrl.points[i]" min="-100" max="100"></md-slider>
 								</div>
-								<div layout="column" flex="70" layout-align="center start">
+								<div layout="column" flex="10">
 									<md-input-container class="detailedPointsContainer md-block" >
-										<input type="number" ng-model="tCtrl.points[i]" aria-label="red" aria-controls="red-slider">
+								 		<input type="number" ng-model="tCtrl.points[i]" aria-label="red" aria-controls="red-slider">
 									</md-input-container>
 								</div>
-							</div>
-							
+							</div>	
 						</div>
 					</div>
 				</div>

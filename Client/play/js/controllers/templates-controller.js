@@ -12,7 +12,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 	self.postValues.dictionary = [];
 	self.postValues.dp=[];
 	
-	
+	 
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 
 	self.dictionary=[];  //list of users to display in the dropdown menu
@@ -20,7 +20,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-	self.points=[]; //holds the values for the corresponding scoring field
+	self.points=[0,0,0,,0,0,0,0,0,0,0,0,0,0,0]; //holds the values for the corresponding scoring field
 
 	self.adding = false;
 	self.selecting = false;
