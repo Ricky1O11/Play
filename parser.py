@@ -8,9 +8,9 @@ import json
 import os
 
 beg = 1
-end = 250000
-div = 500
-breakpoint = 173500
+end = 200
+div = 2
+breakpoint = 0
 rate = end/div
 os.system('cls')
 print '{0}\r'.format("Completion: 0%"),
@@ -42,13 +42,19 @@ for i in range(0,div):
 							xmldict[id][item.tag] = item.text
 					else:
 						if(item.tag not in xmldict[id]):
-							xmldict[id][item.tag] = []
+							xmldict[id][item.tag] = {}
 						if("objectid" in item.attrib):
 							if(item.tag == "boardgameexpansion"):
 								if("inbound" not in item.attrib):
-									xmldict[id][item.tag].append(item.attrib["objectid"])
+									xmldict[id]["is_expanded_by"] = {}
+									xmldict[id]["is_expanded_by"][item.attrib["objectid"]] = {"name":item.text}
+								else:
+									xmldict[id]["expands"] = {}
+									xmldict[id]["expands"][item.attrib["objectid"]] = {"name":item.text}
+							elif(item.tag == "boardgamecategory" or item.tag == "boardgamedesigner" or item.tag == "boardgamepublisher"):
+									xmldict[id][item.tag][item.attrib["objectid"]] = {"name":item.text}
 							else:
-								xmldict[id][item.tag].append(item.text)
+								xmldict[id][item.tag][item.attrib["objectid"]] = item.text
 				elif(item.text):
 					xmldict[id][item.tag] = item.text.replace('"', "'")
 
