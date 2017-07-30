@@ -30,6 +30,7 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 		controller.user.profile_details.old_rec_setting = controller.user.profile_details.rec_setting;
 	}, function errorCallback(response){
 	});
+	
 	Api.friends().success(function(data){
 		for(i = 0;i<data.length; i++){
 			if(data[i].user1 != $scope.user_pk){

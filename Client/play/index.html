@@ -76,13 +76,13 @@
 								<div layout="column" flex="50" layout-align="center start">
 									<div class="imgProfile circleBase borderWhite" layout-align="center center">
 										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
-											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{user.username.substring(0,1).toUpperCase()}}</div>
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 										</div>
 									</div>
 								</div>						
 									
 								<div layout="column" id="username" class="size-18" flex="50" layout-align="center start">
-									{{user.username}}											
+									{{user.profile_details.username}}											
 								</div>
 							</div>
 							

@@ -9,8 +9,9 @@ angular.module("play").controller('sidebarController', function(Auth, $rootScope
 	dbuser = Api.user($rootScope.user.uid);
 	
 	dbuser.$loaded().then(function(response){
-		$rootScope.user.image = dbuser.image;
-		$rootScope.user.username = dbuser.username;
+		$rootScope.user.profile_details = {};
+		$rootScope.user.profile_details.image = dbuser.image;
+		$rootScope.user.profile_details.username = dbuser.username;
 		console.log($rootScope.user);
 	}).catch(function(error){
 		console.log(error);

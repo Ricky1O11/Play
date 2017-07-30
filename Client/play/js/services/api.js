@@ -11,7 +11,12 @@
 				var ref = firebase.database().ref();
 				var obj = $firebaseObject(ref.child('users').child(uid));
 				obj.username = username;
+				obj.name = "";
+				obj.surname = "";
 				obj.image = '';
+				obj.visibility_group = 0;
+				obj.fav_settings = true;
+				obj.rec_settings = false;
 				obj.$save();
 				return "success"
 					},
