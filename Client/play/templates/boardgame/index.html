@@ -2,8 +2,8 @@
 	<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
-				<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.img)">
-					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.img}}">
+				<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.image)">
+					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.image}}">
 						<div class="circleBase"></div>
 					</div> 
 				</div>
@@ -27,8 +27,8 @@
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex>
 			<div layout="row" class="mrg10b" flex layout-wrap>
-				<div layout="column" flex-gt-xs="70" flex-xs="100"  layout-align="center start" layout-align-xs="center center">
-					<h1 class="center-align"> {{bCtrl.boardgame.title}}</h1>
+				<div layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
+					<h1 class="center-align"> {{bCtrl.boardgame.name}}</h1>
 				</div>
 			</div>
 			<div layout="row">
@@ -94,24 +94,24 @@
 									</div>
 								</div>
 								<div layout="row" layout-wrap class="mrg10t">
-									<div layout="column" flex-xs flex-gt-xs ng-repeat="category in bCtrl.boardgame.categories | filter:{ name: '!Expansion for Base-game'}">
-										<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+category.pk)">
+									<div layout="column" flex-xs flex-gt-xs ng-repeat="(key, category) in bCtrl.boardgame.categories">
+										<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+key)">
 											{{category.name}}
 										</md-button>
 									</div>
 								</div>
 								<div layout="row" layout-wrap>
-									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.expansions.length > 0">
+									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.is_expanded_by.length > 0">
 										<div class="absolute2 pad5 size-12 dark54perc">EXPANSIONS</div>
 										<div layout="row">
-											<div layout="column" class="clickable pad10l" flex="none" ng-repeat="exp in bCtrl.boardgame.expansions"
-											ng-click="goTo('boardgames/'+exp.pk)">
+											<div layout="column" class="clickable pad10l" flex="none" ng-repeat="(key,exp) in bCtrl.boardgame.is_expanded_by"
+											ng-click="goTo('boardgames/'+key)">
 												<div class="circleBase imgExpansion hideScrollbar shadowed-box">
-													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.img}}">
+													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.thumbnail}}">
 														<div class="circleBase" style="font-size:50px;"></div>
 													</div>
 												</div>
-												<md-tooltip md-direction="bottom" md-delay="200">{{exp.title}}</md-tooltip>
+												<md-tooltip md-direction="bottom" md-delay="200">{{exp.name}}</md-tooltip>
 											</div>
 										</div>
 									</div>
@@ -135,7 +135,7 @@
 						<md-tab label="Description" class="hideScrollbar">
 							<md-content class="pad5l pad10t hideScrollbar">
 								<div layout="row">
-									<div layout="column" flex="100" ng-repeat="designer in bCtrl.boardgame.designers | filter:{ name: '!(UNCREDITED)'} | limitTo:3">
+									<div layout="column" flex="100" ng-repeat="(key, designer) in bCtrl.boardgame.designers">
 										<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+designer.pk)">
 											{{designer.name}}
 										</md-button>
@@ -166,7 +166,7 @@
 					class=" md-2-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 					ng-href="#/matches/{{match.pk}}"
 					ng-repeat="match in bCtrl.boardgame.matches | filter:{location:query}" ng-click="null">
-						<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.title}}" />
+						<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.name}}" />
 						<div layout="column">
 							<div layout="row">
 								<h3 ng-if="match.name.length == 0">Match {{match.pk}}</h3>
@@ -181,8 +181,9 @@
 				</md-list>
 				<div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
 					<div layout="row" class="size-72 mrg20b">:(</div>
+					{{bCtrl.boardgame}}
 					<div layout="row" class="mrg20b"><h1 class="center-align">Do you like this game? Play it!</h1></div>
-					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches', {display:bCtrl.boardgame.title, value:bCtrl.boardgame.title.toLowerCase(), id:bCtrl.boardgame.pk, thumbnail:bCtrl.boardgame.thumbnail, expansions:bCtrl.boardgame.expansions})"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
+					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches', {display:bCtrl.boardgame.name, value:bCtrl.boardgame.name.toLowerCase(), id:bCtrl.boardgame.pk, thumbnail:bCtrl.boardgame.thumbnail, expansions:bCtrl.boardgame.expansions})"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
 				</div>
 			</div>
 		</div>

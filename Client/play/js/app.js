@@ -1,5 +1,16 @@
 (function(){
-	angular.module('play',["ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
+	// Initialize Firebase
+	var config = {
+	    apiKey: "AIzaSyDUQPNY_D9WCVirdz4xL3YVgJFKWpBdh3Y",
+	    authDomain: "play-5d098.firebaseapp.com",
+	    databaseURL: "https://play-5d098.firebaseio.com",
+	    projectId: "play-5d098",
+	    storageBucket: "play-5d098.appspot.com",
+	    messagingSenderId: "771721288528"
+	  };
+	firebase.initializeApp(config);
+
+	angular.module('play',["firebase", "ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
 	.config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
 		$mdThemingProvider.theme('myTheme')
@@ -35,8 +46,14 @@
 	      showLines: true
 	    });
 	}])
-	.run(function($rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
-			$rootScope.isLogged = false;
+	.run(function(Auth, $rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
+			// any time auth state changes, add the user data to scope
+		    Auth.$onAuthStateChanged(function(firebaseUser) {
+		      	$rootScope.user = firebaseUser;
+		      	$rootScope.loaded = true;
+		      	console.log($rootScope.user)
+		    });
+
 			$rootScope.match = {};
 
 			$rootScope.goTo = function(url, id) {
@@ -53,19 +70,12 @@
 			}
 
 			$rootScope.$on('$locationChangeStart', function(){
-				if($cookies.get('tok') != null){
-					$rootScope.user_pk=jwtHelper.decodeToken($cookies.get('tok')).user_id;
-					$rootScope.isLogged = true;
-				}
-				else{
-					$rootScope.isLogged = false;
-				}
-				$rootScope.path = $location.path();
 				if($rootScope.randomColors === undefined){
 					$rootScope.randomColors = {};
 				}
 			});
 
+		    
 			$rootScope.showPopup = function(ev, user_pk, string, additional_field) {
 				boardgame = additional_field? additional_field : -1;
 				$mdDialog.show({

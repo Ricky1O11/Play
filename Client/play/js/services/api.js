@@ -1,5 +1,5 @@
  angular.module('play')
-.factory('Api', function ApiFactory($http, $cookies){
+.factory('Api', function ApiFactory($http, $cookies,$firebaseObject){
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
 	}
@@ -7,9 +7,13 @@
 	var BASE_URL = "http://127.0.0.1:8000/server"
 	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
-		register:	function(data){
-						reg = $http({method: 'POST', url: BASE_URL+'/register/', data:data});
-						return reg;
+		register:	function(uid, username){
+				var ref = firebase.database().ref();
+				var obj = $firebaseObject(ref.child('users').child(uid));
+				obj.username = username;
+				obj.image = '';
+				obj.$save();
+				return "success"
 					},
 		login:		function(data){
 						tok = $http({method: 'POST', url: BASE_URL+'/auth/token/', data:data});
@@ -17,8 +21,9 @@
 					},
 
 		user:		function(user_id){
-						u = $http({method: 'GET', url: BASE_URL+'/users/'+user_id+'/?include=user_stats'});
-						return u;
+				var ref = firebase.database().ref().child("users").child(user_id);
+				var syncObject = $firebaseObject(ref);
+				return syncObject;
 					},
 
 		userput:		function(user_id, user_data){
@@ -56,6 +61,7 @@
 						return r;
 					},
 		boadgames:	function(offset, limit, orderingField, key){
+			
 						console.log(BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset);
 						if(key != "")
 							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
@@ -64,8 +70,9 @@
 						return l;
 					},
 		boardgame:	function(id){
-						b = $http({method: 'GET', url: BASE_URL+'/boardgames/'+id+'/?include=matches'});
-						return b;
+				var ref = firebase.database().ref().child("boardgames").child(id);
+				var syncObject = $firebaseObject(ref);
+				return syncObject;
 					},	
 		designer: function(id){
 						d = $http({method: 'GET', url: BASE_URL+'/designers/'+id+'/?include=boardgames'});

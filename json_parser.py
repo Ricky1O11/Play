@@ -55,7 +55,7 @@ def addBoardgame(i, game):
     for field in basics_field_array:
         if(field in game):
             gameCompleteObject[field] = game[field]
-        if field == "name" or field == "thumbnail":
+        if field == "name" or field == "thumbnail" or field == "average":
             gameSimpleObject[field] = game[field]
     if("boardgamecategory" in game):
         gameCompleteObject["categories"] = game["boardgamecategory"]

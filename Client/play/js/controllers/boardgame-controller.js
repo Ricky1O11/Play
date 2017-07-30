@@ -1,22 +1,26 @@
 //controller for the single boardgame page
-angular.module("play").controller('boardgameController', function(Api, $routeParams, $scope, $rootScope, $mdDialog) {
+angular.module("play").controller('boardgameController', function(Api, $firebaseObject, $routeParams, $scope, $rootScope, $mdDialog) {
 	//read the requested boardgame'id
 	this.params=$routeParams;
 	this.boardgame={};
 	this.isFavourite = false; 
 	
 	controller=this;
+
 	//api call to get the single boardgame's details
-	Api.boardgame(controller.params.id).then(function(response){
-		controller.boardgame=response.data[0];
-		console.log(controller.boardgame);
-		if(controller.boardgame.favourite > 0){
+	controller.boardgame = Api.boardgame(controller.params.id);
+
+	controller.boardgame.$loaded()
+	  .then(function() {
+	    if(controller.boardgame.favourite > 0){
 			controller.isFavourite = true;
 		}
-	}, function errorCallback(response){
-		console.log(response);
-	});
-	
+		console.log(controller.boardgame.playingtime);
+	  })
+	  .catch(function(err) {
+	    console.error(err);
+	  });
+
 	this.toggleFavourites = function(favourite, boardgame, user){
         if(favourite > 0){
           Api.favouritedelete(favourite).then(
