@@ -10,39 +10,27 @@ angular.module("play").controller('boardgameController', function(Api, $firebase
 	//api call to get the single boardgame's details
 	controller.boardgame = Api.boardgame(controller.params.id);
 
-	controller.boardgame.$loaded()
-	  .then(function() {
-	    if(controller.boardgame.favourite > 0){
-			controller.isFavourite = true;
+	this.toggleFavourites = function(boardgame){
+		if("favourites" in $rootScope.user["profile_details"]){
+			if(boardgame.bggId in $rootScope.user["profile_details"]["favourites"]){
+				delete $rootScope.user["profile_details"]["favourites"][boardgame.bggId];
+			}
+			else{
+				$rootScope.user["profile_details"]["favourites"][boardgame.bggId] = {
+					"name": boardgame.name,
+					"image": boardgame.image,
+					"bggId": boardgame.bggId
+				}
+			}
 		}
-		console.log(controller.boardgame.playingtime);
-	  })
-	  .catch(function(err) {
-	    console.error(err);
-	  });
-
-	this.toggleFavourites = function(favourite, boardgame, user){
-        if(favourite > 0){
-          Api.favouritedelete(favourite).then(
-                              function(response){
-                                //if successfull, hide the dialog and prompt a message
-                              }, function errorCallback(response){
-                              }
-                            );
-          	controller.boardgame.favourite = -1;
-        	controller.isFavourite = false;
-        }
-        else{
-            data = {'user': user, 'boardgame': boardgame};
-            Api.favouritepost(data).then(
-                              function(response){
-                                //if successfull, hide the dialog and prompt a message
-                                controller.boardgame.favourite = response.data.pk;
-                              }, function errorCallback(response){
-                              }
-                            );
-        	controller.isFavourite = true;
-        }
+		else{
+			$rootScope.user["profile_details"]["favourites"] = {};
+			$rootScope.user["profile_details"]["favourites"][boardgame.bggId] = {
+					"name": boardgame.name,
+					"image": boardgame.image,
+					"bggId": boardgame.bggId
+				}
+		}
     }
 
 	//create ordered list of numbers

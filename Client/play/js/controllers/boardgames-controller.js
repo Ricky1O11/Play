@@ -2,8 +2,8 @@
 angular.module("play").controller('boardgamesController', function(Api, $scope,$location, $routeParams) {
 	this.location=$location.path();
 	//this.boardgames=[]; //container of the list of boardgames
-	this.selectedOrderingField="-average"; //ordering field, selectable by the user
-	this.actualOrderingField="-average"; //ordering field, selectable by the user
+	this.selectedOrderingField="average"; //ordering field, selectable by the user
+	this.actualOrderingField="average"; //ordering field, selectable by the user
 	this.searchKey=""; //ordering field, selectable by the user
 	this.designer = -1;
 	if(this.location.indexOf("designers") >= 0){
@@ -76,8 +76,9 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 				});
 			}
 			else{
-				Api.boadgames(pageOffset, ps, controller.actualOrderingField, controller.searchKey, controller.designer).then(function(response){
-					lp[pageNumber]=response.data;
+				Api.boadgames(0, 10, controller.actualOrderingField, controller.searchKey).$loaded()
+				.then(function(response){
+					lp[pageNumber]=response;
 					for(i=0;i<lp[pageNumber].length;i++){
 						if(lp[pageNumber][i].favourite > 0){
 							lp[pageNumber][i].isFavourite = true;
@@ -88,14 +89,21 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 						lp[pageNumber][i].listId = i;
 					}
 
-				}, function errorCallback(response){
-					console.log(response);
-				});
+				}).catch(function(error) {
+				    console.error("Error:", error);
+				  });
 			}
 
 		};
 
-	this.boardgames = new DynamicItems();
+	//this.boardgames = new DynamicItems();
+	Api.boadgames(0, 10, controller.actualOrderingField, controller.searchKey).$loaded()
+		  .then(function(data) {
+		    console.log(data); // true
+		  })
+		  .catch(function(error) {
+		    console.error("Error:", error);
+		  });
 
 	this.toggleFavourites = function(favourite, boardgame, user, id, index){
 		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);

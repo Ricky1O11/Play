@@ -465,10 +465,12 @@ text-align:center;
 	width:50px;
 }
 
+.templateEntryContainer{ margin:0; }
+
 .detailedPointsContainer input{
 	text-align:right;
 }
-#container .md-errors-spacer, .detailedPointsContainer .md-errors-spacer{
+#container .md-errors-spacer, .detailedPointsContainer .md-errors-spacer, .templateEntryContainer .md-errors-spacer{
 	display:none !important;
 }
 

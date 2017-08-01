@@ -1,5 +1,5 @@
  angular.module('play')
-.factory('Api', function ApiFactory($http, $cookies,$firebaseObject){
+.factory('Api', function ApiFactory($http, $cookies,$firebaseObject, $firebaseArray){
 	if($cookies.get('tok') != undefined){
 		$http.defaults.headers.common['Authorization'] = 'JWT ' + $cookies.get('tok');
 	}
@@ -9,14 +9,17 @@
 	return{
 		register:	function(uid, username){
 				var ref = firebase.database().ref();
-				var obj = $firebaseObject(ref.child('users').child(uid));
+				var obj = $firebaseObject(ref.child('profiles').child(uid));
 				obj.username = username;
-				obj.name = "";
-				obj.surname = "";
+				obj.first_name = "";
+				obj.second_name = "";
 				obj.image = '';
 				obj.visibility_group = 0;
-				obj.fav_settings = true;
-				obj.rec_settings = false;
+				obj.fav_setting = true;
+				obj.rec_setting = false;
+				obj.match_won = 0;
+				obj.match_played = 0;
+
 				obj.$save();
 				return "success"
 					},
@@ -26,7 +29,7 @@
 					},
 
 		user:		function(user_id){
-				var ref = firebase.database().ref().child("users").child(user_id);
+				var ref = firebase.database().ref().child("profiles").child(user_id);
 				var syncObject = $firebaseObject(ref);
 				return syncObject;
 					},
@@ -41,8 +44,9 @@
 						return u;
 					},					
 		users:		function(){
-						us = $http({method: 'GET', url: BASE_URL+'/users/'});
-						return us;
+				var ref = firebase.database().ref().child("profiles");
+				var syncArray = $firebaseArray(ref);
+				return syncArray;
 					},
 		favourites:	function(key){
 						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/?search_key='+key});
@@ -66,13 +70,14 @@
 						return r;
 					},
 		boadgames:	function(offset, limit, orderingField, key){
-			
-						console.log(BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset);
-						if(key != "")
-							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&search_key='+key+'&limit='+limit+'+&offset='+offset});
-						else
-							l = $http({method: 'GET', url: BASE_URL+'/boardgames/?order_by='+orderingField+'&limit='+limit+'&offset='+offset});
-						return l;
+				if(key!="")
+					var ref = firebase.database().ref().child("boardgames").orderByChild("name").startAt(key);
+				else
+					var ref = firebase.database().ref().child("boardgames");
+				
+				var syncObject = $firebaseArray(ref);
+				
+				return syncObject;
 					},
 		boardgame:	function(id){
 				var ref = firebase.database().ref().child("boardgames").child(id);
@@ -88,16 +93,25 @@
 						return c;
 					},		
 		match:		function(id){
-						m = $http({method: 'GET', url: BASE_URL+'/matches/'+id+'/?include=boardgame'});
-						return m;
+					var ref = firebase.database().ref().child("matches").child(""+id);
+					var syncObject = $firebaseObject(ref);
+					return syncObject;
 					},	
 		matches:	function(user_id){
 						ms = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?user_id='+user_id+'&include=matches'});
 						return ms;
 					},	
-		matchpost:	function(match){
-						mp = $http({method: 'POST', url: BASE_URL+'/matches/?include=boardgame', data:match});
-						return mp;
+		matchpost:	function(values, values2){
+					var ref = firebase.database().ref().child("matches").push(values);
+					var syncObject = $firebaseObject(ref);
+
+					var ref = firebase.database().ref()
+					.child("boardgame_has_matches")
+					.child(""+values.boardgame.bggId)
+					.child(""+syncObject.$id)
+					.set(values);
+
+					return syncObject;
 					},
 		expansionpost:	function(exp){
 						mp = $http({method: 'POST', url: BASE_URL+'/playedExp/', data:exp});
@@ -112,9 +126,10 @@
 						return md;
 					},
 					
-		playpost:	function(plays){
-						pp = $http({method: 'POST', url: BASE_URL+'/plays/', data:plays});
-						return pp;
+		playpost:	function(match, plays){
+					var ref = firebase.database().ref().child("matches").child(""+match).child("plays").push(plays);
+					var syncObject = $firebaseObject(ref);
+					return syncObject;
 					},
 		dictionary:	function(){
 						d = $http({method: 'GET', url: BASE_URL+'/dictionary/'});
@@ -125,17 +140,19 @@
 						return dp;
 					},
 		templates:	function(boardgame){
-						console.log(boardgame)
-						ts = $http({method: 'GET', url: BASE_URL+'/templates/?boardgame_id='+boardgame});
-						return ts;
+			console.log(boardgame);
+			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame);
+			var syncArray = $firebaseArray(ref);
+			return syncArray;
 					},
 		template:	function(pk){
 						t = $http({method: 'GET', url: BASE_URL+'/templates/'+pk+'/'});
 						return t;
 					},
-		templatespost:	function(templates){
-						tp = $http({method: 'POST', url: BASE_URL+'/templates/', data:templates});
-						return tp;
+		templatespost:	function(boardgame, template){
+			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame).push(template);
+			var syncArray = $firebaseObject(ref);
+			return syncArray;
 					},
 		templatevotes:	function(template, user){
 						ts = $http({method: 'GET', url: BASE_URL+'/templatevotes/?template_id='+template+'&user_id='+user});

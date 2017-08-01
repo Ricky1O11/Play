@@ -47,11 +47,11 @@
 	    });
 	}])
 	.run(function(Auth, $rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
+			$rootScope.lang = "it";
 			// any time auth state changes, add the user data to scope
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 		      	$rootScope.user = firebaseUser;
 		      	$rootScope.loaded = true;
-		      	console.log($rootScope.user)
 		    });
 
 			$rootScope.match = {};

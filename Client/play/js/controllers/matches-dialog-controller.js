@@ -7,34 +7,24 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.title= "Add Match"; //sets the tab title according to its id
 	
 	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
-	self.selectedValues.players=[]; //list that holds the list of player playing the inserted match
-	self.selectedValues.templates=[]; //list that holds the list of templates available in the db
-	self.selectedValues.dictionary=[]; //list that holds the list of templates available in the db
-	self.selectedValues.matchId = 0; //will contain the id of the inserted match
+	self.selectedValues.players={}; //list that holds the list of player playing the inserted match
+	self.selectedValues.name="";
+	self.selectedValues.location="";
+	self.selectedValues.time="";
+	self.selectedValues.total_rounds=1;
+	self.selectedValues.winner="";
+	self.templates=[]; //list that holds the list of templates available in the db
 	self.selectedValues.expansions = []; //will contain the id of the selected expansions
 
 	if(boardgame != -1){
 		self.selectedValues.boardgame = boardgame;
 	}
-
-	self.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
-	self.postValues.match={};
-	self.postValues.expansions=[];
-	self.postValues.plays=[];
-	self.postValues.templates=[];
-	self.postValues.scoringFields=[];
-	self.postValues.dictionary = [];
-	self.postValues.dp=[];
 	
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	self.expansions = [];
 	
-	self.users=[];  //list of users to display in the dropdown menu
-	self.nplayers=1; //holds the selected amount of players
-
-	self.dictionary=[];  //list of users to display in the dropdown menu
-	self.nwords=1; //holds the selected amount of players
+	self.users={};  //list of users to display in the dropdown menu
 
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
@@ -56,14 +46,23 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	//api call to the list of users
 	self.getUsers = function(){
-		if(self.users.length == 0 && self.selectedValues.players.length == 0){
-			Api.users().success(function(data){
+		console.log("ok")
+		if(angular.equals(self.users, {}) && angular.equals(self.selectedValues.players, {})){
+			console.log("ok1")
+			Api.users().$loaded().then(function(data){
 				for (i=0; i<data.length; i++){
-					if(data[i].pk != user_pk){
-						self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.imgimg})
+					simpleUser = {}
+					simpleUser["username"] = data[i]["username"];
+					simpleUser["image"] = data[i]["image"];
+					simpleUser["points"] = 0;
+					simpleUser.uid = data[i].$id;
+					console.log(simpleUser)
+
+					if(simpleUser.uid != $rootScope.user.uid){
+						self.users[simpleUser.uid] = simpleUser;
 					}
 					else{
-						 self.selectedValues.players[0] = {display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), id:data[i].pk, img:data[i].profile_details.img};
+						 self.selectedValues.players[""+simpleUser.uid] = simpleUser;
 					}
 				}
 			});
@@ -72,11 +71,18 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
-		return Api.boadgames(0, 100, "title", query).then(function(response){
+		return Api.boadgames(0, 100, "name", query).$loaded().then(function(response){
 			self.boardgames = [];
-			for (i=0; i<response.data.length; i++){
-				if(response.data[i].expands.length == 0)
-					self.boardgames.push({display:response.data[i].title, value:response.data[i].title.toLowerCase(), id:response.data[i].pk, thumbnail:response.data[i].thumbnail, img:response.data[i].img, expansions:response.data[i].expansions})
+			for (i=0; i<response.length; i++){
+				if(response[i].name.indexOf(query) !== -1)
+					self.boardgames[i] = 
+						{
+							name: response[i].name,
+							bggId: response[i].bggId,
+							thumbnail: response[i].thumbnail,
+							image: response[i].image,
+							is_expanded_by: response[i].is_expanded_by,
+						};
 			}
 			return self.boardgames;
 		});
@@ -94,26 +100,26 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	this.goTo = function(tab){
 		self.currentTab=tab;
+		console.log(self.selectedValues);
 	}
 
 	this.selectBoardgame= function() {
 		//if a boardgame is selected
 		if(self.selectedValues.boardgame!=null){
-			//get its id
-			self.postValues.match.boardgame=self.selectedValues.boardgame.id;
 			//get the template relative to the game
-			Api.templates(self.selectedValues.boardgame.id).then(
+			Api.templates(self.selectedValues.boardgame.bggId).$loaded().then(
 				function(response){
-					self.selectedValues.templates = response.data;
-					if(self.selectedValues.templates.length == 0){
-						self.postBasicTemplate();
+					if(response.length > 0){
+						self.templates = response;
+						for(i=0;i<self.templates.length;i++)
+							self.templates[i].visible = false;
 					}
-					
-					for(i=0;i<self.selectedValues.templates.length;i++)
-						self.selectedValues.templates[i].visible = false;
-					console.log(self.selectedValues.templates);
-					self.getUsers();
+					else{
+						self.templates = [];
+					}
+
 					self.goTo(1);
+					self.getUsers();
 				},
 				function errorCallback(response) {
 					console.log(response);
@@ -125,43 +131,43 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-
 	this.selectTemplate = function(template){
-		self.selectedValues.scoringFields = template.scoringField_details;
+		self.selectedValues.template = {
+			id:template.$id,
+			scoring_fields:template.scoring_fields,
+		};
 		self.goTo(3);
 	}
 
 	//Post function
 	this.postMatch=function(){
-		if(self.selectedValues.time!=null){
-			self.postValues.match.time=self.selectedValues.time;
-		}
-		if(self.selectedValues.location!=null && self.selectedValues.location.replace(/\s/g, '').length){
-			self.postValues.match.location=self.selectedValues.location;
-		}
-		if(self.selectedValues.name!=null){
-			self.postValues.match.name=self.selectedValues.name;
-		}
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
-			Api.matchpost(self.postValues.match).then(
-					function(response){
-						//get the id of the new match
-						self.selectedValues.matchId = response.data.pk;
-						//for each player
-						for (i=0; i<self.selectedValues.expansions.length; i++){
-							if(self.selectedValues.expansions[i] != null){
-								//prepare the "expansion" row to be inserted in the play table
-								row={match:self.selectedValues.matchId, boardgame:self.selectedValues.expansions[i]};
-								self.postValues.expansions.push(row);
-							}
+			Api.matchpost(self.selectedValues).$loaded().then(
+				function(response){
+					self.selectedValues.plays = {};
+					for(player in self.selectedValues.players){
+						play = {}
+						play["user"] = player;
+						play["round"] = 1;
+						play["detailed_points"] = {};
+						play["points"] = 0;
+
+						for(j = 0; j< self.selectedValues.template.scoring_fields.length; j++){
+							scoring_field = self.selectedValues.template.scoring_fields[j];
+							play["detailed_points"][j] = scoring_field;
+							play["detailed_points"][j]["points"] = 0;
 						}
-						self.postExpansion();
-					}, 
-					function errorCallback(response) {
-						console.log(response);
+						play_post = Api.playpost(response.$id, play)
 					}
+					$rootScope.showToast("Match succesfully registered!");
+					$mdDialog.hide();
+					$location.path("matches/"+response.$id);
+				}, 
+				function errorCallback(response) {
+					console.log(response);
+				}
 			);
 		}
 		else{
@@ -169,129 +175,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		}
 	}
 
-	//Post function
-	this.postExpansion=function(){
-		//if some player are selected
-		if(self.postValues.expansions!=[]){
-			//post match
-			Api.expansionpost(self.postValues.expansions).then(
-					function(response){
-						//for each player
-						for (i=0; i<self.selectedValues.players.length; i++){
-							if(self.selectedValues.players[i] != null){
-								//prepare the "play" row to be inserted in the play table
-								row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
-								self.postValues.plays.push(row);
-							}
-						}
-						self.postPlay();
-					}, 
-					function errorCallback(response) {
-						console.log(response);
-					}
-			);
-		}
-		else{
-			for (i=0; i<self.selectedValues.players.length; i++){
-				if(self.selectedValues.players[i] != null){
-					//prepare the "play" row to be inserted in the play table
-					row={match:self.selectedValues.matchId, user:self.selectedValues.players[i].id};
-					self.postValues.plays.push(row);
-				}
-			}
-			self.postPlay();
-		}
-	}
-
-	this.postPlay = function(){
-		//post play
-		Api.playpost(self.postValues.plays).then(
-			function(response){
-				//get the list of posted plays
-				self.selectedValues.play = response.data;
-				self.postDetailedPoints();
-			},
-			function errorCallback(response){
-			}
-		); 
-	}
-
-	//post the detailed points to the server
-	this.postDetailedPoints = function(){
-		for (i=0; i<self.selectedValues.play.length; i++){	
-			//get the current play id
-			self.selectedValues.playId = self.selectedValues.play[i].pk;
-			//for each template entry
-			for (j=0; j<self.selectedValues.scoringFields.length; j++){
-				//get its id and prepare the "detailedPoints" row to be inserted in the detailedPoints table
-				row = {}
-				row.play = self.selectedValues.playId;
-				row.scoringField = self.selectedValues.scoringFields[j].pk;
-				row.detailed_points = 0;
-				self.postValues.dp.push(row);
-			}
-		}
-
-		//call the server API
-		Api.dpPost(self.postValues.dp).then(
-			function(response){
-				//if successfull, hide the dialog and prompt a message
-				$rootScope.showToast("Match succesfully registered!");
-				$mdDialog.hide();
-				$location.path("matches/"+self.selectedValues.matchId);
-			}, 
-			function errorCallback(response){
-			}
-		);
-	}
-
-
-
-	this.postBasicTemplate = function(){
-		//prepare the "template" row to be inserted in the templates table
-		row={	
-				boardgame:self.selectedValues.boardgame.id,
-				hasExpansions: false
-			};
-		self.postValues.templates.push(row);
-		
-		//post template
-		Api.templatespost(self.postValues.templates).then(
-			function(response){
-				self.selectedValues.templates = [response.data[0]];
-				self.postScoringFields();
-			},
-			function errorCallback(response){
-				console.log(response)
-			}
-		);
-	}
-
-	this.postScoringFields = function(){
-		//prepare the "template" row to be inserted in the templates table
-		row={	
-				template:self.selectedValues.templates[0].pk,
-				word: 1,
-				bonus: 1
-			};
-		self.postValues.scoringFields.push(row);
-
-		//post scoring field
-		Api.scoringfieldspost(self.postValues.scoringFields).then(
-			function(response){
-				self.selectedValues.templates[0].scoringField_details = response.data;
-				console.log(self.selectedValues.templates)
-			},
-			function errorCallback(response){
-			}
-		);
-	}
-
 	this.setVisible = function(pk){
-		for(i=0;i<self.selectedValues.templates.length;i++){
-			if(self.selectedValues.templates[i].pk == pk)
-				self.selectedValues.templates[i].visible = !self.selectedValues.templates[i].visible;
-		}
+		self.templates[pk].visible = !self.templates[pk].visible;
 	}
 
 	this.containsObject = function(obj, list) {
@@ -304,17 +189,18 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		return false;
 	}
 
-	this.togglePlayer = function(act, user, id){
+	this.togglePlayer = function(act, user){
+		console.log(user)
+		console.log(self.users)
+		console.log(self.selectedValues.players)
+
 		if(act == "select"){
-			self.selectedValues.players.push(user);
-			for(i=0;i<self.users.length;i++){
-				if(self.users[i].id == id)
-					self.users.splice(i, 1);
-			}
+			self.selectedValues.players[""+user.uid] = user;
+			delete self.users[""+user.uid];
 		}
 		else{
-			self.selectedValues.players.splice(id, 1);
-			self.users.push(user);
+			delete self.selectedValues.players[""+user.uid];
+			self.users[""+user.uid] = user;;
 		}
 	}
 
@@ -346,23 +232,23 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.updateVote = function(template, val){
-		if(template.user_vote != 0){
-			Api.templatevotes(template.pk, self.user_pk).then(function(response){
-					Api.templatevotesdelete(response.data[0].pk).then(function(response){
-						}, function errorCallback(response){
-							console.log(response);
-					});
-				}, function errorCallback(response){
-					console.log(response);
-			});
-		}
-
-		row = [{vote : val, template: template.pk, user: self.user_pk}];
-		Api.templatevotespost(row).then(function(response){
-				template.votes = parseInt(template.votes)-parseInt(template.user_vote)+parseInt(response.data[0].vote);
-				template.user_vote = response.data[0].vote;
-			}, function errorCallback(response){
-				console.log(response.data);
-		});
+		//if(template.user_vote != 0){
+		//	Api.templatevotes(template.pk, self.user_pk).then(function(response){
+		//			Api.templatevotesdelete(response.data[0].pk).then(function(response){
+		//				}, function errorCallback(response){
+		//					console.log(response);
+		//			});
+		//		}, function errorCallback(response){
+		//			console.log(response);
+		//	});
+		//}
+		//
+		//row = [{vote : val, template: template.pk, user: self.user_pk}];
+		//Api.templatevotespost(row).then(function(response){
+		//		template.votes = parseInt(template.votes)-parseInt(template.user_vote)+parseInt(response.data[0].vote);
+		//		template.user_vote = response.data[0].vote;
+		//	}, function errorCallback(response){
+		//		console.log(response.data);
+		//});
 	}
 });

@@ -10,16 +10,16 @@
 				<md-button 
 					aria-label="Edit match info" 
 					class="md-fab absolute">
-					<i ng-if="bCtrl.isFavourite" 
+					<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
 					class="icon-heart"
-					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame)">
 						<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
 					</i>
 
 					<i 
-					ng-if="!bCtrl.isFavourite" 
+					ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
 					class="icon-heart-o "
-					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame.favourite, bCtrl.boardgame.pk, user_pk)">
+					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame)">
 						<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
 					</i>
 				</md-button>

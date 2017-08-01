@@ -3,8 +3,8 @@
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
 				<div class="circleBase imgUser hideScrollbar shadowed-box" >
-					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user_pk] || getRandomColor(user_pk)" alt="profile image">
-						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{pCtrl.user.username.substring(0,1).toUpperCase()}}</div>
+					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
+						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 					</div>
 				</div>
 				<md-button 
@@ -12,7 +12,7 @@
 					class="md-fab md-mini absolute"
 					ng-click = "uploadFile()">
 					<i class="icon-pencil">
-					</i>
+					</i> 
 					<md-tooltip md-direction="bottom" md-delay="200">Edit profile picture</md-tooltip>
 				</md-button>
 			</div>
@@ -47,7 +47,7 @@
 									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{pCtrl.user.match_played}}</h2>
+									<h2>{{user.profile_details.match_played}}</h2>
 								</div>
 							</div> 
 						</div>
@@ -62,7 +62,7 @@
 									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{pCtrl.user.match_won}}</h2>
+									<h2>{{user.profile_details.match_won}}</h2>
 								</div>
 								
 							</div>
@@ -125,16 +125,16 @@
 			<md-tab label="Favourites" >
 				<md-content class="pad5l pad10t">
 					<div layout="row" layout-wrap>
-						<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="f in pCtrl.favourites"
-						ng-click="goTo('boardgames/'+f.pk)">
+						<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="(key,value) in user.profile_details.favourites"
+						ng-click="goTo('boardgames/'+key)">
 							<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
-								<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{f.img}}">
+								<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{value.image}}">
 									<div class="circleBase" style="font-size:50px;"></div>
 								</div>
 							</div>
-							<md-tooltip md-direction="bottom" md-delay="200">{{f.title}}</md-tooltip>
+							<md-tooltip md-direction="bottom" md-delay="200">{{value.name}}</md-tooltip>
 						</div>
-						<div layout="column" layout-align="center center" ng-if="pCtrl.favourites.length == 0" flex="100">
+						<div layout="column" layout-align="center center" ng-if="user.profile_details.favourites.length == 0" flex="100">
 								<div layout="row" class="size-72 mrg20b">:(</div>
 								<div layout="row" class="mrg20b"><h1>You don't have any favourite game</h1></div>
 								<div layout="row" class="blue-grey clickable decoNone" ng-click="goTo('boardgames/')"><h2><i class="icon-plus-1 mrg10r"></i>Browse the list and add one of them</h2></div>
@@ -204,9 +204,6 @@
 										Personal data
 									</h2>
 								</div>
-								<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.infoChanged" >
-									<md-button class="md-primary" ng-click="pCtrl.saveInfo()">Save</md-button>
-								</div>
 							</div>
 							<div layout="row">
 								<div layout="column" flex="100" class="pad10l">
@@ -214,7 +211,7 @@
 										<div layout="column" flex="90">
 											<md-input-container>
 												<label>First name</label>
-												<input ng-model="pCtrl.user.first_name" ng-change="pCtrl.setInfoChanged()" >
+												<input ng-model="user.profile_details.first_name">
 											</md-input-container>
 										</div>
 									</div>
@@ -222,7 +219,7 @@
 										<div layout="column" flex="90">
 											<md-input-container>
 												<label>Last name</label>
-												<input ng-model="pCtrl.user.last_name" ng-change="pCtrl.setInfoChanged()">
+												<input ng-model="user.profile_details.last_name">
 											</md-input-container>
 										</div>
 									</div>
@@ -231,7 +228,7 @@
 										<div layout="column" flex="90">
 											<md-input-container>
 												<label>Email</label>
-												<input ng-model="pCtrl.user.email" ng-change="pCtrl.setInfoChanged()">
+												<input ng-model="user.email">
 											</md-input-container>
 										</div>
 									</div>
@@ -255,9 +252,6 @@
 											Settings
 										</h2>
 									</div>
-									<div layout="column" flex="20" layout-align="center center" ng-show="pCtrl.settingsChanged" >
-										<md-button class="md-primary" ng-click="pCtrl.saveSettings()">Save</md-button>
-									</div>
 								</div>
 								<div layout="row"  class="pad20l">
 									<div layout="column" class="mrg10l">
@@ -268,7 +262,7 @@
 												</div>
 												<div layout="row"  class="mrg20b">
 													<div layout = "column" flex="100">
-															<md-radio-group ng-model="pCtrl.user.profile_details.visibility_group" ng-change="pCtrl.setSettingsChanged()">
+															<md-radio-group ng-model="user.profile_details.visibility_group">
 																<md-radio-button value="0">All</md-radio-button>
 																<md-radio-button value="1">Friends</md-radio-button>
 																<md-radio-button value="2">None</md-radio-button>
@@ -280,18 +274,18 @@
 										</div>
 										<div layout="row">
 											<div>
-												<md-checkbox ng-model="pCtrl.user.profile_details.fav_setting" aria-label="Toggle favourite visibility to viewers" ng-change="pCtrl.setSettingsChanged()">
+												<md-checkbox ng-model="user.profile_details.fav_setting" aria-label="Toggle favourite visibility to viewers">
 													Let viewers see your favourites
 												</md-checkbox>
 											</div>
 										</div>
 										<div layout="row">
 											<div>
-												<md-checkbox ng-model="pCtrl.user.profile_details.rec_setting" aria-label="Toggle recents visibility to viewers" ng-change="pCtrl.setSettingsChanged()">
+												<md-checkbox ng-model="user.profile_details.rec_setting" aria-label="Toggle recents visibility to viewers">
 													Let viewers see your recent matches
 												</md-checkbox>
 											</div>
-										</div>	
+										</div>
 									</div>
 								</div>
 							</div>

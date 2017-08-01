@@ -16,21 +16,23 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 
 	//api call to get the single match's details
 	this.callApi = function(){
-		Api.match(controller.params.id).then(
-			function(response){
-				if(response.data.length > 0){
-					controller.match=response.data[0];
-					controller.setup();
-				}
-				else{
-					$rootScope.showToast("You are not allowed to see this match!");
-					$location.path("matches/");	
-				}
-			}, function errorCallback(response){
-				$rootScope.showToast("You are not allowed to see this match!");
-				//$location.path("matches/");			
-			}
-		);
+		dbMatch = Api.match(controller.params.id);
+		dbMatch.$bindTo($scope, "match");
+		//.then(
+		//	function(response){
+		//		if(response.data.length > 0){
+		//			controller.match=response.data[0];
+		//			controller.setup();
+		//		}
+		//		else{
+		//			$rootScope.showToast("You are not allowed to see this match!");
+		//			$location.path("matches/");	
+		//		}
+		//	}, function errorCallback(response){
+		//		$rootScope.showToast("You are not allowed to see this match!");
+		//		//$location.path("matches/");			
+		//	}
+		//);
 	}
 	this.callApi();
 
@@ -50,13 +52,11 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		return sum;
 	}
 
-	this.setVisible = function(pk){
-		controller.allVisible = false;
-		for(i = 0; i<controller.match.plays_set.length; i++){
-			if(controller.match.plays_set[i].pk == pk){
-				controller.match.plays_set[i].visible = !controller.match.plays_set[i].visible;
-			}
-		}
+	this.setVisible = function(i){
+		if($scope.match.plays[i].visible)
+			$scope.match.plays[i].visible = !$scope.match.plays[i].visible;
+		else
+			$scope.match.plays[i].visible = true;
 	}
 
 	this.setLeaderboardVisible = function(user){
@@ -116,31 +116,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		controller.detectStatus();
 	}
 
-	this.savePoints = function(){
-		for(i = 0; i<controller.match.plays_set.length; i++){
-			play_pk = controller.match.plays_set[i].pk;
-			for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
-				old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
-				new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
-				if(old_points != new_points){
-					scoringField_pk = controller.match.plays_set[i].detailedPoints[j].scoringField;
-					detailedPoints = controller.match.plays_set[i].detailedPoints[j].detailed_points;
-					row = {
-						play:play_pk,
-						scoringField:scoringField_pk,
-						detailed_points:detailedPoints
-					};
-					Api.dpPut(row, controller.match.plays_set[i].detailedPoints[j].pk).then(function(data){
-					}, 
-					function errorCallback(response) {
-						return;
-					});
-				}
-			}
-		}
-		controller.managePlays();
-	}
-
 	this.deleteMatchPopup = function(ev){
 		var confirm = $mdDialog.confirm()
           .title('Would you like to delete this match?')
@@ -161,67 +136,67 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	    });
 	}
 
-	this.setup = function(){
-		controller.match.old_location = controller.match.location;
-		controller.match.old_duration = controller.match.duration;
-		controller.match.time = new Date(controller.match.time);
-		controller.match.old_time = new Date(controller.match.time);
-		controller.match.old_name = controller.match.name;
-		if(controller.match.location == ""){
-			controller.match.location = "No location";
-		}
-		controller.match.scoringFieldObj = {}
-		for(sf in controller.match.scoring_fields_details){
-			controller.match.scoringFieldObj[controller.match.scoring_fields_details[sf].pk] = controller.match.scoring_fields_details[sf];
-		}
-		for(play in controller.match.plays_set){
-			controller.match.plays_set[play].detailedPointsObj = {}
-			for(dp in controller.match.plays_set[play].detailedPoints){
-				controller.match.plays_set[play].detailedPointsObj[controller.match.plays_set[play].detailedPoints[dp].scoringField] = controller.match.plays_set[play].detailedPoints[dp];
-			}
-		}
-		controller.managePlays();
-		controller.detectStatus();
-		controller.loadedLeaderboard = true;
-		startTime();
-	}
+	//this.setup = function(){
+	//	controller.match.old_location = controller.match.location;
+	//	controller.match.old_duration = controller.match.duration;
+	//	controller.match.time = new Date(controller.match.time);
+	//	controller.match.old_time = new Date(controller.match.time);
+	//	controller.match.old_name = controller.match.name;
+	//	if(controller.match.location == ""){
+	//		controller.match.location = "No location";
+	//	}
+	//	controller.match.scoringFieldObj = {}
+	//	for(sf in controller.match.scoring_fields_details){
+	//		controller.match.scoringFieldObj[controller.match.scoring_fields_details[sf].pk] = controller.match.scoring_fields_details[sf];
+	//	}
+	//	for(play in controller.match.plays_set){
+	//		controller.match.plays_set[play].detailedPointsObj = {}
+	//		for(dp in controller.match.plays_set[play].detailedPoints){
+	//			controller.match.plays_set[play].detailedPointsObj[controller.match.plays_set[play].detailedPoints[dp].scoringField] = controller.match.plays_set[play].detailedPoints[dp];
+	//		}
+	//	}
+	//	controller.managePlays();
+	//	controller.detectStatus();
+	//	controller.loadedLeaderboard = true;
+	//	startTime();
+	//}
 
-	this.managePlays = function(){
-		controller.match.totalTurns = 0;
-		controller.match.leaderboard = {};
-		for(i = 0; i< controller.match.plays_set.length;i++){
-			play = controller.match.plays_set[i];
-			if(!(play.user in controller.match.leaderboard)){
-				controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
-			}
-
-			if(play.turn > controller.match.totalTurns){
-				controller.match.totalTurns = play.turn;
-			}
-
-
-			for(j = 0; j<play.detailedPoints.length; j++){
-				if(!(play.detailedPoints[j].scoringField in controller.match.leaderboard[play.user]["detailedPoints"])){
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField] = {}
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] = play.detailedPoints[j].detailed_points;
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["bonus"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].bonus;
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["word_value"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].word_value;
-				}
-				else{
-					controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] += play.detailedPoints[j].detailed_points;
-				}
-				play.detailedPoints[j].old_detailed_points = play.detailedPoints[j].detailed_points;
-			}
-
-			controller.match.leaderboardArray= []
-			for(user in controller.match.leaderboard) {
-			    controller.match.leaderboardArray.push(controller.match.leaderboard[user]);
-			}
-
-			play.points = controller.sumPointsPerPlay(play.detailedPoints);
-			controller.match.leaderboard[play.user].points = controller.sumPointsPerUser(controller.match.leaderboard[play.user].detailedPoints);
-		}
-	}
+	//this.managePlays = function(){
+	//	controller.match.totalTurns = 0;
+	//	controller.match.leaderboard = {};
+	//	for(i = 0; i< controller.match.plays_set.length;i++){
+	//		play = controller.match.plays_set[i];
+	//		if(!(play.user in controller.match.leaderboard)){
+	//			controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
+	//		}
+//
+	//		if(play.turn > controller.match.totalTurns){
+	//			controller.match.totalTurns = play.turn;
+	//		}
+//
+//
+	//		for(j = 0; j<play.detailedPoints.length; j++){
+	//			if(!(play.detailedPoints[j].scoringField in controller.match.leaderboard[play.user]["detailedPoints"])){
+	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField] = {}
+	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] = play.detailedPoints[j].detailed_points;
+	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["bonus"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].bonus;
+	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["word_value"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].word_value;
+	//			}
+	//			else{
+	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] += play.detailedPoints[j].detailed_points;
+	//			}
+	//			play.detailedPoints[j].old_detailed_points = play.detailedPoints[j].detailed_points;
+	//		}
+//
+	//		controller.match.leaderboardArray= []
+	//		for(user in controller.match.leaderboard) {
+	//		    controller.match.leaderboardArray.push(controller.match.leaderboard[user]);
+	//		}
+//
+	//		play.points = controller.sumPointsPerPlay(play.detailedPoints);
+	//		controller.match.leaderboard[play.user].points = controller.sumPointsPerUser(controller.match.leaderboard[play.user].detailedPoints);
+	//	}
+	//}
 
 	this.detectStatus = function(){
 		var now = new Date();
