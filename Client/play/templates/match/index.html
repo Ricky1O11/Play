@@ -6,7 +6,7 @@
 					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{match.boardgame.image}}">
 						<div class="circleBase" style="font-size:50px;"></div>
 					</div>
-				</div> 
+				</div>  
 				<md-fab-speed-dial	
 						md-open = "mCtrl.fabOpen"
 						md-direction="left"
@@ -183,7 +183,7 @@
 	</div>
 	<div layout="row" flex="grow">
 		<div layout="column" flex="40" class="pad20r">
-			<md-tabs  ng-if="mCtrl.loadedLeaderboard"
+			<md-tabs
 			md-stretch-tabs="always" flex-gt-xs flex-xs>
 				<md-tab label="Leaderboard" flex>
 					<md-content class="pad5l pad10t" flex>
@@ -191,37 +191,23 @@
 							<md-list flex>
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="details in mCtrl.match.leaderboardArray | orderBy:'-points' "
+								ng-repeat="player in match.players | orderObjectBy:'-points' "
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column">
-										<md-button 	ng-click="goTo('users/'+details.pk)" class="md-fab md-mini" ng-style="randomColors[details.pk] || getRandomColor(details.pk)" >
-											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{details.username.substring(0,1).toUpperCase()}}</div>
+										<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 										</md-button>
 									</div>
 									<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
 									<div layout="column" flex="95">
 										<div layout="row">
-											<h3>{{details.username}}</h3>
+											<h3>{{player.username}}</h3>
 										</div>
 									</div>
 									<div layout="column" flex="5" layout-align="center end">
-										<strong>{{details.points}}</strong>
+										<strong>{{player.points}}</strong>
 									</div>
 									
-								</md-list-item>
-								<md-list-item layout="row" ng-repeat-end ng-repeat-end ng-repeat="sf in mCtrl.match.scoring_fields_details" ng-if="false"
-								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-										<div layout="column" flex="90">
-											{{sf.word_value}}
-										</div>
-										<div layout="column" flex="10">
-											<div layout="row">
-												<div layout="column" flex="100" layout-align="center end">
-													{{details.detailedPoints[sf.pk].detailed_points}}
-													<md-tooltip md-direction="bottom" md-delay="200">value:  {{sf.bonus}} points </md-tooltip>
-												</div>
-											</div>
-										</div>
 								</md-list-item>
 							</md-list>
 						</div>
@@ -240,7 +226,7 @@
 								<!-- | filter:{round:round} | orderBy:'-points' -->
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="play in match.plays | orderObjectBy:'-points'" ng-if="play.round == round"
+								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'-points'" ng-if="play.round == round"
 								ng-click="mCtrl.setVisible(play.key)">
 									<div layout="column">
 										<md-button 	ng-click="goTo('users/'+friend.pk)" class="md-fab md-mini" ng-style="randomColors[play.user] || getRandomColor(play.user)" >
@@ -263,16 +249,16 @@
 											<div layout="row">
 												<div layout="column" flex="100" layout-align="center center">
 													{{value.name[lang]}}
+													<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
 												</div>
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
 															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
-															<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
 													</md-input-container>
 												</div>
 											</div>

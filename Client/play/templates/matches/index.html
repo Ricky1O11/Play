@@ -29,7 +29,7 @@
 						</md-menu-content>
 					</md-menu>
 				</div>
-			</div>
+			</div> 
 			<div layout="row" class="height600">
 				<div layout="column" flex="100">
 					<md-tabs  md-selected="currentTab"
@@ -104,17 +104,18 @@
 								<div layout="row" class="overflowScroll">
 									<div layout="column" flex="100">
 										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
+										<!-- | filter:{title:query} | orderBy:msCtrl.getOrderingField():true-->
 											<md-list-item
 												class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-												ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField():true"
-												ng-click="msCtrl.setVisible(boardgame.pk)">
-												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
+												ng-repeat-start="(boardgame, details) in user.matches"
+												ng-click="msCtrl.setVisible(boardgame)">
+												<img ng-src="{{details.thumbnail}}" class="md-avatar" alt="match {{details.name}}" />
 												<div layout="column">
 													<div layout="row">
-														<h3> {{boardgame.title}}</h3>
+														<h3> {{details.name}}</h3>
 													</div>
 													<div layout="row">
-														<i>{{boardgame.matches.length}} matches</i>
+														<i>{{details.matches | keylength}} matches</i>
 													</div>
 												</div>
 												<i 
@@ -130,17 +131,19 @@
 												md-colors="{color: 'myTheme-accent'}"
 												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
 											</md-list-item>
+											<!-- | filter:{title:query} | orderBy:'-time'"
+											ng-href="#/matches/{{match.pk}}-->
 											<md-list-item 
-											ng-if="boardgame.visible"
+											ng-if="details.visible"
 											class=" md-3-line mrg50l whiteBg mrg5b mrg5r shadowed-box" ng-cloak						
-											ng-repeat-end ng-repeat="match in boardgame.matches | filter:{title:query} | orderBy:'-time'"
-											ng-href="#/matches/{{match.pk}}"
+											ng-repeat-end ng-repeat="(key,match) in details.matches"
+											ng-href="#/matches/{{key}}"
 											>
 
-												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
+												<img ng-src="{{details.thumbnail}}" class="md-avatar" alt="match {{details.title}}" />
 												<div layout="column">
 													<div layout="row">
-														<h3 ng-if="match.name.length == 0"> Match {{match.pk}}</h3>
+														<h3 ng-if="match.name.length == 0"> Match {{key}}</h3>
 														<h3 ng-if="match.name.length > 0">{{match.name}}</h3>
 													</div>
 													<div layout="row" class="size-14">

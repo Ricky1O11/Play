@@ -2,7 +2,8 @@ angular.module("play").controller('sidebarController', function(Auth, $rootScope
 
 	controllerSidebar=this;
 	dbuser = Api.user($rootScope.user.uid);
-	dbuser.$bindTo($rootScope, "user.profile_details");
+	dbuser[0].$bindTo($rootScope, "user.profile_details");
+	dbuser[1].$bindTo($rootScope, "user.matches");
 
 	this.checkImg = function(){
 		if($scope.img=="") 

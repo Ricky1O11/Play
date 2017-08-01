@@ -1,21 +1,20 @@
 //controller for the list of boardgames
-angular.module("play").controller('matchesController', function(Api, $scope) {
+angular.module("play").controller('matchesController', function(Api, $rootScope, $scope) {
 	this.matches=[]; //container of the list of boardgames
 	this.orderingField="-title"; //ordering field, selectable by the user
-	this.loaded=false;
+	this.loaded=true;
 	controller=this;
-
 	//api call to the list of boardgames
-	Api.matches($scope.user_pk).success(function(data){
-		controller.games=data;
-		for(i = 0; i< controller.games.length; i++){
-			controller.games[i].visible = false;
-			controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
-			controller.games[i].isFavourite = (controller.games[i].favourite > 0);
-			controller.games[i].listId = i;
-		}
-		controller.loaded = true;
-	});
+	//Api.matches($rootScope.user.uid).$loaded().then(function(data){
+	//	controller.games=data;
+	//	for(i = 0; i< controller.games.length; i++){
+	//		controller.games[i].visible = false;
+	//		controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
+	//		controller.games[i].isFavourite = (controller.games[i].favourite > 0);
+	//		controller.games[i].listId = i;
+	//	}
+	//	controller.loaded = true;
+	//});
 	
 	//create ordered list of numbers
 	this.range = function(a, b, step) {
@@ -44,12 +43,13 @@ angular.module("play").controller('matchesController', function(Api, $scope) {
 		return controller.orderingField;
 	}
 
-	this.setVisible = function(pk){
-		for(i = 0; i<controller.games.length; i++){
-			if(controller.games[i].pk == pk){
-				controller.games[i].visible = !controller.games[i].visible;
-			}
-		}
+	this.setVisible = function(boardgame_id){
+		if("visible" in $rootScope.user.matches[boardgame_id])
+			$rootScope.user.matches[boardgame_id]["visible"] = !$rootScope.user.matches[boardgame_id]["visible"];
+		else
+			$rootScope.user.matches[boardgame_id]["visible"] = true;
+
+
 	}
 
 	this.toggleFavourites = function(favourite, boardgame, user, id){

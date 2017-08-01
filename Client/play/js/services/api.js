@@ -31,7 +31,10 @@
 		user:		function(user_id){
 				var ref = firebase.database().ref().child("profiles").child(user_id);
 				var syncObject = $firebaseObject(ref);
-				return syncObject;
+
+				var ref = firebase.database().ref().child("user_played_matches").child(user_id);
+				var syncObject2 = $firebaseObject(ref);
+				return [syncObject, syncObject2];
 					},
 
 		userput:		function(user_id, user_data){
@@ -98,10 +101,10 @@
 					return syncObject;
 					},	
 		matches:	function(user_id){
-						ms = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?user_id='+user_id+'&include=matches'});
-						return ms;
+					var ref = firebase.database().ref().child("user_played_matches").child(""+user_id);
+					var syncObject = $firebaseObject(ref);
 					},	
-		matchpost:	function(values, values2){
+		matchpost:	function(values){
 					var ref = firebase.database().ref().child("matches").push(values);
 					var syncObject = $firebaseObject(ref);
 
@@ -110,6 +113,24 @@
 					.child(""+values.boardgame.bggId)
 					.child(""+syncObject.$id)
 					.set(values);
+
+					for(player in values.players){
+						var ref = firebase.database().ref();
+						ref.child("user_played_matches")
+						.child(""+values.players[player].uid)
+						.child(""+values.boardgame.bggId)
+						.child("matches")
+						.child(""+syncObject.$id)
+						.set(values);
+
+						ref.child("user_played_matches")
+						.child(""+values.players[player].uid)
+						.child(""+values.boardgame.bggId).
+						update({
+							"name":values.boardgame.name,
+							"thumbnail":values.boardgame.thumbnail,
+						})
+					}
 
 					return syncObject;
 					},
