@@ -1,5 +1,5 @@
 //controller for the single match page
-angular.module("play").controller('matchController', function(Api, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $scope) {
+angular.module("play").controller('matchController', function(Api, Utils, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $scope) {
 	this.fabOpen = false;
 	this.editMode = false;
 	this.anim = "md-scale";
@@ -7,10 +7,11 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 
 	//read the requested match'id
 	this.params=$routeParams;
-	this.match={};
-	this.allVisible=false;
+
+	this.match={}; //to eliminate
+
 	this.timer;
-	this.loadedLeaderboard = false;
+
 	this.plays = {};
 	controller=this;
 
@@ -18,6 +19,12 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 
 	dbMatch.$loaded().then(
 		function(response){
+			controller.loaded = true;
+			if($rootScope.user.uid in response.players){
+				controller.allowed = true;
+			}
+			console.log(response.time)
+			controller.time = new Date(response.time);
 			controller.plays = response.plays;
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(response.players);
 			console.log(controller.total_rounds)
@@ -32,6 +39,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	this.updateScore = function(play_id, detailed_point_id, val){
 		prev = $scope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 		update = val-prev;
+		
 		$scope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 		controller.plays[play_id]["points"] += update;
 		$scope.match.plays[play_id]["points"] += update;
@@ -51,6 +59,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	}
 
 	this.endEditMode = function(wantToSave){
+		$scope.match.time = controller.time.getTime();
 		controller.editMode = !controller.editMode;
 	}
 	
@@ -201,7 +210,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	}
 
 
-	$window.onbeforeunload =  controller.updateDuration;
+	//$window.onbeforeunload =  controller.updateDuration;
 
 	$scope.$on('$destroy', function(){
 	    //controller.updateDuration();

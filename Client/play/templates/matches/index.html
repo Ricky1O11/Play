@@ -15,7 +15,7 @@
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button ng-click="msCtrl.setOrderingField('-title')">
+								<md-button ng-click="msCtrl.setOrderingField('-name')">
 									<i class="icon-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
 									Alphabetical order
 								</md-button>
@@ -34,7 +34,9 @@
 				<div layout="column" flex="100">
 					<md-tabs  md-selected="currentTab"
 					md-stretch-tabs="always" class="height100perc" >
+						
 						<md-tab label="Programmed matches">
+						<!--
 							<md-content>
 								<div layout="row" class="overflowScroll">
 									<div layout="column" flex="100">
@@ -57,7 +59,7 @@
 												aria-label="remove favourite"
 												class="icon-heart md-secondary"  
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+												ng-click="msCtrl.toggleFavourites(boardgame)">
 													<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
 												</i>
 												<i 
@@ -65,7 +67,7 @@
 												aria-label="add favourite"
 												class="icon-heart-o md-secondary" 
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)">
+												ng-click="msCtrl.toggleFavourites(boardgame)">
 													<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
 												</i>
 											</md-list-item>
@@ -96,7 +98,59 @@
 									</div>
 								</div>
 							</md-content>
+							-->
+							<md-content>
+								<div layout="row" class="overflowScroll">
+									<div layout="column" flex="100">
+										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
+											<md-list-item
+												class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
+												ng-repeat-start="boardgame in (msCtrl.games | filter:{name:query} | filter: msCtrl.timeGreaterThanGame) | orderBy:msCtrl.getOrderingField():true"
+												ng-click="msCtrl.setVisible(boardgame.$id)" ng-if="boardgame.hasOwnProperty('matches')">
+												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
+												<div layout="column">
+													<div layout="row">
+														<h3> {{boardgame.name}}</h3>
+													</div>
+												</div>
+												<i 
+												ng-if="user.profile_details.favourites[boardgame.$id]"
+												aria-label="remove favourite"
+												class="icon-heart md-secondary" 
+												md-colors="{color: 'myTheme-accent'}"
+												ng-click="msCtrl.toggleFavourite(boardgame)"></i>
+												<i 
+												ng-if="!user.profile_details.favourites[boardgame.$id]" 
+												aria-label="add favourite"
+												class="icon-heart-o md-secondary"  
+												md-colors="{color: 'myTheme-accent'}"
+												ng-click="msCtrl.toggleFavourite(boardgame)"></i>
+											</md-list-item>
+											
+											<md-list-item 
+											ng-if="boardgame.visible"
+											class=" md-3-line mrg50l whiteBg mrg5b mrg5r shadowed-box" ng-cloak						
+											ng-repeat-end ng-repeat="match in boardgame.matches | orderObjectBy:'-time' | filter: msCtrl.timeGreaterThanMatch"
+											ng-href="#/matches/{{match.key}}"
+											>
+
+												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
+												<div layout="column">
+													<div layout="row">
+														<h3 ng-if="match.name.length == 0"> Match {{key}}</h3>
+														<h3 ng-if="match.name.length > 0">{{match.name}}</h3>
+													</div>
+													<div layout="row" class="size-14">
+														<i>{{match.time | date:"EEEE, MMMM d, y, H:mm in"}} {{match.location}}</i>
+													</div>
+												</div>
+											</md-list-item>
+										</md-list>
+									</div>
+								</div>
+							</md-content>
 						</md-tab>
+						
 						<md-tab label="all matches">
 							<md-content>
 								<div layout="row" class="overflowScroll">
@@ -104,9 +158,9 @@
 										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
 											<md-list-item
 												class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-												ng-repeat-start="boardgame in msCtrl.games | filter:{title:query} | orderBy:msCtrl.getOrderingField():true"
-												ng-click="msCtrl.setVisible(boardgame.$id)">
-												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
+												ng-repeat-start="boardgame in msCtrl.games | filter:{name:query} | orderBy:msCtrl.getOrderingField():true"
+												ng-click="msCtrl.setVisible(boardgame.$id)" ng-if="boardgame.hasOwnProperty('matches')">
+												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 												<div layout="column">
 													<div layout="row">
 														<h3> {{boardgame.name}}</h3>
@@ -116,17 +170,17 @@
 													</div>
 												</div>
 												<i 
-												ng-if="boardgame.isFavourite"
+												ng-if="user.profile_details.favourites[boardgame.$id]"
 												aria-label="remove favourite"
 												class="icon-heart md-secondary" 
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+												ng-click="msCtrl.toggleFavourite(boardgame)"></i>
 												<i 
-												ng-if="!boardgame.isFavourite" 
+												ng-if="!user.profile_details.favourites[boardgame.$id]" 
 												aria-label="add favourite"
 												class="icon-heart-o md-secondary"  
 												md-colors="{color: 'myTheme-accent'}"
-												ng-click="msCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId)"></i>
+												ng-click="msCtrl.toggleFavourite(boardgame)"></i>
 											</md-list-item>
 											
 											<md-list-item 
@@ -136,7 +190,7 @@
 											ng-href="#/matches/{{match.key}}"
 											>
 
-												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.title}}" />
+												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 												<div layout="column">
 													<div layout="row">
 														<h3 ng-if="match.name.length == 0"> Match {{key}}</h3>

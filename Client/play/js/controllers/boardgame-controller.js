@@ -1,37 +1,17 @@
 //controller for the single boardgame page
-angular.module("play").controller('boardgameController', function(Api, $firebaseObject, $routeParams, $scope, $rootScope, $mdDialog) {
+angular.module("play").controller('boardgameController', function(Api, Utils, $firebaseObject, $routeParams, $scope, $rootScope, $mdDialog,currentAuth) {
 	//read the requested boardgame'id
 	this.params=$routeParams;
 	this.boardgame={};
 	this.isFavourite = false; 
+
+	this.toggleFavourite = Utils.toggleFavourite
 	
 	controller=this;
 
 	//api call to get the single boardgame's details
 	controller.boardgame = Api.boardgame(controller.params.id);
-
-	this.toggleFavourites = function(boardgame){
-		if("favourites" in $rootScope.user["profile_details"]){
-			if(boardgame.bggId in $rootScope.user["profile_details"]["favourites"]){
-				delete $rootScope.user["profile_details"]["favourites"][boardgame.bggId];
-			}
-			else{
-				$rootScope.user["profile_details"]["favourites"][boardgame.bggId] = {
-					"name": boardgame.name,
-					"image": boardgame.image,
-					"bggId": boardgame.bggId
-				}
-			}
-		}
-		else{
-			$rootScope.user["profile_details"]["favourites"] = {};
-			$rootScope.user["profile_details"]["favourites"][boardgame.bggId] = {
-					"name": boardgame.name,
-					"image": boardgame.image,
-					"bggId": boardgame.bggId
-				}
-		}
-    }
+	controller.matches = Api.matches(currentAuth.uid, controller.params.id)
 
 	//create ordered list of numbers
 	this.range = function(a, b, step) {

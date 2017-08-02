@@ -12,14 +12,14 @@
 					class="md-fab absolute">
 					<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
 					class="icon-heart"
-					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame)">
+					ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
 						<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
 					</i>
 
 					<i 
 					ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
 					class="icon-heart-o "
-					ng-click="bCtrl.toggleFavourites(bCtrl.boardgame)">
+					ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
 						<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
 					</i>
 				</md-button>
@@ -158,14 +158,14 @@
 	<div layout="row" flex="none">
 		<div layout="column" flex="100">
 			<div layout="row" flex-sm="none" class="height60">
-				<h3 class="blue-grey">Match played ({{bCtrl.boardgame.matches.length}})</h3>
+				<h3 class="blue-grey">Match played ({{bCtrl.matches.length}})</h3>
 			</div>	
 			<div layout="row">
-				<md-list flex ng-if="bCtrl.boardgame.matches.length > 0">
+				<md-list flex ng-if="bCtrl.matches.length > 0">
 					<md-list-item
 					class=" md-2-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
-					ng-href="#/matches/{{match.pk}}"
-					ng-repeat="match in bCtrl.boardgame.matches | filter:{location:query}" ng-click="null">
+					ng-href="#/matches/{{match.$id}}"
+					ng-repeat="match in bCtrl.matches | filter:{location:query}" ng-click="null">
 						<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.name}}" />
 						<div layout="column">
 							<div layout="row">
@@ -179,9 +179,8 @@
 						
 					</md-list-item>
 				</md-list>
-				<div layout="column" layout-align="center center" ng-if="bCtrl.boardgame.matches.length == 0" flex="100">
+				<div layout="column" layout-align="center center" ng-if="bCtrl.matches.length == 0" flex="100">
 					<div layout="row" class="size-72 mrg20b">:(</div>
-					{{bCtrl.boardgame}}
 					<div layout="row" class="mrg20b"><h1 class="center-align">Do you like this game? Play it!</h1></div>
 					<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches', {display:bCtrl.boardgame.name, value:bCtrl.boardgame.name.toLowerCase(), id:bCtrl.boardgame.pk, thumbnail:bCtrl.boardgame.thumbnail, expansions:bCtrl.boardgame.expansions})"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
 				</div>

@@ -23,10 +23,6 @@
 				obj.$save();
 				return "success"
 					},
-		login:		function(data){
-						tok = $http({method: 'POST', url: BASE_URL+'/auth/token/', data:data});
-						return tok;
-					},
 
 		user:		function(user_id){
 				var ref = firebase.database().ref().child("profiles").child(user_id);
@@ -97,12 +93,15 @@
 					var syncObject = $firebaseObject(ref);
 					return syncObject;
 					},	
-		matches:	function(user_id){
-				var ref = firebase.database().ref().child("user_played_matches").child(user_id);
+		matches:	function(user_id, boardgame_id){
+				if(boardgame_id)
+					var ref = firebase.database().ref().child("user_played_matches").child(user_id).child(boardgame_id).child("matches");
+				else
+					var ref = firebase.database().ref().child("user_played_matches").child(user_id);
 				var syncArray = $firebaseArray(ref);
 				return syncArray;
 					},	
-		matchpost:	function(values){
+		matchpost:	function(values, simpleObject){
 					var ref = firebase.database().ref().child("matches").push(values);
 					var syncObject = $firebaseObject(ref);
 
@@ -110,7 +109,7 @@
 					.child("boardgame_has_matches")
 					.child(""+values.boardgame.bggId)
 					.child(""+syncObject.$id)
-					.set(values);
+					.set(simpleObject);
 
 					for(player in values.players){
 						var ref = firebase.database().ref();
@@ -119,7 +118,7 @@
 						.child(""+values.boardgame.bggId)
 						.child("matches")
 						.child(""+syncObject.$id)
-						.set(values);
+						.set(simpleObject);
 
 						ref.child("user_played_matches")
 						.child(""+values.players[player].uid)
@@ -127,6 +126,8 @@
 						update({
 							"name":values.boardgame.name,
 							"thumbnail":values.boardgame.thumbnail,
+							"image":values.boardgame.image,
+							"bggId":values.boardgame.bggId,
 						})
 					}
 
@@ -135,10 +136,6 @@
 		expansionpost:	function(exp){
 						mp = $http({method: 'POST', url: BASE_URL+'/playedExp/', data:exp});
 						return mp;
-					},
-		matchput:	function(match,id){
-						mpu = $http({method: 'PUT', url: BASE_URL+'/matches/'+id+'/?include=boardgame', data:match});
-						return mpu;
 					},
 		matchdelete:function(bggId, players, match_id){
 						var ref = firebase.database().ref();

@@ -44,7 +44,11 @@ angular.module('play')
 	.when('/boardgames/:id', {
 		templateUrl: 'templates/boardgame/index.html',
 		controller: 'boardgameController',
-		controllerAs: 'bCtrl'
+		controllerAs: 'bCtrl',
+		resolve: {
+		      "currentAuth": ["Auth", function(Auth) {
+		        return Auth.$waitForSignIn();
+		      }]}
 	})
 	.when('/matches/:id', {
 		templateUrl: 'templates/match/index.html',
@@ -56,10 +60,7 @@ angular.module('play')
 		controller: 'matchesController',
 		controllerAs: 'msCtrl',
 		resolve: {
-		      // controller will not be loaded until $waitForSignIn resolves
-		      // Auth refers to our $firebaseAuth wrapper in the factory below
 		      "currentAuth": ["Auth", function(Auth) {
-		        // $waitForSignIn returns a promise so the resolve waits for it to complete
 		        return Auth.$waitForSignIn();
 		      }]}
 	})

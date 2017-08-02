@@ -10,7 +10,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.selectedValues.players={}; //list that holds the list of player playing the inserted match
 	self.selectedValues.name="";
 	self.selectedValues.location="No Location";
-	self.selectedValues.time="";
+	self.selectedValues.time= new Date();
+	self.selectedValues.duration=0;
 	self.selectedValues.winner="";
 	self.templates=[]; //list that holds the list of templates available in the db
 	self.selectedValues.expansions = []; //will contain the id of the selected expansions
@@ -18,7 +19,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	if(boardgame != -1){
 		self.selectedValues.boardgame = boardgame;
 	}
-	
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	self.expansions = [];
@@ -78,7 +78,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 							bggId: response[i].bggId,
 							thumbnail: response[i].thumbnail,
 							image: response[i].image,
-							is_expanded_by: response[i].is_expanded_by,
+							is_expanded_by: (response[i].is_expanded_by)? response[i].is_expanded_by : null,
 						};
 			}
 			return self.boardgames;
@@ -140,8 +140,14 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
-			self.selectedValues.time = $filter('date')(self.selectedValues.time, "dd/MM/yyyy");
-			Api.matchpost(self.selectedValues).$loaded().then(
+			self.selectedValues.time = self.selectedValues.time.getTime();
+			simpleObject = {};
+			angular.copy(self.selectedValues, simpleObject);
+			delete simpleObject["boardgame"]
+			console.log(self.selectedValues)
+			console.log(simpleObject)
+
+			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
 				function(response){
 					for(player in self.selectedValues.players){
 						play = {}

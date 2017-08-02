@@ -308,3 +308,6 @@
 .icon-scoreboard:before {
   content: "\7b";
 }
+.icon-angry:before {
+  content: "\7c";
+}

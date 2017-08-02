@@ -1,18 +1,18 @@
 //controller for the list of boardgames
-angular.module("play").controller('matchesController', function(Api, $rootScope, $scope,currentAuth) {
+angular.module("play").controller('matchesController', function(Api, Utils, $rootScope, $scope,currentAuth) {
 	this.matches=[]; //container of the list of boardgames
-	this.orderingField="-title"; //ordering field, selectable by the user
+	this.orderingField="-name"; //ordering field, selectable by the user
 	this.loaded=true;
+	this.toggleFavourite = Utils.toggleFavourite;
 	controller=this;
 	//api call to the list of boardgames
-	console.log(currentAuth);
 	Api.matches(currentAuth.uid).$loaded().then(function(data){
 		controller.games=data;
 		for(i = 0; i< controller.games.length; i++){
 			controller.games[i].visible = false;
-			//controller.games[i].lastMatchTime = controller.games[i].matches[controller.games[i].matches.length-1].time;
-			controller.games[i].isFavourite = (controller.games[i].$id in $rootScope.user.profile_details.favourites);
-			controller.games[i].listId = i;
+			controller.games[i].lastMatchTime = 0;
+			for(match in controller.games[i].matches)
+				controller.games[i].lastMatchTime = Math.max(controller.games[i].lastMatchTime, controller.games[i].matches[match].time);
 		}
 		controller.loaded = true;
 	});
@@ -52,31 +52,10 @@ angular.module("play").controller('matchesController', function(Api, $rootScope,
 		}
 	}
 
-	this.toggleFavourites = function(favourite, boardgame, user, id){
-        if(favourite > 0){
-          Api.favouritedelete(favourite).then(
-                              function(response){
-                              }, function errorCallback(response){
-                              }
-                            );
-          	controller.games[id].favourite = -1;
-        	controller.games[id].isFavourite = false;
-        }
-        else{
-            data = {'user': user, 'boardgame': boardgame};
-            Api.favouritepost(data).then(
-                              function(response){
-                                controller.games[id].favourite = response.data.pk;
-                              }
-            );
-        	controller.games[id].isFavourite = true;
-        }
-    }
-
     this.timeGreaterThanGame = function (game) {
-    	var now = new Date();
-    	for(i = 0; i< game.matches.length; i++){
-			if(now < new Date(game.matches[i].time)){
+    	var now = new Date().getTime();
+    	for(i in game.matches){
+			if(now < game.matches[i].time){
 				return true;
 			}
     	}
@@ -84,8 +63,8 @@ angular.module("play").controller('matchesController', function(Api, $rootScope,
 	};
 
 	this.timeGreaterThanMatch = function (match) {
-    	var now = new Date();
-		if(now < new Date(match.time)){
+    	var now = new Date().getTime();
+		if(now < match.time){
 			return true;
 		}
     	return false;
