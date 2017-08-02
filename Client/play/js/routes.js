@@ -4,7 +4,14 @@ angular.module('play')
 	.when('/', {
 		templateUrl: 'templates/profile/index.html',
 		controller: 'profileController',
-		controllerAs: 'pCtrl'
+		controllerAs: 'pCtrl',
+		resolve: {
+		      // controller will not be loaded until $waitForSignIn resolves
+		      // Auth refers to our $firebaseAuth wrapper in the factory below
+		      "currentAuth": ["Auth", function(Auth) {
+		        // $waitForSignIn returns a promise so the resolve waits for it to complete
+		        return Auth.$waitForSignIn();
+		      }]}
 		/*templateUrl: 'templates/home/index.html',
 		controller: 'homeController',
 		controllerAs: 'hCtrl'*/
@@ -47,7 +54,14 @@ angular.module('play')
 	.when('/matches', {
 		templateUrl: 'templates/matches/index.html',
 		controller: 'matchesController',
-		controllerAs: 'msCtrl'
+		controllerAs: 'msCtrl',
+		resolve: {
+		      // controller will not be loaded until $waitForSignIn resolves
+		      // Auth refers to our $firebaseAuth wrapper in the factory below
+		      "currentAuth": ["Auth", function(Auth) {
+		        // $waitForSignIn returns a promise so the resolve waits for it to complete
+		        return Auth.$waitForSignIn();
+		      }]}
 	})
 	.when('/users/:id', {
 		templateUrl: 'templates/user/index.html',

@@ -1,5 +1,5 @@
 //controller for the popup dialog used to insert a new match
-angular.module("play").controller('matchesDialogController', function($scope, Api, $rootScope, $mdDialog, $location, user_pk, boardgame) {
+angular.module("play").controller('matchesDialogController', function($scope, Api, $filter, $rootScope, $mdDialog, $location, user_pk, boardgame) {
 	// list of `state` value/display objects
 	self=this;
 	self.user_pk = user_pk;
@@ -9,9 +9,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
 	self.selectedValues.players={}; //list that holds the list of player playing the inserted match
 	self.selectedValues.name="";
-	self.selectedValues.location="";
+	self.selectedValues.location="No Location";
 	self.selectedValues.time="";
-	self.selectedValues.total_rounds=1;
 	self.selectedValues.winner="";
 	self.templates=[]; //list that holds the list of templates available in the db
 	self.selectedValues.expansions = []; //will contain the id of the selected expansions
@@ -46,9 +45,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	
 	//api call to the list of users
 	self.getUsers = function(){
-		console.log("ok")
 		if(angular.equals(self.users, {}) && angular.equals(self.selectedValues.players, {})){
-			console.log("ok1")
 			Api.users().$loaded().then(function(data){
 				for (i=0; i<data.length; i++){
 					simpleUser = {}
@@ -56,7 +53,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 					simpleUser["image"] = data[i]["image"];
 					simpleUser["points"] = 0;
 					simpleUser.uid = data[i].$id;
-					console.log(simpleUser)
+
 
 					if(simpleUser.uid != $rootScope.user.uid){
 						self.users[simpleUser.uid] = simpleUser;
@@ -100,7 +97,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	this.goTo = function(tab){
 		self.currentTab=tab;
-		console.log(self.selectedValues);
 	}
 
 	this.selectBoardgame= function() {
@@ -144,9 +140,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//if some player are selected
 		if(self.selectedValues.players!=[]){
 			//post match
+			self.selectedValues.time = $filter('date')(self.selectedValues.time, "dd/MM/yyyy");
 			Api.matchpost(self.selectedValues).$loaded().then(
 				function(response){
-					self.selectedValues.plays = {};
 					for(player in self.selectedValues.players){
 						play = {}
 						play["user"] = player;
@@ -190,9 +186,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.togglePlayer = function(act, user){
-		console.log(user)
-		console.log(self.users)
-		console.log(self.selectedValues.players)
 
 		if(act == "select"){
 			self.selectedValues.players[""+user.uid] = user;

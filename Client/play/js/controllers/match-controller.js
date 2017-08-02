@@ -1,5 +1,5 @@
 //controller for the single match page
-angular.module("play").controller('matchController', function(Api, $window, $timeout, $routeParams, $location, $mdDialog, $rootScope, $scope) {
+angular.module("play").controller('matchController', function(Api, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $scope) {
 	this.fabOpen = false;
 	this.editMode = false;
 	this.anim = "md-scale";
@@ -15,19 +15,19 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	controller=this;
 
 	dbMatch = Api.match(controller.params.id);
-	dbMatch.$bindTo($scope, "match");
 
 	dbMatch.$loaded().then(
 		function(response){
 			controller.plays = response.plays;
-			console.log(controller.plays)
-			
+			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(response.players);
+			console.log(controller.total_rounds)
 		}, function errorCallback(response){
 			$rootScope.showToast("You are not allowed to see this match!");
 			//$location.path("matches/");			
 		}
 	);
 	
+	dbMatch.$bindTo($scope, "match");
 	
 	this.updateScore = function(play_id, detailed_point_id, val){
 		prev = $scope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
@@ -37,21 +37,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		$scope.match.plays[play_id]["points"] += update;
 		$scope.match.players[$scope.match.plays[play_id]["user"]]["points"] += update;
 	}
-	//this.sumPointsPerPlay = function(detailedPoints){
-	//	sum = 0;
-	//	for(k = 0; k< detailedPoints.length; k++){
-	//		sum += detailedPoints[k].detailed_points*controller.match.scoringFieldObj[detailedPoints[k].scoringField].bonus;
-	//	}
-	//	return sum;
-	//}
-//
-	//this.sumPointsPerUser = function(detailedPoints){
-	//	sum = 0;
-	//	for(dp in detailedPoints){
-	//		sum += detailedPoints[dp].detailed_points*detailedPoints[dp].bonus;
-	//	}
-	//	return sum;
-	//}
 
 	this.setVisible = function(i){
 		if(controller.plays[i].visible)
@@ -60,144 +45,34 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 			controller.plays[i].visible = true;
 	}
 
-	//this.setLeaderboardVisible = function(user){
-	//	controller.allVisible = false;
-	//	controller.match.leaderboard[user].visible = !controller.match.leaderboard[user].visible;
-	//}
-//
-	//this.startEditMode = function($event){
-	//	controller.editMode = true;
-	//	controller.fabOpen = true;
-	//	controller.allVisible = true;
-	//}
-//
-	//this.endEditMode = function(wantToSave){
-	//	controller.editMode = !controller.editMode;
-	//	if(wantToSave){
-	//		controller.savePoints();
-	//		row={
-	//			duration:controller.match.duration,
-	//			boardgame:controller.match.boardgame,
-	//			location:controller.match.location,
-	//			time:controller.match.time,
-	//			name:controller.match.name,
-	//			status:controller.match.status,
-	//			winner: controller.getWinner()
-	//			}
-//
-	//		Api.matchput(row, controller.match.pk).then(function(data){
-	//			controller.match.old_location = controller.match.location;
-	//			controller.match.old_duration = controller.match.duration;
-	//			controller.match.old_time = controller.match.time;
-	//			controller.match.old_name = controller.match.name;
-	//		}, 
-	//		function errorCallback(response) {
-	//		});
-//
-//
-	//		$rootScope.showToast("Match successfully edited!");
-	//	}
-	//	else{
-	//		controller.match.location = controller.match.old_location;
-	//		controller.match.time = controller.match.old_time;
-	//		controller.match.name = controller.match.old_name;
-	//		for(i = 0; i<controller.match.plays_set.length; i++){
-	//			play_pk = controller.match.plays_set[i].pk;
-	//			for(j = 0; j<controller.match.plays_set[i].detailedPoints.length; j++){
-	//				old_points = controller.match.plays_set[i].detailedPoints[j].old_detailed_points;
-	//				new_points = controller.match.plays_set[i].detailedPoints[j].detailed_points;
-	//				if(old_points != new_points){
-	//					controller.match.plays_set[i].detailedPoints[j].detailed_points = old_points;
-	//				}
-	//			}
-	//		}
-	//		controller.allVisible = false;
-	//		controller.managePlays();
-	//	}
-	//	controller.detectStatus();
-	//}
-//
-	//this.deleteMatchPopup = function(ev){
-	//	var confirm = $mdDialog.confirm()
-    //      .title('Would you like to delete this match?')
-    //      .targetEvent(ev)
-    //      .ok('Yes!')
-    //      .cancel('No');
-//
-	//    $mdDialog.show(confirm).then(function() {
-	//    	Api.matchdelete(controller.match.pk).then(function(data){
-	//    			$rootScope.showToast("Match successfully removed!");
-	//    			$location.path("matches/");
-	//			}, 
-	//			function errorCallback(response) {
-	//				return;
-	//			});
-	//    }, function() {
-	//      $scope.status = 'You decided to keep your debt.';
-	//    });
-	//}
+	this.startEditMode = function($event){
+		controller.editMode = true;
+		controller.fabOpen = true;
+	}
 
-	//this.setup = function(){
-	//	controller.match.old_location = controller.match.location;
-	//	controller.match.old_duration = controller.match.duration;
-	//	controller.match.time = new Date(controller.match.time);
-	//	controller.match.old_time = new Date(controller.match.time);
-	//	controller.match.old_name = controller.match.name;
-	//	if(controller.match.location == ""){
-	//		controller.match.location = "No location";
-	//	}
-	//	controller.match.scoringFieldObj = {}
-	//	for(sf in controller.match.scoring_fields_details){
-	//		controller.match.scoringFieldObj[controller.match.scoring_fields_details[sf].pk] = controller.match.scoring_fields_details[sf];
-	//	}
-	//	for(play in controller.match.plays_set){
-	//		controller.match.plays_set[play].detailedPointsObj = {}
-	//		for(dp in controller.match.plays_set[play].detailedPoints){
-	//			controller.match.plays_set[play].detailedPointsObj[controller.match.plays_set[play].detailedPoints[dp].scoringField] = controller.match.plays_set[play].detailedPoints[dp];
-	//		}
-	//	}
-	//	controller.managePlays();
-	//	controller.detectStatus();
-	//	controller.loadedLeaderboard = true;
-	//	startTime();
-	//}
+	this.endEditMode = function(wantToSave){
+		controller.editMode = !controller.editMode;
+	}
+	
+	this.deleteMatchPopup = function(ev){
+		var confirm = $mdDialog.confirm()
+	      .title('Would you like to delete this match?')
+	      .targetEvent(ev)
+	      .ok('Yes!')
+	      .cancel('No');
+	
+	    $mdDialog.show(confirm).then(function() {
+	    	Api.matchdelete($scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id)
+	    	.then(function(data){
+	    			$rootScope.showToast("Match successfully removed!");
+	    			$location.path("matches/");
+				}, 
+				function errorCallback(response) {
+					return;
+				});
+	    });
+	}
 
-	//this.managePlays = function(){
-	//	controller.match.totalTurns = 0;
-	//	controller.match.leaderboard = {};
-	//	for(i = 0; i< controller.match.plays_set.length;i++){
-	//		play = controller.match.plays_set[i];
-	//		if(!(play.user in controller.match.leaderboard)){
-	//			controller.match.leaderboard[play.user] = {pk: play.user, visible: false, username: play.user_details.username, detailedPoints:{}}
-	//		}
-//
-	//		if(play.turn > controller.match.totalTurns){
-	//			controller.match.totalTurns = play.turn;
-	//		}
-//
-//
-	//		for(j = 0; j<play.detailedPoints.length; j++){
-	//			if(!(play.detailedPoints[j].scoringField in controller.match.leaderboard[play.user]["detailedPoints"])){
-	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField] = {}
-	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] = play.detailedPoints[j].detailed_points;
-	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["bonus"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].bonus;
-	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["word_value"] = controller.match.scoringFieldObj[play.detailedPoints[j].scoringField].word_value;
-	//			}
-	//			else{
-	//				controller.match.leaderboard[play.user]["detailedPoints"][play.detailedPoints[j].scoringField]["detailed_points"] += play.detailedPoints[j].detailed_points;
-	//			}
-	//			play.detailedPoints[j].old_detailed_points = play.detailedPoints[j].detailed_points;
-	//		}
-//
-	//		controller.match.leaderboardArray= []
-	//		for(user in controller.match.leaderboard) {
-	//		    controller.match.leaderboardArray.push(controller.match.leaderboard[user]);
-	//		}
-//
-	//		play.points = controller.sumPointsPerPlay(play.detailedPoints);
-	//		controller.match.leaderboard[play.user].points = controller.sumPointsPerUser(controller.match.leaderboard[play.user].detailedPoints);
-	//	}
-	//}
 
 	//this.detectStatus = function(){
 	//	var now = new Date();
@@ -217,7 +92,7 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	//		console.log(controller.match.statusMessage);
 	//	}
 	//}
-//
+// 
 	//this.setCompletionStatus = function(id){
 	//	if(id != controller.match.status){
 	//		row={
@@ -289,24 +164,29 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 		return input;
 	};
 
-	//this.postPlay = function(){
-	//	console.log(controller.match);
-	//	controller.match.totalTurns++;
-	//	plays = [];
-	//	for(user in controller.match.leaderboard){
-	//		plays.push({match:controller.match.pk, user:user, turn:controller.match.totalTurns})
-	//	}
-	//	console.log(plays);
-	//	//post play
-	//	Api.playpost(plays).then(
-	//		function(response){
-	//			controller.play = response.data;
-	//			controller.postDetailedPoints();
-	//		},
-	//		function errorCallback(response){
-	//		}
-	//	);
-	//}
+	this.postPlay = function(){
+		for(player in $scope.match.players){
+			play = {}
+			play["user"] = player;
+			play["round"] = this.total_rounds+1;
+			play["detailed_points"] = {};
+			play["points"] = 0;
+
+			for(j in $scope.match.template.scoring_fields){
+				scoring_field = $scope.match.template.scoring_fields[j];
+				play["detailed_points"][j] = scoring_field;
+				play["detailed_points"][j]["points"] = 0;
+			}
+			play_post = Api.playpost($scope.match.$id, play);
+			play_post.$loaded().then(function(response){
+				controller.plays = $scope.match.plays;
+				
+			})
+			console.log(controller.plays)
+
+		}
+		controller.total_rounds += 1;
+	}
 
 	function startTime() {
 		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){
@@ -324,6 +204,6 @@ angular.module("play").controller('matchController', function(Api, $window, $tim
 	$window.onbeforeunload =  controller.updateDuration;
 
 	$scope.$on('$destroy', function(){
-	    controller.updateDuration();
+	    //controller.updateDuration();
 	});
 });

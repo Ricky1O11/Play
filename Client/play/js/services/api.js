@@ -31,10 +31,7 @@
 		user:		function(user_id){
 				var ref = firebase.database().ref().child("profiles").child(user_id);
 				var syncObject = $firebaseObject(ref);
-
-				var ref = firebase.database().ref().child("user_played_matches").child(user_id);
-				var syncObject2 = $firebaseObject(ref);
-				return [syncObject, syncObject2];
+				return syncObject;
 					},
 
 		userput:		function(user_id, user_data){
@@ -101,8 +98,9 @@
 					return syncObject;
 					},	
 		matches:	function(user_id){
-					var ref = firebase.database().ref().child("user_played_matches").child(""+user_id);
-					var syncObject = $firebaseObject(ref);
+				var ref = firebase.database().ref().child("user_played_matches").child(user_id);
+				var syncArray = $firebaseArray(ref);
+				return syncArray;
 					},	
 		matchpost:	function(values){
 					var ref = firebase.database().ref().child("matches").push(values);
@@ -142,9 +140,26 @@
 						mpu = $http({method: 'PUT', url: BASE_URL+'/matches/'+id+'/?include=boardgame', data:match});
 						return mpu;
 					},
-		matchdelete:function(id){
-						md = $http({method: 'DELETE', url: BASE_URL+'/matches/'+id+'/'});
-						return md;
+		matchdelete:function(bggId, players, match_id){
+						var ref = firebase.database().ref();
+
+
+						ref.child("boardgame_has_matches")
+						.child(""+bggId)
+						.child(""+match_id)
+						.remove();
+
+						for(k in players){
+							ref.child("user_played_matches")
+							.child(""+players[k].uid)
+							.child(""+bggId)
+							.child("matches")
+							.child(""+match_id)
+							.remove();
+						}
+
+						obj = ref.child("matches").child(""+match_id).remove();
+						return obj;
 					},
 					
 		playpost:	function(match, plays){
