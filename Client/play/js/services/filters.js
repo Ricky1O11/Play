@@ -2,7 +2,7 @@ angular.module("play")
 .filter('keylength', function(){
   return function(input){
     if(!angular.isObject(input)){
-      throw Error("Usage of non-objects with keylength filter!!")
+      return 0;
     }
     return Object.keys(input).length;
   }

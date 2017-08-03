@@ -187,21 +187,9 @@
 			var syncArray = $firebaseObject(ref);
 			return syncArray;
 					},
-		templatevotes:	function(template, user){
-						ts = $http({method: 'GET', url: BASE_URL+'/templatevotes/?template_id='+template+'&user_id='+user});
-						return ts;
-					},
-		templatevotespost:	function(templatevote){
-						tp = $http({method: 'POST', url: BASE_URL+'/templatevotes/', data:templatevote});
-						return tp;
-					},
-		templatevotesdelete:	function(templatevote){
-						tp = $http({method: 'DELETE', url: BASE_URL+'/templatevotes/'+templatevote+'/'});
-						return tp;
-					},
-		templateput:	function(template, id){
-						tpu = $http({method: 'PUT', url: BASE_URL+'/templates/'+id+'/', data:template});
-						return tpu;
+
+		templateput:	function(boardgame, template_id, template){
+			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame).child(template_id).update(template);
 					},				
 		dpPost:	function(dp){
 						dpp = $http({method: 'POST', url: BASE_URL+'/detailedpoints/', data:dp});

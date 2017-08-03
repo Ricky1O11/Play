@@ -46,14 +46,19 @@
 	      showLines: true
 	    });
 	}])
-	.run(function(Auth, $rootScope, $location,  $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
+	.run(function(Auth, $rootScope, $location, $timeout, $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
 			$rootScope.lang = "it";
 			// any time auth state changes, add the user data to scope
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
-		      	$rootScope.user = firebaseUser;
-		      	console.log($rootScope.user);
-		      	$rootScope.loaded = true;
+			      	$rootScope.user = firebaseUser;
+			      	if($rootScope.user){
+				      	dbuser = Api.user($rootScope.user.uid);
+						dbuser.$bindTo($rootScope, "user.profile_details");
+					}
 		    });
+			$timeout(function () {
+				       $rootScope.l = true;
+				    }, 3000);
 
 			$rootScope.match = {};
 

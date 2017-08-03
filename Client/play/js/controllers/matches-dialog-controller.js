@@ -103,7 +103,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		//if a boardgame is selected
 		if(self.selectedValues.boardgame!=null){
 			//get the template relative to the game
-			Api.templates(self.selectedValues.boardgame.bggId).$loaded().then(
+			templates = Api.templates(self.selectedValues.boardgame.bggId);
+			templates.$loaded().then(
 				function(response){
 					if(response.length > 0){
 						self.templates = response;
@@ -230,24 +231,33 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		return i >= 0;
 	}
 
-	this.updateVote = function(template, val){
-		//if(template.user_vote != 0){
-		//	Api.templatevotes(template.pk, self.user_pk).then(function(response){
-		//			Api.templatevotesdelete(response.data[0].pk).then(function(response){
-		//				}, function errorCallback(response){
-		//					console.log(response);
-		//			});
-		//		}, function errorCallback(response){
-		//			console.log(response);
-		//	});
-		//}
-		//
-		//row = [{vote : val, template: template.pk, user: self.user_pk}];
-		//Api.templatevotespost(row).then(function(response){
-		//		template.votes = parseInt(template.votes)-parseInt(template.user_vote)+parseInt(response.data[0].vote);
-		//		template.user_vote = response.data[0].vote;
-		//	}, function errorCallback(response){
-		//		console.log(response.data);
-		//});
+	this.updateVote = function(template, add, remove, user){
+		
+		if(template[add]){
+			if(template[add][user])
+				delete template[add][user];
+			else
+				template[add][user] = true;
+		}
+		else{
+			template[add] = {}
+			template[add][user] = true;
+		}
+
+		if(template[remove]){
+			if(template[remove][user])
+				delete template[remove][user];
+		}
+		simpleTemplate = {};
+		angular.copy(template, simpleTemplate);
+		delete simpleTemplate.$id;
+		delete simpleTemplate.$$hashKey;
+		delete simpleTemplate.$priority;
+		uTemplate = Api.templateput(self.selectedValues.boardgame.bggId, template.$id, simpleTemplate);
+	}
+
+	this.addTemplate = function(){
+		$mdDialog.hide();
+		$rootScope.goTo('templates/')
 	}
 });

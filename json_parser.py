@@ -10,6 +10,22 @@ from os.path import isfile, join
 def populateDB():
     in_files = [f for f in listdir("jsons/trial") if isfile(join("jsons/trial", f))]
     expansionsDict = {}
+
+    basicTemplate = {
+        "has_expansions" : False,
+        "name" : "Basic Template",
+        "scoring_fields" : {
+            0 : {
+                "bonus" : 1,
+                "name" : {
+                    "it" : "Punti",
+                    "en" : "Points"
+                }
+            }
+        }
+    }
+    current_boardgames = boardgames_ref.get()
+
     for in_file in in_files:
         #in_file = "bgg_1_500.json"
         file = open(join("jsons/trial", in_file), "r")
@@ -17,17 +33,10 @@ def populateDB():
 
         data = json.loads(text)
         file.close()
-        #try:
         boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
 
-        last_inserted = boardgames_ref.order_by_key().limit_to_last(1).get() #granted: all the previous games are already in the DB
-        if(last_inserted):
-            key, value = last_inserted.items()[0]
-            start = value["bggId"]+1
-        else:
-            start = 1
-        for i in range(start,int(boundaries[1])):
-            if(str(i) in data):
+        for i in range(int(boundaries[0]),int(boundaries[1])):
+            if(str(i) in data and str(i) not in current_boardgames):
                 game = data[str(i)]
                 if("rpgartist" in game or 
                     "rpgdesigner" in game or 
@@ -37,6 +46,7 @@ def populateDB():
                     print "Not a boardgame: skipped"
                 else:
                     boardgame = addBoardgame(i, game)
+                    template = addTemplate(i, basicTemplate)
                     #addCategories(game, boardgame)
                     #addDesigners(game, boardgame)
                     #addPublishers(game, boardgame)
@@ -46,7 +56,7 @@ def addBoardgame(i, game):
     basics_field_array = ["bggId", "average", "description", "image", "name", "usersrated", 
     "maxplayers", "minplayers", "maxplaytime", "minplaytime", "age", "playingtime", "yearpublished", "thumbnail", "expands", "is_expanded_by"]
 
-    print "Boardgame id: " + str(i) + " START"
+    print "Boardgame id: " + str(i)
     gameCompleteObject = {}
     gameSimpleObject = {}
     gameCompleteObject["bggId"] = i
@@ -55,6 +65,21 @@ def addBoardgame(i, game):
     for field in basics_field_array:
         if(field in game):
             gameCompleteObject[field] = game[field]
+            if (field == "is_expanded_by"):
+                for bggId in gameCompleteObject[field]:
+                    bg = boardgames_ref.child(str(bggId))
+                    bg_get = bg.get()
+                    if bg_get != None:
+                        gameCompleteObject[field][bggId] = {"name": bg_get["name"], "thumbnail": bg_get["thumbnail"], "image": bg_get["image"]}
+                        bg.child("expands").child(str(i)).update({"name": game["name"], "thumbnail": game["thumbnail"], "image": game["image"]})
+            
+            if (field == "expands"):
+                for bggId in gameCompleteObject[field]:
+                    bg = boardgames_ref.child(str(bggId))
+                    if bg.get() != None:
+                        gameCompleteObject[field][bggId] = {"name": bg_get["name"], "thumbnail": bg_get["thumbnail"], "image": bg_get["image"]}
+                        bg.child("is_expanded_by").child(str(i)).update({"name": game["name"], "thumbnail": game["thumbnail"], "image": game["image"]})
+        
         if field == "name" or field == "thumbnail" or field == "average":
             gameSimpleObject[field] = game[field]
     if("boardgamecategory" in game):
@@ -68,12 +93,15 @@ def addBoardgame(i, game):
     #    addFields("publishers", game["boardgamepublisher"], gameSimpleObject)
 
     new_boardgame = boardgames_ref.child(str(i)).set(gameCompleteObject)
-    print "Boardgame id: " + str(i) + " END"
+
 
 def addFields(field, val, boardgame):
     for key in val:
         references_dictionary[field].child(key).update(val[key])
         references_dictionary[field].child(key).child("boardgames").child(str(boardgame["bggId"])).set(boardgame)
+
+def addTemplate(bggId, template):
+        ref.child('boardgame_has_templates').child(str(bggId)).child("0").set(template)
 
 ################MAIN FUNCTION####################
 if __name__ == "__main__":

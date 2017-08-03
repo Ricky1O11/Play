@@ -164,22 +164,22 @@
 						<div layout="column" flex="15">
 							<div layout="row">
 								<div layout="column" flex="40" layout-align="center center">
-									<md-button aria-label="select template" class="md-icon-button blue-grey" 
-										ng-class="{'md-primary': template.user_vote == '1'}"
-										ng-click="mdCtrl.updateVote(template, 1)">
-										<i class="icon-thumbs-up"></i>
+									<md-button aria-label="select template" class="md-icon-button blue-grey"
+										ng-class="{'md-accent': template.minus[user.uid]}"
+										ng-click="mdCtrl.updateVote(template, 'minus', 'plus', user.uid)">
+										<i class="icon-thumbs-down"></i>
 									</md-button>
 								</div>
 								<div layout="column" flex="20" layout-align="center center">
 									<div layout="row">
-										<h4>{{template.plus.length-template.minus.length}}</h4>
+										<h4>{{(template.plus | keylength) - (template.minus | keylength)}}</h4>
 									</div>
 								</div>
 								<div layout="column" flex="40" layout-align="center center">
-									<md-button aria-label="select template" class="md-icon-button blue-grey"
-										ng-class="{'md-accent': template.user_vote == '-1'}"
-										ng-click="mdCtrl.updateVote(template, -1)">
-										<i class="icon-thumbs-down"></i>
+									<md-button aria-label="select template" class="md-icon-button blue-grey" 
+										ng-class="{'md-primary': template.plus[user.uid]}"
+										ng-click="mdCtrl.updateVote(template, 'plus', 'minus', user.uid)">
+										<i class="icon-thumbs-up"></i>
 									</md-button>
 								</div>
 							</div>
@@ -208,7 +208,7 @@
 					</md-list-item>
 				</md-list>
 				<div layout="row" class="mrg20t" layout-align="end center">
-					<md-button aria-label="add template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate(true)">
+					<md-button aria-label="add template" class="md-accent md-raised" ng-click="mdCtrl.addTemplate()">
 						Add new template
 					</md-button>
 				</div>

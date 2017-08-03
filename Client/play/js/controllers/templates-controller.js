@@ -121,43 +121,4 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		templateController.selectedValues.templates[pk].visible = !templateController.selectedValues.templates[pk].visible;
 	}
 
-	this.containsObject = function(obj, list) {
-		var i;
-		for (i = 0; i < list.length; i++) {
-			if (list[i] === obj) {
-				return true;
-			}
-		}
-		return false;
-	}
-
-
-	this.back = function(){
-		templateController.currentTab--;
-	}
-
-	this.dismiss = function(){
-		$mdDialog.hide();
-	}
-
-	this.updateVote = function(template, val){
-		if(template.user_vote != 0){
-			Api.templatevotes(template.pk, templateController.user_pk).then(function(response){
-					Api.templatevotesdelete(response.data[0].pk).then(function(response){
-						}, function errorCallback(response){
-							console.log(response);
-					});
-				}, function errorCallback(response){
-					console.log(response);
-			});
-		}
-
-		row = [{vote : val, template: template.pk, user: templateController.user_pk}];
-		Api.templatevotespost(row).then(function(response){
-				template.votes = parseInt(template.votes)-parseInt(template.user_vote)+parseInt(response.data[0].vote);
-				template.user_vote = response.data[0].vote;
-			}, function errorCallback(response){
-				console.log(response.data);
-		});
-	}
 });

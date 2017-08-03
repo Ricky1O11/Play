@@ -1,7 +1,7 @@
 //controller for login
 angular.module("play").controller('loginController', function(Api, Auth, $scope, $cookies, $rootScope, $window) {
 	this.login = {};
-	this.login.username = "";
+	this.login.email = "";
 	this.login.password = "";
 	loginController = this;
 
@@ -9,7 +9,7 @@ angular.module("play").controller('loginController', function(Api, Auth, $scope,
 
 	this.submit = function(){
 		
-		Auth.$signInWithEmailAndPassword(loginController.login.username, loginController.login.password).then(function(firebaseUser) {
+		Auth.$signInWithEmailAndPassword(loginController.login.email, loginController.login.password).then(function(firebaseUser) {
 			console.log(firebaseUser);
 			$scope.user = firebaseUser;
 		}).catch(function(error) {
