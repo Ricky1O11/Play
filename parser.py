@@ -53,7 +53,7 @@ def getDataFromBgg(start,end):
                     for leaf in subcategory:
                         if(leaf.tag == "average" or leaf.tag == "usersrated"):
                             xmldict[id][leaf.tag] = leaf.text
-    file = open("jsons/bgg_"+str(start)+"_"+str(end)+".json", "w")
+    file = open("jsons/bgg_"+str(int(start))+"_"+str(int(end))+".json", "w")
     file.write(json.dumps(xmldict))
     
     print "finished"
@@ -61,10 +61,10 @@ def getDataFromBgg(start,end):
 
 ################MAIN FUNCTION####################
 if __name__ == "__main__":
-    threads = 5
+    threads = 20
     beg = 1
-    end = 5000
-    div = 4
+    end = 200000
+    div = 40
     breakpoint = 0
     thread_rate = end/threads
     rate = thread_rate/div
