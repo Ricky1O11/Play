@@ -1,4 +1,4 @@
- //controller for user profile
+  //controller for user profile
 angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
 	this.user = {};
 	this.friends = [];
@@ -20,31 +20,6 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	}
 	controller = this;
 	controllerSidebar=this;
-	
-	//Api.friends().success(function(data){
-	//	for(i = 0;i<data.length; i++){
-	//		if(data[i].user1 != $scope.user_pk){
-	//			controller.friends.push(data[i].user1_details);
-	//		}
-	//		else if(data[i].user2 != $scope.user_pk){
-	//			controller.friends.push(data[i].user2_details);
-	//		}
-	//	}
-	//	console.log(controller.friends)
-	//});
-
-	////api call to the list of favourites boardgames
-	//Api.favourites("").success(function(data){
-	//	//if(data.length >=4)
-	//	//	controller.favourites=data.slice(0, 4);
-	//	//else
-	//		controller.favourites=data;
-	//});
-	//
-	////api call to the list of the played boardgames
-	//Api.recents($scope.user_pk).success(function(data){
-	//	controller.recents=data;
-	//});
 
 	//are there less then 4 boardgames in the "arg" (favourites / recents) list?
 	this.lessThenFour = function(arg){

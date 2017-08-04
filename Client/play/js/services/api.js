@@ -48,17 +48,24 @@
 						f = $http({method: 'GET', url: BASE_URL+'/boardgames/favourites/?search_key='+key});
 						return f;
 					},
-		friends:	function(){
-						fr = $http({method: 'GET', url: BASE_URL+'/friends/?include=user_stats'});
-						return fr;
+		friends:	function(user_id){
+						var ref = firebase.database().ref().child("friends").child(user_id);
+						var syncObject = $firebaseObject(ref);
+						return syncObject;
 					},
-		friendspost:	function(data){
-						frp = $http({method: 'POST', url: BASE_URL+'/friends/', data:data});
-						return frp;
+		friendspost:	function(user,friend){
+						var ref = firebase.database().ref().child("friends").child(user.uid).child("outbound").child(friend.$id).set({"username":friend.username, "image":friend.image, "accepted":true});
+						var ref = firebase.database().ref().child("friends").child(friend.$id).child("inbound").child(user.uid).set({"username":user.profile_details.username, "image":user.profile_details.image, "accepted":false});
+						
+						return ref;
+
 					},
-		frienddelete:	function(id){
-						frd = $http({method: 'DELETE', url: BASE_URL+'/friends/'+id+'/'});
-						return frd;
+		frienddelete:	function(user_id,friend_id){
+						console.log(user_id)
+						console.log(friend_id)
+						var ref = firebase.database().ref().child("friends").child(user_id).child("outbound").child(friend_id).remove();
+						var ref = firebase.database().ref().child("friends").child(friend_id).child("inbound").child(user_id).remove();
+						return ref;
 					},
 					
 		recents:	function(user_id){
@@ -83,9 +90,8 @@
 					}
 				}
 
-				var syncObject = $firebaseArray(ref);
-				console.log(syncObject);
-				return syncObject;
+				var syncArray = $firebaseArray(ref);
+				return syncArray;
 					},
 		boardgame:	function(id){
 				var ref = firebase.database().ref().child("boardgames").child(id);
@@ -151,7 +157,6 @@
 					},
 		matchdelete:function(bggId, players, match_id){
 						var ref = firebase.database().ref();
-
 
 						ref.child("boardgame_has_matches")
 						.child(""+bggId)

@@ -12,35 +12,11 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 
 	controller = this;
 	controllerSidebar=this;
-	Api.user(controller.params.id).then(function(response){
-		controller.user = response.data		
-		console.log(controller.user)
-		if(controller.user.profile_details.visibility_group == 0 || (controller.user.profile_details.visibility_group == 1 && controller.user.friendship > 0)){
-			if(controller.user.profile_details.fav_setting){
-				//api call to the list of favourites boardgames
-				Api.favourites(controller.params.id).success(function(data){
-					controller.favourites=data;
-				});
-			}
-
-			if(controller.user.profile_details.rec_setting){
-				//api call to the list of the played boardgames
-				Api.recents(controller.params.id).success(function(data){
-					controller.recents=data;
-				});
-			}
-		}
-	}, function errorCallback(response){
-	});
+	controller.user = Api.user(controller.params.id);
 
 
 	this.addFriend = function(){
-		rowToAdd = [{
-			'user1' : $rootScope.user_pk,
-			'user2' : controller.user.pk
-		}];
-		Api.friendspost(rowToAdd).then(function(response){
-			controller.user.friendship = response.data[0].pk;
+		Api.friendspost($rootScope.user, controller.user).then(function(response){
 			$rootScope.showToast("Good job! You have a new friend!");
 		}, function errorCallback(response){
 			console.log(response);
@@ -48,8 +24,7 @@ angular.module("play").controller('userController', function(Api, $routeParams, 
 	}
 
 	this.removeFriend = function(){
-		Api.frienddelete(controller.user.friendship).then(function(response){
-			controller.user.friendship = 0;
+		Api.frienddelete($rootScope.user.uid, controller.user.$id).then(function(response){
 			$rootScope.showToast("What a pity! You lose a companion");
 		}, function errorCallback(response){
 			console.log(response);

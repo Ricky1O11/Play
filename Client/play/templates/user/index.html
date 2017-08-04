@@ -3,7 +3,7 @@
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
 				<div class="circleBase imgUser hideScrollbar shadowed-box" >
-					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[uCtrl.user.pk] || getRandomColor(uCtrl.user.pk)" alt="profile image">
+					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[uCtrl.user.$id] || getRandomColor(uCtrl.user.$id)" alt="profile image">
 						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{uCtrl.user.username.substring(0,1).toUpperCase()}}</div>
 					</div>
 				</div>
@@ -11,15 +11,16 @@
 					aria-label="Edit match info" 
 					class="md-fab md-primary absolute"
 					ng-click="uCtrl.addFriend()"
-					ng-if="uCtrl.user.friendship == 0">
+					ng-if="!user.friends.outbound[uCtrl.user.$id] && !user.friends.inbound[uCtrl.user.$id]">
 					<i class="icon-user-add size-18"></i>
 					<md-tooltip md-direction="bottom" md-delay="200">Add friend</md-tooltip>
 				</md-button>
 				<md-button 
-					aria-label="Edit match info" 
+					aria-label="Edit match info"
 					class="md-fab md-accent absolute"
 					ng-click="uCtrl.removeFriend()"
-					ng-if="uCtrl.user.friendship > 0">
+					ng-if="user.friends.outbound[uCtrl.user.$id] || user.friends.inbound[uCtrl.user.$id]">
+					
 					<i class="icon-close-round size-18"></i>
 					<md-tooltip md-direction="bottom" md-delay="200">Remove friend</md-tooltip>
 				</md-button>

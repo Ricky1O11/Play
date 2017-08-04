@@ -52,8 +52,24 @@
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 			      	$rootScope.user = firebaseUser;
 			      	if($rootScope.user){
-				      	dbuser = Api.user($rootScope.user.uid);
+				      	var dbuser = Api.user($rootScope.user.uid);
 						dbuser.$bindTo($rootScope, "user.profile_details");
+						var friends = Api.friends($rootScope.user.uid);
+						friends.$bindTo($rootScope, "user.friends");
+
+						$rootScope.$watch('user.friends', function(newData, oldData) {
+							console.log(newData);
+							console.log(oldData);
+							if((oldData.inbound == null 
+									&& newData.inbound != null) 
+								|| 
+								(oldData.inbound != null 
+										&& newData.inbound != null 
+										&& Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
+								  var audio = new Audio('audio/song.mp3');
+		        					audio.play();
+	        				}
+						});
 					}
 		    });
 			$timeout(function () {

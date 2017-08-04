@@ -20,31 +20,28 @@ angular.module("play").controller('friendsDialogController', function($scope, Ap
 		return input;
 	};
 	//api call to the list of users
-	Api.users().success(function(data){
+	Api.users().$loaded().then(function(data){
 		for (i=0; i<data.length; i++){
-			if(data[i].pk != user_pk && data[i].friendship==0){
-				self.users.push({display:data[i].username, friendship:data[i].friendship, value:data[i].username.toLowerCase(), pk:data[i].pk, img:data[i].profile_details.img})
+			if(data[i].$id != $rootScope.user.uid
+				&& (!$rootScope.user.friends.outbound || !(data[i].$id in $rootScope.user.friends.outbound))
+				&& (!$rootScope.user.friends.inbound || !(data[i].$id in $rootScope.user.friends.inbound))){
+				self.users.push(data[i]);
 			}
 		}
 	});
 
 	this.saveFriends = function(){
-		listUsers = [];
 		console.log("ok");
 		for(i=0; i<self.friends.length;i++){
-			rowAddFriend = {
-			'user1' : $rootScope.user_pk,
-			'user2' : self.friends[i].pk
-			}
-			listUsers.push(rowAddFriend);
+
+			Api.friendspost($rootScope.user, self.friends[i]).then(function(response){
+				$rootScope.showToast("Good job! You have "+self.friends.length+" new friends!");
+				$mdDialog.hide();
+				$route.reload();
+			}, function errorCallback(response){
+			});
 		}
 		
-		Api.friendspost(listUsers).then(function(response){
-			$rootScope.showToast("Good job! You have "+listUsers.length+" new friend!");
-			$mdDialog.hide();
-			$route.reload();
-		}, function errorCallback(response){
-		});
 	}
 	
 	this.togglePlayer = function(act, user, id){

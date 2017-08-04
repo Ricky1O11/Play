@@ -1,4 +1,4 @@
-<div class="container-fluid  pad20t " layout="column" ng-cloak>
+ <div class="container-fluid  pad20t " layout="column" ng-cloak>
 	<div layout="row" layout-xs="column" flex="noshrink" flex-xs="noshrink" class="height500xs pad20l pad20r mrg10b mrg10r">
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
@@ -95,10 +95,24 @@
 							</h5>
 						</div>
 					</div>
-					<div layout="row" ng-if="pCtrl.friends.length > 0" flex-xs="noshrink">
-						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="friend in pCtrl.friends">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+friend.pk)">
-								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[friend.pk] || getRandomColor(friend.pk)" alt="profile image">
+					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) > 0" flex-xs="noshrink">
+						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.outbound" ng-if="friend.accepted">
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)">
+								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
+									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
+								 </div>
+								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
+							</div>
+							<md-button 
+								aria-label="Edit match info" 
+								class="md-fab md-mini absolute1">
+									{{friend.match_played_with}}
+								<md-tooltip md-direction="bottom" md-delay="200">Matches played together</md-tooltip>
+							</md-button>
+						</div>
+						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)">
+								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
 								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
@@ -111,7 +125,7 @@
 							</md-button>
 						</div>
 					</div>
-					<div layout="row" ng-if="pCtrl.friends.length == 0" class="height60 pad20t size-21"  flex-xs="noshrink">
+					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) == 0" class="height60 pad20t size-21"  flex-xs="noshrink">
 						<strong class="pad10r">): </strong> You seem so lonely! Add a friend!
 					</div>
 				</div>
