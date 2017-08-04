@@ -12,6 +12,7 @@ angular.module("play").controller('loginController', function(Api, Auth, $scope,
 		Auth.$signInWithEmailAndPassword(loginController.login.email, loginController.login.password).then(function(firebaseUser) {
 			console.log(firebaseUser);
 			$scope.user = firebaseUser;
+			console.log($scope.user)
 		}).catch(function(error) {
 			console.error("Authentication failed:", error);
 		});

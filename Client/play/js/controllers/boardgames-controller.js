@@ -4,7 +4,10 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	//this.boardgames=[]; //container of the list of boardgames
 	this.selectedOrderingField="average"; //ordering field, selectable by the user
 	this.actualOrderingField="average"; //ordering field, selectable by the user
+	this.displayedSearchKey=""; //ordering field, selectable by the user
 	this.searchKey=""; //ordering field, selectable by the user
+	this.endAt="9.99"; //ordering field, selectable by the user
+	this.endAtKey=""; //ordering field, selectable by the user
 	this.designer = -1;
 	if(this.location.indexOf("designers") >= 0){
 		this.designer = $routeParams.id;
@@ -56,54 +59,50 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 			this.loaded += this.PAGE_SIZE;
 			lp = this.loadedPages; 
 			ps = this.PAGE_SIZE;
-			var pageOffset = pageNumber * this.PAGE_SIZE;
+			
 			//api call to the list of boardgames
-			if(controller.actualOrderingField == "favourite"){
-				Api.favourites(controller.searchKey).then(function(response){
-					lp[pageNumber]=response.data;
-					for(i=0;i<lp[pageNumber].length;i++){
-						if(lp[pageNumber][i].favourite > 0){
-							lp[pageNumber][i].isFavourite = true;
-						}
-						else{
-							lp[pageNumber][i].isFavourite = false;
-						}
-						lp[pageNumber][i].listId = i;
+			Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
+			.then(function(response){
+				if(controller.actualOrderingField != "name")
+					response.reverse()
+				lp[pageNumber]=response;
+				for(i=0;i<lp[pageNumber].length;i++){
+					if(lp[pageNumber][i].favourite > 0){
+						lp[pageNumber][i].isFavourite = true;
 					}
-
-				}, function errorCallback(response){
-					console.log(response);
-				});
-			}
-			else{
-				Api.boadgames(0, 10, controller.actualOrderingField, controller.searchKey).$loaded()
-				.then(function(response){
-					lp[pageNumber]=response;
-					for(i=0;i<lp[pageNumber].length;i++){
-						if(lp[pageNumber][i].favourite > 0){
-							lp[pageNumber][i].isFavourite = true;
-						}
-						else{
-							lp[pageNumber][i].isFavourite = false;
-						}
-						lp[pageNumber][i].listId = i;
+					else{
+						lp[pageNumber][i].isFavourite = false;
 					}
-
-				}).catch(function(error) {
-				    console.error("Error:", error);
-				  });
-			}
+					lp[pageNumber][i].listId = i;
+				}
+				controller.searchKey = lp[pageNumber][19].name;
+				controller.endAt = lp[pageNumber][19].average;
+				controller.endAtKey = ""+lp[pageNumber][19].bggId;
+		
+			}).catch(function(error) {
+			    console.error("Error:", error);
+			});
 
 		};
 
-	//this.boardgames = new DynamicItems();
-	Api.boadgames(0, 10, controller.actualOrderingField, controller.searchKey).$loaded()
-		  .then(function(data) {
-		    console.log(data); // true
-		  })
-		  .catch(function(error) {
-		    console.error("Error:", error);
-		  });
+	this.boardgames = new DynamicItems();
+		//Api.boadgames(controller.searchKey, 100, "name").$loaded()
+	//			.then(function(response){
+	//				console.log(response)
+	//				lp[pageNumber]=response;
+	//				for(i=0;i<lp[pageNumber].length;i++){
+	//					if(lp[pageNumber][i].favourite > 0){
+	//						lp[pageNumber][i].isFavourite = true;
+	//					}
+	//					else{
+	//						lp[pageNumber][i].isFavourite = false;
+	//					}
+	//					lp[pageNumber][i].listId = i;
+	//				}
+//
+	//			}).catch(function(error) {
+	//			    console.error("Error:", error);
+	//			  });
 
 	this.toggleFavourites = function(favourite, boardgame, user, id, index){
 		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);
@@ -148,6 +147,10 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
 		controller.selectedOrderingField = field;
+		controller.actualOrderingField="average"; //ordering field, selectable by the user
+		controller.displayedSearchKey=""; //ordering field, selectable by the user
+		controller.searchKey=""; //ordering field, selectable by the user
+		controller.endAt="9.99";
 		if(field == "sfavourite"){
 			Api.favourites().then(function(response){
 				lp[pageNumber]=response.data;
@@ -176,6 +179,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	}
 
 	this.search = function(){
+		this.searchKey = this.displayedSearchKey;
 		this.boardgames = new DynamicItems();
 	}
 });

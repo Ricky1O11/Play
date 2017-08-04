@@ -101,7 +101,7 @@
 									</div>
 								</div>
 								<div layout="row" layout-wrap>
-									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.is_expanded_by.length > 0">
+									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.is_expanded_by">
 										<div class="absolute2 pad5 size-12 dark54perc">EXPANSIONS</div>
 										<div layout="row">
 											<div layout="column" class="clickable pad10l" flex="none" ng-repeat="(key,exp) in bCtrl.boardgame.is_expanded_by"
@@ -115,17 +115,17 @@
 											</div>
 										</div>
 									</div>
-									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10l mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.expands.length > 0">
+									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10l mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.expands">
 										<div class="absolute pad5 size-12 dark54perc">EXPANDS</div>
 										<div layout="row" layout-wrap>
 											<div layout="column" class="clickable pad10l" flex ng-repeat="exp in bCtrl.boardgame.expands"
 											ng-click="goTo('boardgames/'+exp.pk)">
 												<div class="circleBase imgExpansion hideScrollbar shadowed-box">
-													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.img}}">
+													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.thumbnail}}">
 														<div class="circleBase" style="font-size:50px;"></div>
 													</div>
 												</div>
-												<md-tooltip md-direction="bottom" md-delay="200">{{exp.title}}</md-tooltip>
+												<md-tooltip md-direction="bottom" md-delay="200">{{exp.name}}</md-tooltip>
 											</div>
 										</div>
 									</div>

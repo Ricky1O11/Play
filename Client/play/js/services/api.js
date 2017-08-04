@@ -65,14 +65,26 @@
 						r = $http({method: 'GET', url: BASE_URL+'/boardgames/recents/?user_id='+user_id});
 						return r;
 					},
-		boadgames:	function(offset, limit, orderingField, key){
-				if(key!="")
-					var ref = firebase.database().ref().child("boardgames").orderByChild("name").startAt(key);
-				else
-					var ref = firebase.database().ref().child("boardgames");
-				
+		boadgames:	function(query, limit, orderingField, endAt, endAtKey){
+				if(orderingField == "name"){
+					if(query!=""){
+						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).startAt(query).limitToFirst(limit);
+					}
+					else{
+						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).limitToFirst(limit);
+					}
+				}
+				else{
+					if(endAtKey == ""){
+						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt).limitToLast(limit);
+					}
+					else{
+						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt, endAtKey).limitToLast(limit);
+					}
+				}
+
 				var syncObject = $firebaseArray(ref);
-				
+				console.log(syncObject);
 				return syncObject;
 					},
 		boardgame:	function(id){

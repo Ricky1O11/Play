@@ -80,8 +80,7 @@
 					$rootScope.randomColors = {};
 				}
 			});
-
-		    
+			
 			$rootScope.showPopup = function(ev, user_pk, string, additional_field) {
 				boardgame = additional_field? additional_field : -1;
 				$mdDialog.show({

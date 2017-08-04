@@ -61,13 +61,12 @@ def getDataFromBgg(start,end):
 
 ################MAIN FUNCTION####################
 if __name__ == "__main__":
-    threads = 20
-    beg = 1
-    end = 200000
-    div = 40
+    contemporary_threads = 10
+    amount_of_games = 200000
+    bgg_per_thread = 500
     breakpoint = 0
-    thread_rate = end/threads
-    rate = thread_rate/div
+    thread_rate = amount_of_games/contemporary_threads
+    div = int(thread_rate/bgg_per_thread)
 
     exclusion_array = [
         "rpgartist", 
@@ -84,15 +83,15 @@ if __name__ == "__main__":
     thread_array = []
     cont = []
     start = 1
-    end = 250
-    for i in range(0,threads):
+    end = bgg_per_thread
+    for i in range(0,div):
         content = []
-        for j in range(0,div):
+        for j in range(0,contemporary_threads):
             content.append(threading.Thread(target=getDataFromBgg,  args=(start,end) ))
-            start +=rate
-            end +=rate
+            start +=bgg_per_thread
+            end +=bgg_per_thread
         thread_array.append(content)
-
+    
     for thread_set in thread_array:
         print thread_set
         for thread in thread_set:

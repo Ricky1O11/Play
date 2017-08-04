@@ -1,62 +1,45 @@
 import firebase_admin
 from firebase_admin import credentials
 from firebase_admin import db
-
+import threading
 import json
 from os import listdir
 from os.path import isfile, join
 
 # Retrieve data from json representation of boardgamegeek database
-def populateDB():
-    in_files = [f for f in listdir("jsons/trial") if isfile(join("jsons/trial", f))]
-    expansionsDict = {}
+def populateDB(min, max):
 
-    basicTemplate = {
-        "has_expansions" : False,
-        "name" : "Basic Template",
-        "scoring_fields" : {
-            0 : {
-                "bonus" : 1,
-                "name" : {
-                    "it" : "Punti",
-                    "en" : "Points"
-                }
-            }
-        }
-    }
-    current_boardgames = boardgames_ref.get()
-
-    for in_file in in_files:
-        #in_file = "bgg_1_500.json"
-        file = open(join("jsons/trial", in_file), "r")
+    for in_file in in_files[min:max]:
+        file = open(join("jsons", in_file), "r")
         text = file.read()
 
         data = json.loads(text)
         file.close()
         boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
-
+        print boundaries
         for i in range(int(boundaries[0]),int(boundaries[1])):
-            if(str(i) in data and str(i) not in current_boardgames):
-                game = data[str(i)]
-                if("rpgartist" in game or 
-                    "rpgdesigner" in game or 
-                    "rpgpublisher" in game or 
-                    "videogamedeveloper" in game or
-                    "videogamepublisher" in game):
-                    print "Not a boardgame: skipped"
-                else:
-                    boardgame = addBoardgame(i, game)
-                    template = addTemplate(i, basicTemplate)
-                    #addCategories(game, boardgame)
-                    #addDesigners(game, boardgame)
-                    #addPublishers(game, boardgame)
-        return True
+
+                if(str(i) in data and (current_boardgames == None or str(i) not in current_boardgames)):
+                #if(str(i) in data):
+                    game = data[str(i)]
+                    if("rpgartist" in game or 
+                        "rpg" in game or 
+                        "rpgdesigner" in game or 
+                        "rpgpublisher" in game or 
+                        "videogame" in game or 
+                        "videogametheme" in game or 
+                        "videogamemode" in game or 
+                        "videogamedeveloper" in game or
+                        "videogamepublisher" in game):
+                        a = ""
+                    else:
+                        boardgame = addBoardgame(i, game)
+                        template = addTemplate(i, basicTemplate)
 
 def addBoardgame(i, game):
     basics_field_array = ["bggId", "average", "description", "image", "name", "usersrated", 
     "maxplayers", "minplayers", "maxplaytime", "minplaytime", "age", "playingtime", "yearpublished", "thumbnail", "expands", "is_expanded_by"]
 
-    print "Boardgame id: " + str(i)
     gameCompleteObject = {}
     gameSimpleObject = {}
     gameCompleteObject["bggId"] = i
@@ -70,18 +53,48 @@ def addBoardgame(i, game):
                     bg = boardgames_ref.child(str(bggId))
                     bg_get = bg.get()
                     if bg_get != None:
-                        gameCompleteObject[field][bggId] = {"name": bg_get["name"], "thumbnail": bg_get["thumbnail"], "image": bg_get["image"]}
-                        bg.child("expands").child(str(i)).update({"name": game["name"], "thumbnail": game["thumbnail"], "image": game["image"]})
+                        row = {}
+                        if "name" in bg_get:
+                            row["name"] = bg_get["name"]
+                        if "image" in bg_get:
+                            row["image"] = bg_get["image"]
+                        if "thumbnail" in bg_get:
+                            row["thumbnail"] = bg_get["thumbnail"]
+                        gameCompleteObject[field][bggId] = row
+                        row = {}
+                        if "name" in game:
+                            row["name"] = game["name"]
+                        if "image" in game:
+                            row["image"] = game["image"]
+                        if "thumbnail" in game:
+                            row["thumbnail"] = game["thumbnail"]
+                        bg.child("expands").child(str(i)).update(row)
             
             if (field == "expands"):
                 for bggId in gameCompleteObject[field]:
                     bg = boardgames_ref.child(str(bggId))
+                    bg_get = bg.get()
                     if bg.get() != None:
-                        gameCompleteObject[field][bggId] = {"name": bg_get["name"], "thumbnail": bg_get["thumbnail"], "image": bg_get["image"]}
-                        bg.child("is_expanded_by").child(str(i)).update({"name": game["name"], "thumbnail": game["thumbnail"], "image": game["image"]})
+                        row = {}
+                        if "name" in bg_get:
+                            row["name"] = bg_get["name"]
+                        if "image" in bg_get:
+                            row["image"] = bg_get["image"]
+                        if "thumbnail" in bg_get:
+                            row["thumbnail"] = bg_get["thumbnail"]
+                        gameCompleteObject[field][bggId] = row
+                        row = {}
+                        if "name" in game:
+                            row["name"] = game["name"]
+                        if "image" in game:
+                            row["image"] = game["image"]
+                        if "thumbnail" in game:
+                            row["thumbnail"] = game["thumbnail"]
+                        bg.child("is_expanded_by").child(str(i)).update(row)
         
-        if field == "name" or field == "thumbnail" or field == "average":
-            gameSimpleObject[field] = game[field]
+            if field == "name" or field == "thumbnail" or field == "average":
+                gameSimpleObject[field] = game[field]
+
     if("boardgamecategory" in game):
         gameCompleteObject["categories"] = game["boardgamecategory"]
         addFields("categories", game["boardgamecategory"], gameSimpleObject)
@@ -122,4 +135,29 @@ if __name__ == "__main__":
         "designers" : designers_ref,
         "publishers" : publishers_ref,
     }
-    dbPopulated = populateDB()
+    #dbPopulated = populateDB()
+
+    basicTemplate = {
+        "has_expansions" : False,
+        "name" : "Basic Template",
+        "scoring_fields" : {
+            0 : {
+                "bonus" : 1,
+                "name" : {
+                    "it" : "Punti",
+                    "en" : "Points"
+                }
+            }
+        }
+    }
+    current_boardgames =boardgames_ref.get()
+    #current_boardgames = ref.set("")
+    thread_num = 20
+
+    in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]
+
+    file_per_list = len(in_files)/thread_num
+    
+    for i in range (0,thread_num):
+        t = threading.Thread(target=populateDB,  args=(min(i,1)+i*file_per_list,(i+1)*file_per_list) )
+        t.start()

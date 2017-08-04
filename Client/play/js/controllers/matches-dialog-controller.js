@@ -68,7 +68,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
-		return Api.boadgames(0, 100, "name", query).$loaded().then(function(response){
+		return Api.boadgames(query, 20, "name").$loaded().then(function(response){
 			self.boardgames = [];
 			for (i=0; i<response.length; i++){
 				if(response[i].name.indexOf(query) !== -1)
@@ -145,8 +145,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 			simpleObject = {};
 			angular.copy(self.selectedValues, simpleObject);
 			delete simpleObject["boardgame"]
-			console.log(self.selectedValues)
-			console.log(simpleObject)
 
 			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
 				function(response){

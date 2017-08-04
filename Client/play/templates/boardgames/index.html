@@ -11,7 +11,7 @@
 					<form name="registerForm" layout="column" flex="40" ng-submit="bsCtrl.search()">
 						<md-input-container class="md-block md-accent md-icon-float md-icon-right">
 							<label>Search</label>
-						  	<input ng-model="bsCtrl.searchKey">
+						  	<input ng-model="bsCtrl.displayedSearchKey">
 							<md-icon  class="icon-search clickable"  md-colors="{color: 'myTheme-accent'}"  ng-click="bsCtrl.search()"></md-icon>
 						</md-input-container>
 					</form>
@@ -26,7 +26,7 @@
 						</md-button>
 						<md-menu-content width="4">
 							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField('title')">
+								<md-button ng-click="bsCtrl.setOrderingField('name')">
 									<i class="icon-sort-alpha-asc" md-colors="{color: 'myTheme-accent'}"></i>
 									Alphabetical order
 								</md-button>
@@ -35,12 +35,6 @@
 								<md-button ng-click="bsCtrl.setOrderingField('-average')">
 									<i class="icon-star-o" md-colors="{color: 'myTheme-accent'}"></i>
 									Average order
-								</md-button>
-							</md-menu-item>
-							<md-menu-item>
-								<md-button ng-click="bsCtrl.setOrderingField('favourite')">
-									<i class="icon-heart-o" md-colors="{color: 'myTheme-accent'}"></i>
-									Favourite order
 								</md-button>
 							</md-menu-item>
 						</md-menu-content>
@@ -54,8 +48,8 @@
 					<!--  | filter:{title:query} | orderBy:bsCtrl.getOrderingField() -->
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
-						ng-href="#/boardgames/{{boardgame.bggId}}"
-						md-virtual-repeat="(key, boardgame) in bsCtrl.boardgames" ng-click="null" md-on-demand>
+						md-virtual-repeat="boardgame in bsCtrl.boardgames" ng-click="null" md-on-demand
+						ng-href="#/boardgames/{{boardgame.bggId}}">
 							<img ng-src="{{boardgame.thumbnail}}?100" class="md-avatar" alt="{{boardgame.name}}" />
 							<div layout="column">
 								<div layout="row">

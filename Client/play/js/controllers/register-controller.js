@@ -11,7 +11,7 @@ angular.module("play").controller('registerController', function(Api, Auth, $fir
 		if(registerController.register.password === registerController.register.password2){
 			Auth.$createUserWithEmailAndPassword(registerController.register.email, registerController.register.password)
 		        .then(function(firebaseUser) {
-		        	$rootScope.showToast("User created with uid: " + firebaseUser.uid);
+		        	$rootScope.showToast("Good job! We sent you and e-mail to confirm your account");
 		        	
 		        	var user = firebase.auth().currentUser;
 		        	user.sendEmailVerification().then(function() {

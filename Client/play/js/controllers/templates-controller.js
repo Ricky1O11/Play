@@ -34,7 +34,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 
 	//Search for boardagames
 	templateController.querySearchBoardgames = function (query) {
-		return Api.boadgames(0, 100, "name", query).$loaded().then(function(response){
+		return Api.boadgames(query, 20, "name").$loaded().then(function(response){
 			templateController.boardgames = [];
 			for (i=0; i<response.length; i++){
 				if(response[i].name.indexOf(query) !== -1)

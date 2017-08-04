@@ -68,7 +68,7 @@
 		<div ng-show="l" layout="column" flex>
 			<div layout="row" id="container" flex>
 				<md-sidenav
-					ng-if="user"
+					ng-if="user && user.emailVerified"
 					class="md-sidenav-left height100perc"
 					md-is-locked-open="$mdMedia('gt-sm')"
 					id="sidebar" 				
@@ -233,7 +233,7 @@
 						</div>
 					</div> 
 				</md-sidenav>
-				<md-content layout="column" ng-if="user" flex ng-view></md-content>
+				<md-content layout="column" ng-if="user && user.emailVerified" flex ng-view></md-content>
 			</div>
 			<div id="tabs" ng-hide="user">
 				<md-tabs  md-selected="currentTab"
@@ -375,6 +375,22 @@
 						</md-content>
 					</md-tab>
 				</md-tabs>
+			</div>
+			<div layout="column" ng-show="user && !user.emailVerified"  class="height100perc" layout-align="center center" md-colors="{background: 'myTheme-accent'}">
+					<div>
+						<img ng-src="img/play.png" id="logo" flex="none"/>
+					</div>
+					<div class="size-24 pad10b">
+						You are not verified!
+					</div>
+					<div class="size-16 pad10b">
+						We have sent an e-mail to: {{user.email}}
+					</div>
+					<div class="pad10b">
+						<md-button aria-label="create template template" class="md-primary md-raised" ng-click="user.sendEmailVerification()">
+							Send e-mail again
+						</md-button>
+					</div>
 			</div>
 		</div>
 		<div ng-show="!l" layout="column" flex>
