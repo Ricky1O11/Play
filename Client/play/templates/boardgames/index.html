@@ -45,7 +45,6 @@
 			<div layout="row" class="overflowScroll">
 				<div layout="column" flex="100">
 					<md-virtual-repeat-container class="height100perc" flex>
-					<!--  | filter:{title:query} | orderBy:bsCtrl.getOrderingField() -->
 						<md-list-item
 						class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 						md-virtual-repeat="boardgame in bsCtrl.boardgames" ng-click="null" md-on-demand
@@ -78,18 +77,18 @@
 								 
 							<i 
 							aria-label="remove favourite"
-							ng-if="boardgame.isFavourite" 
+							ng-if="user.profile_details.favourites[boardgame.$id]" 
 							class="icon-heart md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+							ng-click="bsCtrl.toggleFavourite(boardgame)">
 								<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
 							</i>
 							<i 
 							aria-label="add favourite"
-							ng-if="!boardgame.isFavourite" 
+							ng-if="!user.profile_details.favourites[boardgame.$id]" 
 							class="icon-heart-o md-secondary" 
 							md-colors="{color: 'myTheme-accent'}"
-							ng-click="bsCtrl.toggleFavourites(boardgame.favourite, boardgame.pk, user_pk, boardgame.listId, $index)">
+							ng-click="bsCtrl.toggleFavourite(boardgame)">
 								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
 							</i>
 						</md-list-item>

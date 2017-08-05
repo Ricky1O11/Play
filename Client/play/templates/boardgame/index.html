@@ -136,7 +136,7 @@
 							<md-content class="pad5l pad10t hideScrollbar">
 								<div layout="row">
 									<div layout="column" flex="100" ng-repeat="(key, designer) in bCtrl.boardgame.designers">
-										<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+designer.pk)">
+										<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+key)">
 											{{designer.name}}
 										</md-button>
 									</div>

@@ -1,6 +1,7 @@
 //controller for the list of boardgames
-angular.module("play").controller('boardgamesController', function(Api, $scope,$location, $routeParams) {
+angular.module("play").controller('boardgamesController', function(Api, $scope,$location, $routeParams, Utils) {
 	this.location=$location.path();
+	this.toggleFavourite = Utils.toggleFavourite
 	//this.boardgames=[]; //container of the list of boardgames
 	this.selectedOrderingField="average"; //ordering field, selectable by the user
 	this.actualOrderingField="average"; //ordering field, selectable by the user
@@ -86,47 +87,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 		};
 
 	this.boardgames = new DynamicItems();
-		//Api.boadgames(controller.searchKey, 100, "name").$loaded()
-	//			.then(function(response){
-	//				console.log(response)
-	//				lp[pageNumber]=response;
-	//				for(i=0;i<lp[pageNumber].length;i++){
-	//					if(lp[pageNumber][i].favourite > 0){
-	//						lp[pageNumber][i].isFavourite = true;
-	//					}
-	//					else{
-	//						lp[pageNumber][i].isFavourite = false;
-	//					}
-	//					lp[pageNumber][i].listId = i;
-	//				}
-//
-	//			}).catch(function(error) {
-	//			    console.error("Error:", error);
-	//			  });
-
-	this.toggleFavourites = function(favourite, boardgame, user, id, index){
-		page_number = Math.floor(index / controller.boardgames["PAGE_SIZE"]);
-		if(favourite > 0){
-		  Api.favouritedelete(favourite).then(
-							  function(response){
-							  }, function errorCallback(response){
-							  }
-							);
-			controller.boardgames.loadedPages[page_number][id].favourite = -1;
-			controller.boardgames.loadedPages[page_number][id].isFavourite = false;
-		}
-		else{
-			data = {'boardgame': boardgame};
-			Api.favouritepost(data).then(
-							  function(response){
-								controller.boardgames.loadedPages[page_number][id].favourite = response.data.pk;
-							  }, function errorCallback(response){
-							  }
-			);
-			controller.boardgames.loadedPages[page_number][id].isFavourite = true;
-		}
-	}
-
+console.log(this.boardgames)
 	//create ordered list of numbers
 	this.range = function(a, b, step) {
 		step = step || 1;

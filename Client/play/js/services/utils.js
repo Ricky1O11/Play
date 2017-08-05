@@ -2,7 +2,7 @@ angular.module("play")
 .factory('Utils', function($rootScope){
   return {
             toggleFavourite: function(boardgame) {
-                console.log(boardgame)
+              console.log(boardgame);
                     if("favourites" in $rootScope.user["profile_details"]){
                       if(boardgame.bggId in $rootScope.user["profile_details"]["favourites"]){
                         delete $rootScope.user["profile_details"]["favourites"][boardgame.bggId];

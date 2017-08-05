@@ -58,8 +58,6 @@
 						friends.$bindTo($rootScope, "user.friends");
 
 						$rootScope.$watch('user.friends', function(newData, oldData) {
-							console.log(newData);
-							console.log(oldData);
 							if((oldData.inbound == null 
 									&& newData.inbound != null) 
 								|| 
@@ -74,7 +72,7 @@
 		    });
 			$timeout(function () {
 				       $rootScope.l = true;
-				    }, 3000);
+				    }, 500);
 
 			$rootScope.match = {};
 

@@ -6,17 +6,20 @@ import json
 from os import listdir
 from os.path import isfile, join
 
+
+done_files = 0
 # Retrieve data from json representation of boardgamegeek database
 def populateDB(min, max):
-
+    global done_files
     for in_file in in_files[min:max]:
+        done_files+=1
+        print done_files
         file = open(join("jsons", in_file), "r")
         text = file.read()
 
         data = json.loads(text)
         file.close()
         boundaries = [int(s) for s in in_file.replace(".","_").split("_") if s.isdigit()]
-        print boundaries
         for i in range(int(boundaries[0]),int(boundaries[1])):
 
                 if(str(i) in data and (current_boardgames == None or str(i) not in current_boardgames)):
