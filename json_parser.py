@@ -50,53 +50,60 @@ def addBoardgame(i, game):
     
     for field in basics_field_array:
         if(field in game):
-            gameCompleteObject[field] = game[field]
-            if (field == "is_expanded_by"):
-                for bggId in gameCompleteObject[field]:
-                    bg = boardgames_ref.child(str(bggId))
-                    bg_get = bg.get()
-                    if bg_get != None:
-                        row = {}
-                        if "name" in bg_get:
-                            row["name"] = bg_get["name"]
-                        if "image" in bg_get:
-                            row["image"] = bg_get["image"]
-                        if "thumbnail" in bg_get:
-                            row["thumbnail"] = bg_get["thumbnail"]
-                        gameCompleteObject[field][bggId] = row
-                        row = {}
-                        if "name" in game:
-                            row["name"] = game["name"]
-                        if "image" in game:
-                            row["image"] = game["image"]
-                        if "thumbnail" in game:
-                            row["thumbnail"] = game["thumbnail"]
-                        bg.child("expands").child(str(i)).update(row)
-            
-            if (field == "expands"):
-                for bggId in gameCompleteObject[field]:
-                    bg = boardgames_ref.child(str(bggId))
-                    bg_get = bg.get()
-                    if bg.get() != None:
-                        row = {}
-                        if "name" in bg_get:
-                            row["name"] = bg_get["name"]
-                        if "image" in bg_get:
-                            row["image"] = bg_get["image"]
-                        if "thumbnail" in bg_get:
-                            row["thumbnail"] = bg_get["thumbnail"]
-                        gameCompleteObject[field][bggId] = row
-                        row = {}
-                        if "name" in game:
-                            row["name"] = game["name"]
-                        if "image" in game:
-                            row["image"] = game["image"]
-                        if "thumbnail" in game:
-                            row["thumbnail"] = game["thumbnail"]
-                        bg.child("is_expanded_by").child(str(i)).update(row)
-        
-            if field == "name" or field == "thumbnail" or field == "average":
+            if field == "name":
+                gameCompleteObject[field] = game[field].lower()
+                gameSimpleObject[field] = game[field].lower()
+            elif field == "thumbnail" or field == "average" or field == "image":
+                gameCompleteObject[field] = game[field]
                 gameSimpleObject[field] = game[field]
+            else:
+                gameCompleteObject[field] = game[field]
+
+                if (field == "is_expanded_by"):
+                    for bggId in gameCompleteObject[field]:
+                        bg = boardgames_ref.child(str(bggId))
+                        bg_get = bg.get()
+                        if bg_get != None:
+                            row = {}
+                            if "name" in bg_get:
+                                row["name"] = bg_get["name"]
+                            if "image" in bg_get:
+                                row["image"] = bg_get["image"]
+                            if "thumbnail" in bg_get:
+                                row["thumbnail"] = bg_get["thumbnail"]
+                            gameCompleteObject[field][bggId] = row
+                            row = {}
+                            if "name" in game:
+                                row["name"] = game["name"]
+                            if "image" in game:
+                                row["image"] = game["image"]
+                            if "thumbnail" in game:
+                                row["thumbnail"] = game["thumbnail"]
+                            bg.child("expands").child(str(i)).update(row)
+            
+                if (field == "expands"):
+                    for bggId in gameCompleteObject[field]:
+                        bg = boardgames_ref.child(str(bggId))
+                        bg_get = bg.get()
+                        if bg.get() != None:
+                            row = {}
+                            if "name" in bg_get:
+                                row["name"] = bg_get["name"]
+                            if "image" in bg_get:
+                                row["image"] = bg_get["image"]
+                            if "thumbnail" in bg_get:
+                                row["thumbnail"] = bg_get["thumbnail"]
+                            gameCompleteObject[field][bggId] = row
+                            row = {}
+                            if "name" in game:
+                                row["name"] = game["name"]
+                            if "image" in game:
+                                row["image"] = game["image"]
+                            if "thumbnail" in game:
+                                row["thumbnail"] = game["thumbnail"]
+                            bg.child("is_expanded_by").child(str(i)).update(row)
+        
+
 
     if("boardgamecategory" in game):
         gameCompleteObject["categories"] = game["boardgamecategory"]
