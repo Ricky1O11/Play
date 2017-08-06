@@ -51,8 +51,10 @@ def addBoardgame(i, game):
     for field in basics_field_array:
         if(field in game):
             if field == "name":
-                gameCompleteObject[field] = game[field].lower()
-                gameSimpleObject[field] = game[field].lower()
+                gameCompleteObject["name"] = game[field]
+                gameSimpleObject["name"] = game[field]
+                gameCompleteObject["search_name"] = game[field].lower()
+                gameSimpleObject["search_name"] = game[field].lower()
             elif field == "thumbnail" or field == "average" or field == "image":
                 gameCompleteObject[field] = game[field]
                 gameSimpleObject[field] = game[field]
@@ -120,6 +122,9 @@ def addBoardgame(i, game):
 
 def addFields(field, val, boardgame):
     for key in val:
+        vals = {}
+        vals["name"] = val[key]["name"]
+        vals["search_name"] = val[key]["name"].lower()
         references_dictionary[field].child(key).update(val[key])
         references_dictionary[field].child(key).child("boardgames").child(str(boardgame["bggId"])).set(boardgame)
 
@@ -128,9 +133,9 @@ def addTemplate(bggId, template):
 
 ################MAIN FUNCTION####################
 if __name__ == "__main__":
-    cred = credentials.Certificate('Server/Play/config/play-5d098-firebase-adminsdk-lxldu-abcee1bab7.json')
+    cred = credentials.Certificate('Server/Play/config/play-4fd54-firebase-adminsdk-qjpvd-aa91cb3eb8.json')
     default_app = firebase_admin.initialize_app(cred, {
-        'databaseURL': 'https://play-5d098.firebaseio.com/'
+        'databaseURL': 'https://play-4fd54.firebaseio.com/'
     })
 
     # As an admin, the app has access to read and write all data, regradless of Security Rules

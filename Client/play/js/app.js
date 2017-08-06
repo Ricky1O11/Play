@@ -1,13 +1,13 @@
 (function(){
 	// Initialize Firebase
 	var config = {
-	    apiKey: "AIzaSyDUQPNY_D9WCVirdz4xL3YVgJFKWpBdh3Y",
-	    authDomain: "play-5d098.firebaseapp.com",
-	    databaseURL: "https://play-5d098.firebaseio.com",
-	    projectId: "play-5d098",
-	    storageBucket: "play-5d098.appspot.com",
-	    messagingSenderId: "771721288528"
-	  };
+	    apiKey: "AIzaSyBI2Uab-jJ5RVzVppEvibmOlnHJRBgScnQ",
+	    authDomain: "play-4fd54.firebaseapp.com",
+	    databaseURL: "https://play-4fd54.firebaseio.com/",
+	    projectId: "play-4fd54",
+	    storageBucket: "",
+	    messagingSenderId: "603822728152"
+	};
 	firebase.initializeApp(config);
 
 	angular.module('play',["firebase", "ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
