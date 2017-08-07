@@ -55,7 +55,7 @@
 					},
 					
 		boadgames:	function(query, limit, orderingField, endAt, endAtKey){
-				if(orderingField == "name"){
+				if(orderingField == "search_name"){
 					if(query!=""){
 						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).startAt(query).limitToFirst(limit);
 					}

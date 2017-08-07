@@ -1,78 +1,75 @@
-<div class="container-fluid" layout="column">
-	<div layout="row" flex="none" class="mrg20l mrg10r mrg10t" >
-		<div layout="column" flex="noshrink" >
-			<div layout="row" class="height30" flex="none">
-				<div layout="column" flex="100">
-					<a class="decoNone" href="#/favourites"><h3 class="blue-grey">Favourite games</h3></a>
-				</div>
-			</div>
-			<div layout="row" flex="noshrink">
-				<md-grid-list 
-					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
-					md-row-height="1:1"
-					md-gutter="12px" md-gutter-gt-sm="10px" flex
-					>
-
-					<md-grid-tile ng-repeat="f in hCtrl.favourites" ng-click="goTo('boardgames/'+f.pk)" alt="{{f.title}}" back-img="{{f.img}}" class="shadowed-box">					  
-					  <md-grid-tile-footer class="whiteBg blue-grey">
-						<div layout="row"  class="height100perc">
-					  		<div layout="column" class="height100perc" flex="80"  layout-align="center start">
-								<h3>{{f.title}}</h3>
-							</div>
-					  		<div layout="column" class="height100perc" flex="20" layout-align="center start">
-								<i class="icon-heart size-24" md-colors="{color: 'myTheme-accent'}"></i>
-							</div>
-						</div>
-					  </md-grid-tile-footer>
-					</md-grid-tile>			
-				</md-grid-list>
-				<div layout="column" layout-align="center center" ng-if="hCtrl.favourites.length == 0 && hCtrl.recents.length > 0" flex="100">
-					  	<div layout="row" class="size-72 mrg20b">:(</div>
-					  	<div layout="row" class="mrg20b"><h1>You don't have any favourite game</h1></div>
-					  	<div layout="row" class="blue-grey clickable decoNone" ng-click="goTo('boardgames/')"><h2><i class="icon-plus-1 mrg10r"></i>Browse the list and add one of them</h2></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div layout="row"  class="mrg20l mrg10r mrg20t">
-		<div layout="column" flex="100">
-			<div layout="row" class="height30" flex="none">
-				<div layout="column" flex="100">
-					<a class="decoNone" href="#/recents"><h3 class="blue-grey">Recently played boardgames</h3></a>
-				</div>
-			</div>
-			<div layout="row" flex="noshrink">
-				<md-grid-list 
-					md-cols-xs="2" md-cols-sm="3" md-cols-md="3" md-cols-gt-md="4"
-					md-row-height="1:1"
-					md-gutter="10px" md-gutter-gt-sm="10px" flex
-					>
-
-					<md-grid-tile ng-repeat="r in hCtrl.recents | limitTo:4" ng-click="goTo('boardgames/'+r.pk)" alt="{{r.title}}" back-img="{{r.img}}" class="shadowed-box">
-					  <md-grid-tile-footer class="whiteBg blue-grey">
-					  	<div layout="row"  class="height100perc">
-					  		<div layout="column" class="height100perc" flex="80"  layout-align="center start">
-								<h3>{{r.title}}</h3>
-							</div>
-					  		<div layout="column" class="height100perc" flex="20" layout-align="center start">
-								<i ng-if="hCtrl.inFavourites(r.title)" class="icon-heart size-24" md-colors="{color: 'myTheme-accent'}"></i>
-								<i ng-if="!hCtrl.inFavourites(r.title)" class="icon-heart-o size-24" md-colors="{color: 'myTheme-accent'}"></i>
-							</div>
-						</div>
-					  </md-grid-tile-footer>
-					</md-grid-tile>
-				</md-grid-list>
-				<div layout="column" layout-align="center center" ng-if="hCtrl.recents.length == 0 && hCtrl.favourites.length > 0" flex="100">
-				  	<div layout="row" class="size-72 mrg20b">:(</div>
-				  	<div layout="row" class="mrg20b"><h1>Hey you! This area seems to be quite empty! Fill it!</h1></div>
-				  	<div layout="row" class="blue-grey clickable decoNone" ng-click="matchesPopup($event, user_pk)"><h2><i class="icon-plus-1 mrg10r"></i>Play!</h2></div>
-				</div>
-			</div>
-		</div>
-	</div>
-	<div layout="column" class="height100perc" layout-align="center center" ng-if="hCtrl.recents.length == 0 && hCtrl.favourites.length == 0" flex="100">
-	  	<div layout="row" class="size-72 mrg20b">:(</div>
-	  	<div layout="row" class="mrg20b"><h1>Hey you! This area seems to be quite empty! Fill it!</h1></div>
-	  	<div layout="row" class="blue-grey clickable decoNone" ng-click="matchesPopup($event, user_pk)"><h2><i class="icon-plus-1 mrg10r"></i>Play!</h2></div>
-	</div>
+<div>
+  <md-content class="md-padding">
+    <div layout="row" flex="100">
+	    <div layout="column" flex-xs flex-gt-xs="50" >
+	      <md-card class="whiteBg" md-theme-watch>
+	        <md-card-title>
+	          <md-card-title-text>
+	            <span class="md-headline">Last favourites</span>
+	          </md-card-title-text>
+	        </md-card-title>
+	        <md-card-actions layout="row" layout-align="end center">
+	          <md-button>Action 1</md-button>
+	          <md-button>Action 2</md-button>
+	        </md-card-actions>
+	      </md-card>
+	    </div>
+	    <div layout="column" flex-xs flex-gt-xs="50" >
+	      <md-card class="whiteBg" md-theme-watch>
+	        <md-card-title>
+	          <md-card-title-text>
+	            <span class="md-headline">Last favourites</span>
+	            <span class="md-subhead">Large</span>
+	          </md-card-title-text>
+	          <md-card-title-media>
+	            <div class="md-media-lg card-media"></div>
+	          </md-card-title-media>
+	        </md-card-title>
+	        <md-card-actions layout="row" layout-align="end center">
+	          <md-button>Action 1</md-button>
+	          <md-button>Action 2</md-button>
+	        </md-card-actions>
+	      </md-card>
+	    </div>
+    </div>
+    <div layout="row" flex="100" layout-align="center center">
+	    <md-button class="md-fab"></md-button>
+    </div>
+    <div layout="row"  flex="100">
+	    <div layout="column" flex-xs flex-gt-xs="50" >
+	      <md-card class="whiteBg" md-theme-watch>
+	        <md-card-title>
+	          <md-card-title-text>
+	            <span class="md-headline">Last favourites</span>
+	            <span class="md-subhead">Large</span>
+	          </md-card-title-text>
+	          <md-card-title-media>
+	            <div class="md-media-lg card-media"></div>
+	          </md-card-title-media>
+	        </md-card-title>
+	        <md-card-actions layout="row" layout-align="end center">
+	          <md-button>Action 1</md-button>
+	          <md-button>Action 2</md-button>
+	        </md-card-actions>
+	      </md-card>
+	    </div>
+	    <div layout="column" flex-xs flex-gt-xs="50" >
+	      <md-card class="whiteBg" md-theme-watch>
+	        <md-card-title>
+	          <md-card-title-text>
+	            <span class="md-headline">Last favourites</span>
+	            <span class="md-subhead">Large</span>
+	          </md-card-title-text>
+	          <md-card-title-media>
+	            <div class="md-media-lg card-media"></div>
+	          </md-card-title-media>
+	        </md-card-title>
+	        <md-card-actions layout="row" layout-align="end center">
+	          <md-button>Action 1</md-button>
+	          <md-button>Action 2</md-button>
+	        </md-card-actions>
+	      </md-card>
+	    </div>
+    </div>
+  </md-content>
 </div>

@@ -7,7 +7,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	this.actualOrderingField="average"; //ordering field, selectable by the user
 	this.displayedSearchKey=""; //ordering field, selectable by the user
 	this.searchKey=""; //ordering field, selectable by the user
-	this.endAt="9.99"; //ordering field, selectable by the user
+	this.endAt=10; //ordering field, selectable by the user
 	this.endAtKey=""; //ordering field, selectable by the user
 	this.designer = -1;
 	if(this.location.indexOf("designers") >= 0){
@@ -60,11 +60,11 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 			this.loaded += this.PAGE_SIZE;
 			lp = this.loadedPages; 
 			ps = this.PAGE_SIZE;
-			
+			console.log(controller.searchKey)
 			//api call to the list of boardgames
-			Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
+			Api.boadgames(controller.searchKey.toLowerCase(), 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
 			.then(function(response){
-				if(controller.actualOrderingField != "name")
+				if(controller.actualOrderingField != "search_name")
 					response.reverse()
 				lp[pageNumber]=response;
 				for(i=0;i<lp[pageNumber].length;i++){
@@ -76,7 +76,8 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 					}
 					lp[pageNumber][i].listId = i;
 				}
-				controller.searchKey = lp[pageNumber][19].name;
+				console.log(lp[pageNumber])
+				controller.searchKey = lp[pageNumber][19].search_name;
 				controller.endAt = lp[pageNumber][19].average;
 				controller.endAtKey = ""+lp[pageNumber][19].bggId;
 		
@@ -87,7 +88,6 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 		};
 
 	this.boardgames = new DynamicItems();
-console.log(this.boardgames)
 	//create ordered list of numbers
 	this.range = function(a, b, step) {
 		step = step || 1;
@@ -140,7 +140,8 @@ console.log(this.boardgames)
 	}
 
 	this.search = function(){
-		this.searchKey = this.displayedSearchKey;
-		this.boardgames = new DynamicItems();
+		controller.searchKey = this.displayedSearchKey.toLowerCase();
+		
+		controller.boardgames = new DynamicItems();
 	}
 });

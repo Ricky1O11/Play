@@ -33,7 +33,10 @@ def populateDB(min, max):
                         "videogametheme" in game or 
                         "videogamemode" in game or 
                         "videogamedeveloper" in game or
-                        "videogamepublisher" in game):
+                        "videogamehwversion" in game or
+                        "videogamehardware" in game or
+                        "videogamepublisher" in game or
+                        int(game["usersrated"])<50):
                         a = ""
                     else:
                         boardgame = addBoardgame(i, game)
@@ -55,7 +58,10 @@ def addBoardgame(i, game):
                 gameSimpleObject["name"] = game[field]
                 gameCompleteObject["search_name"] = game[field].lower()
                 gameSimpleObject["search_name"] = game[field].lower()
-            elif field == "thumbnail" or field == "average" or field == "image":
+            if field == "average":
+                gameCompleteObject[field] = float(game[field])
+                gameSimpleObject[field] = float(game[field])
+            elif field == "thumbnail" or field == "image":
                 gameCompleteObject[field] = game[field]
                 gameSimpleObject[field] = game[field]
             else:
@@ -125,7 +131,7 @@ def addFields(field, val, boardgame):
         vals = {}
         vals["name"] = val[key]["name"]
         vals["search_name"] = val[key]["name"].lower()
-        references_dictionary[field].child(key).update(val[key])
+        references_dictionary[field].child(key).update(vals)
         references_dictionary[field].child(key).child("boardgames").child(str(boardgame["bggId"])).set(boardgame)
 
 def addTemplate(bggId, template):
@@ -165,8 +171,8 @@ if __name__ == "__main__":
             }
         }
     }
-    current_boardgames =boardgames_ref.get()
-    #current_boardgames = ref.set("")
+    #current_boardgames =boardgames_ref.get()
+    current_boardgames = ref.set("")
     thread_num = 20
 
     in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]

@@ -2,8 +2,8 @@ angular.module('play')
 .config(function($routeProvider) {
 	$routeProvider
 	.when('/', {
-		templateUrl: 'templates/profile/index.html',
-		controller: 'profileController',
+		templateUrl: 'templates/home/index.html',
+		controller: 'homeController',
 		controllerAs: 'pCtrl',
 		resolve: {
 		      // controller will not be loaded until $waitForSignIn resolves
@@ -16,7 +16,7 @@ angular.module('play')
 		controller: 'homeController',
 		controllerAs: 'hCtrl'*/
 	})
-	.when('/profile/:id', {
+	.when('/profile', {
 		templateUrl: 'templates/profile/index.html',
 		controller: 'profileController',
 		controllerAs: 'pCtrl'
