@@ -68,10 +68,10 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
-		return Api.boadgames(query, 20, "name").$loaded().then(function(response){
+		return Api.boadgames(query.toLowerCase(), 20, "search_name", 10, "").$loaded().then(function(response){
 			self.boardgames = [];
 			for (i=0; i<response.length; i++){
-				if(response[i].name.indexOf(query) !== -1)
+				if(response[i].search_name.indexOf(query.toLowerCase()) !== -1)
 					self.boardgames[i] = 
 						{
 							name: response[i].name,
@@ -142,10 +142,14 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		if(self.selectedValues.players!=[]){
 			//post match
 			self.selectedValues.time = self.selectedValues.time.getTime();
+			date = new Date();
+			time = date.getTime();
+			self.selectedValues.inserted_at = time;
+			self.selectedValues.completed = false;
 			simpleObject = {};
 			angular.copy(self.selectedValues, simpleObject);
 			delete simpleObject["boardgame"]
-
+			
 			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
 				function(response){
 					for(player in self.selectedValues.players){
@@ -177,6 +181,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.setVisible = function(pk){
+		console.log(templates[pk]);
 		self.templates[pk].visible = !self.templates[pk].visible;
 	}
 
@@ -251,7 +256,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 		delete simpleTemplate.$id;
 		delete simpleTemplate.$$hashKey;
 		delete simpleTemplate.$priority;
-		uTemplate = Api.templateput(self.selectedValues.boardgame.bggId, template.$id, simpleTemplate);
+		uTemplate = Api.templateput(self.selectedValues.boardgame.bggId, template.$id, simpleTemplate, $rootScope.user.uid);
 	}
 
 	this.addTemplate = function(){

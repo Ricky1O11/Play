@@ -34,11 +34,12 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 
 	//Search for boardagames
 	templateController.querySearchBoardgames = function (query) {
-		return Api.boadgames(query, 20, "name").$loaded().then(function(response){
+		return Api.boadgames(query.toLowerCase(), 20, "search_name", 10, "").$loaded().then(function(response){
 			templateController.boardgames = [];
 			for (i=0; i<response.length; i++){
-				if(response[i].name.indexOf(query) !== -1)
+				if(response[i].search_name.indexOf(query.toLowerCase()) !== -1){
 					templateController.boardgames[i] = response[i];
+				}
 			}
 			//	if(response[i].expands.length == 0)
 			//		console.log(response[i])
@@ -94,15 +95,18 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 		//prepare the "template" row to be inserted in the templates table
 		if(templateController.name == "")
 			templateController.name = "Template " + templateController.selectedValues.templates.length
+		date = new Date();
 		templateController.postValues.template={	
 				"name": templateController.name,
 				//hasExpansions: (templateController.selectedValues.expansions.length > 0)
 				"has_expansions": false,
+				"inserted_at": date.getTime(),
+				"inserted_by": $rootScope.user.uid,
 				"scoring_fields": templateController.postValues.scoringFields
 			};
 		
 		//post template
-		Api.templatespost(templateController.selectedValues.boardgame.bggId, templateController.postValues.template).$loaded().then(
+		Api.templatespost(templateController.selectedValues.boardgame.bggId, $rootScope.user.uid, templateController.postValues.template).$loaded().then(
 			function(response){
 				templateController.currentTab++;
 			},

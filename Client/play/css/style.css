@@ -87,8 +87,14 @@ md-sidenav.md-closed.md-locked-open-add-active {
 .height50perc{
 	height:50%;
 }
+.height40perc{
+	height:40%;
+}
 .height25perc{
 	height:25%;
+}
+.height20perc{
+	height:20%;
 }
 .height10perc{
 	height:10%;
@@ -407,6 +413,15 @@ md-sidenav.md-closed.md-locked-open-add-active {
 	border:0px solid #FFFFFF;
 	box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
 }
+.borderAccent{
+	border-bottom:3px solid #FF3D00;
+	box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+
+.borderGrey{
+	border-bottom:1px solid rgb(220,220,220);
+	box-shadow: 0 1px 5px 0 rgba(0,0,0,.06);
+}
 
 .shadowed{
 	text-shadow: -1px 1px 1px #444444;
@@ -414,6 +429,10 @@ md-sidenav.md-closed.md-locked-open-add-active {
 
 .shadowed-box{
 	box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
+}
+
+.shadowed-box-right{
+	box-shadow: 2px 0px 5px 0 rgba(0,0,0,.86);
 }
 
 a.decoNone, .decoNone:active{

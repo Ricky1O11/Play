@@ -1,5 +1,5 @@
  angular.module('play')
-.factory('Api', function ApiFactory($firebaseObject, $firebaseArray){
+.factory('Api', function ApiFactory($firebaseObject, $firebaseArray, Utils){
 	//var BASE_URL = "http://127.0.0.1:8000/server"
 	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
@@ -17,6 +17,7 @@
 				obj.rec_setting = false;
 				obj.match_won = 0;
 				obj.match_played = 0;
+				obj.match_finished = 0;
 
 				obj.$save();
 				return "success"
@@ -55,20 +56,23 @@
 					},
 					
 		boadgames:	function(query, limit, orderingField, endAt, endAtKey){
-				if(orderingField == "search_name"){
-					if(query!=""){
-						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).startAt(query).limitToFirst(limit);
-					}
-					else{
-						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).limitToFirst(limit);
-					}
+				if(query!=""){
+					var ref = firebase.database().ref().child("boardgames").orderByChild("search_name").startAt(query).limitToFirst(limit);
 				}
 				else{
-					if(endAtKey == ""){
-						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt).limitToLast(limit);
+					if(orderingField == "search_name"){
+							var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).limitToFirst(limit);
 					}
 					else{
-						var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt, endAtKey).limitToLast(limit);
+							console.log("cio");
+						if(endAtKey == ""){
+							console.log(endAt);
+							console.log(endAtKey);
+							var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt).limitToLast(limit);
+						}
+						else{
+							var ref = firebase.database().ref().child("boardgames").orderByChild(orderingField).endAt(endAt, endAtKey).limitToLast(limit);
+						}
 					}
 				}
 
@@ -112,7 +116,7 @@
 				return syncArray;
 					},	
 		
-		matchpost:	function(values, simpleObject){
+		matchpost:	function(values, simpleObject, match_played){
 					var ref = firebase.database().ref().child("matches").push(values);
 					var syncObject = $firebaseObject(ref);
 
@@ -139,6 +143,7 @@
 							"thumbnail":values.boardgame.thumbnail,
 							"image":values.boardgame.image,
 							"bggId":values.boardgame.bggId,
+							"last_inserted_at":values.inserted_at,
 						})
 					}
 
@@ -165,6 +170,27 @@
 						obj = ref.child("matches").child(""+match_id).remove();
 						return obj;
 					},
+
+		matchput:function(completed, bggId, players, match_id){
+						winner = Utils.getMax(players, "points");
+						update = {
+							"completed": completed,
+							"winner": (completed)? winner : ""
+						}
+						var ref = firebase.database().ref();
+
+						obj = ref.child("matches").child(""+match_id).update(update);
+
+						for(k in players){
+							ref.child("user_played_matches")
+							.child(""+players[k].uid)
+							.child(""+bggId)
+							.child("matches")
+							.child(""+match_id)
+							.update(update);
+						}
+						return obj;
+					},
 					
 		playpost:	function(match, plays){
 					var ref = firebase.database().ref().child("matches").child(""+match).child("plays").push(plays);
@@ -173,20 +199,23 @@
 					},
 		
 		templates:	function(boardgame){
-			console.log(boardgame);
 			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame);
 			var syncArray = $firebaseArray(ref);
 			return syncArray;
 					},
 		
-		templatespost:	function(boardgame, template){
+		templatespost:	function(boardgame, user, template){
 			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame).push(template);
-			var syncArray = $firebaseObject(ref);
-			return syncArray;
+			var syncObject = $firebaseObject(ref);
+			var ref = firebase.database().ref().child("user_posted_templates").child(""+user).child(syncObject.$id).set(true);
+
+			return syncObject;
 					},
 
-		templateput:	function(boardgame, template_id, template){
+		templateput:	function(boardgame, template_id, template, user_id){
 			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame).child(template_id).update(template);
+			if(template_id != "0")
+			var ref = firebase.database().ref().child("user_posted_templates").child(user_id).child(template_id).update(template);
 					},				
 		
 	}

@@ -23,11 +23,9 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			if($rootScope.user.uid in response.players){
 				controller.allowed = true;
 			}
-			console.log(response.time)
 			controller.time = new Date(response.time);
 			controller.plays = response.plays;
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(response.players);
-			console.log(controller.total_rounds)
 		}, function errorCallback(response){
 			$rootScope.showToast("You are not allowed to see this match!");
 			//$location.path("matches/");			
@@ -82,45 +80,10 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	    });
 	}
 
-
-	//this.detectStatus = function(){
-	//	var now = new Date();
-	//	if(now < new Date(controller.match.time)){
-	//		controller.statusColor = "md-primary";
-	//		controller.match.statusMessage = "programmed";
-	//	}
-	//	else if(controller.match.status == 0){
-	//		controller.statusColor = "md-accent";
-	//		controller.match.statusMessage = "in progress";
-	//	}
-	//	else if(controller.match.status == 1){
-	//		$timeout.cancel(controller.timer);
-	//		controller.match.statusMessage = "completed";
-	//	}
-	//	else{
-	//		console.log(controller.match.statusMessage);
-	//	}
-	//}
-// 
-	//this.setCompletionStatus = function(id){
-	//	if(id != controller.match.status){
-	//		row={
-	//			boardgame:controller.match.boardgame,
-	//			duration:controller.match.duration,
-	//			status:id,
-	//			winner: controller.getWinner()
-	//			}
-//
-	//		Api.matchput(row, controller.match.pk).then(function(data){
-	//				controller.match.status = id;
-	//				controller.detectStatus();
-	//				startTime();
-	//			}, 
-	//			function errorCallback(response) {
-	//				console.log(response);
-	//			});
-	//	}
-	//}
+	this.setCompletionStatus = function(completed){
+		if($scope.match.completed != completed)
+			Api.matchput(completed, $scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id);
+	}
 
 	//this.getWinner = function(){
 	//	winner_pk = null;
@@ -133,12 +96,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	//	}
 	//	return winner_pk;
 	//}
-//
-//
-	//this.is = function(message){
-	//	return controller.match.statusMessage == message;
-	//}
-//
+
 	//this.updateDuration = function(){
 	//	$timeout.cancel(controller.timer);
 	//    if(controller.match.old_duration != controller.match.duration){
@@ -191,7 +149,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 				controller.plays = $scope.match.plays;
 				
 			})
-			console.log(controller.plays)
+
 
 		}
 		controller.total_rounds += 1;

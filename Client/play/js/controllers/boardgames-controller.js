@@ -60,22 +60,21 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 			this.loaded += this.PAGE_SIZE;
 			lp = this.loadedPages; 
 			ps = this.PAGE_SIZE;
-			console.log(controller.searchKey)
 			//api call to the list of boardgames
-			Api.boadgames(controller.searchKey.toLowerCase(), 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
+			console.log(controller.searchKey)
+			Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
 			.then(function(response){
-				if(controller.actualOrderingField != "search_name")
-					response.reverse()
-				lp[pageNumber]=response;
-				for(i=0;i<lp[pageNumber].length;i++){
-					if(lp[pageNumber][i].favourite > 0){
-						lp[pageNumber][i].isFavourite = true;
+				if(controller.actualOrderingField != "search_name"){
+					if(controller.searchKey != ""){
+						console.log("searchkey")
+						response.sort(function(a,b) {return (a.average < b.average) ? 1 : ((b.average < a.average) ? -1 : 0);} );
 					}
 					else{
-						lp[pageNumber][i].isFavourite = false;
+						response.reverse()
 					}
-					lp[pageNumber][i].listId = i;
 				}
+				lp[pageNumber]=response;
+				
 				console.log(lp[pageNumber])
 				controller.searchKey = lp[pageNumber][19].search_name;
 				controller.endAt = lp[pageNumber][19].average;
@@ -108,30 +107,12 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
 		controller.selectedOrderingField = field;
-		controller.actualOrderingField="average"; //ordering field, selectable by the user
 		controller.displayedSearchKey=""; //ordering field, selectable by the user
 		controller.searchKey=""; //ordering field, selectable by the user
-		controller.endAt="9.99";
-		if(field == "sfavourite"){
-			Api.favourites().then(function(response){
-				lp[pageNumber]=response.data;
-				for(i=0;i<lp[pageNumber].length;i++){
-					if(lp[pageNumber][i].favourite > 0){
-						lp[pageNumber][i].isFavourite = true;
-					}
-					else{
-						lp[pageNumber][i].isFavourite = false;
-					}
-					lp[pageNumber][i].listId = i;
-				}
-
-			}, function errorCallback(response){
-				console.log(response);
-			});
-		}
-		//else
+		controller.endAt=10;
+		controller.endAtKey="";
 		controller.actualOrderingField = field;
-		this.boardgames = new DynamicItems();
+		controller.boardgames = new DynamicItems();
 	}
 	
 	//get the ordering field selected by the user
@@ -140,7 +121,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	}
 
 	this.search = function(){
-		controller.searchKey = this.displayedSearchKey.toLowerCase();
+		controller.searchKey = controller.displayedSearchKey.toLowerCase();
 		
 		controller.boardgames = new DynamicItems();
 	}

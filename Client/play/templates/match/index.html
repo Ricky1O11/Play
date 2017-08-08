@@ -56,26 +56,26 @@
 					</div>
 					<div layout="column" flex-gt-xs="30" flex-xs="100" layout-align-xs="center center"  layout-align="center end">
 						<div layout="row">
+							<!--
 							<md-button 
-							ng-if="mCtrl.is('programmed')" 
+							ng-if="!match.completed" 
 							ng-class="mCtrl.statusColor">
 								programmed
 							</md-button>
+							-->
 							<md-button 
-							ng-if="!mCtrl.is('programmed')" 
 							ng-class="{
-								'buttonDisabled' : !mCtrl.is('in progress'),
-								'md-accent' : mCtrl.is('in progress')}"
-							ng-click="mCtrl.setCompletionStatus(0)"
+								'buttonDisabled' : match.completed,
+								'md-accent' : !match.completed}"
+							ng-click="mCtrl.setCompletionStatus(false)"
 							>
 								in progress
 							</md-button>
 							<md-button 
-							ng-if="!mCtrl.is('programmed')" 
 							ng-class="{
-								'buttonDisabled' : mCtrl.is('in progress'),
-								'md-primary' : !mCtrl.is('in progress')}"
-							ng-click="mCtrl.setCompletionStatus(1)"
+								'buttonDisabled' : !match.completed,
+								'md-primary' : match.completed}"
+							ng-click="mCtrl.setCompletionStatus(true)"
 							>
 								completed
 							</md-button>

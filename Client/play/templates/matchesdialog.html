@@ -199,10 +199,17 @@
 							</md-button>
 						</div>
 					</md-list-item>
-					<md-list-item layout="row" ng-repeat-end ng-repeat="scoringField in template.scoringField_details"  ng-if="template.visible"
+					<md-list-item layout="row" ng-repeat-end ng-repeat="scoring_field in template.scoring_fields"  ng-if="template.visible"
 					class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-						<div layout="row">
-							{{scoringField.word_value}}
+						<div layout="column" flex="50">
+							<div layout="row">
+								{{scoring_field.name[lang]}}
+							</div>
+						</div>
+						<div layout="column" flex="50" layout-align="center end">
+							<div layout="row">
+								points: {{scoring_field.bonus}}
+							</div>
 						</div>
 					</md-list-item>
 				</md-list>

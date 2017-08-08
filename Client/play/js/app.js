@@ -52,27 +52,58 @@
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 			      	$rootScope.user = firebaseUser;
 			      	if($rootScope.user){
+
 				      	var dbuser = Api.user($rootScope.user.uid);
 						dbuser.$bindTo($rootScope, "user.profile_details");
+						
 						var friends = Api.friends($rootScope.user.uid);
 						friends.$bindTo($rootScope, "user.friends");
 
+						var matches = Api.matches($rootScope.user.uid);
+						matches.$loaded().then(function(data){
+							$rootScope.games=data;
+							match_played = 0;
+							match_finished = 0;
+							match_won = 0;
+							for(i = 0; i< $rootScope.games.length; i++){
+								$rootScope.games[i].visible = false;
+								$rootScope.games[i].lastMatchTime = 0;
+								for(match in $rootScope.games[i].matches){
+									$rootScope.games[i].lastMatchTime = Math.max($rootScope.games[i].lastMatchTime, $rootScope.games[i].matches[match].time);
+									if($rootScope.games[i].matches[match].completed){
+										match_finished++; 
+										if($rootScope.games[i].matches[match].winner == $rootScope.user.uid)
+											match_won++;
+									}
+									match_played++;
+								}
+							}
+							$rootScope.user.profile_details.match_played = match_played;
+							$rootScope.user.profile_details.match_won = match_won;
+							$rootScope.user.profile_details.match_finished = match_finished;
+							console.log($rootScope.user.profile_details.match_won);
+						});
+
 						$rootScope.$watch('user.friends', function(newData, oldData) {
-							if((oldData.inbound == null 
-									&& newData.inbound != null) 
-								|| 
-								(oldData.inbound != null 
-										&& newData.inbound != null 
-										&& Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
-								  var audio = new Audio('audio/song.mp3');
-		        					audio.play();
-	        				}
+							if(oldData){
+								if((oldData.inbound == null 
+										&& newData.inbound != null) 
+									|| 
+									(oldData.inbound != null 
+											&& newData.inbound != null 
+											&& Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
+									  var audio = new Audio('audio/song.mp3');
+			        					audio.play();
+		        				}
+		        			}
+						
+
 						});
 					}
 		    });
 			$timeout(function () {
 				       $rootScope.l = true;
-				    }, 500);
+				    }, 3000);
 
 			$rootScope.match = {};
 

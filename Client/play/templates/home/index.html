@@ -1,75 +1,144 @@
 <div>
-  <md-content class="md-padding">
-    <div layout="row" flex="100">
-	    <div layout="column" flex-xs flex-gt-xs="50" >
-	      <md-card class="whiteBg" md-theme-watch>
-	        <md-card-title>
-	          <md-card-title-text>
-	            <span class="md-headline">Last favourites</span>
-	          </md-card-title-text>
-	        </md-card-title>
-	        <md-card-actions layout="row" layout-align="end center">
-	          <md-button>Action 1</md-button>
-	          <md-button>Action 2</md-button>
-	        </md-card-actions>
-	      </md-card>
-	    </div>
-	    <div layout="column" flex-xs flex-gt-xs="50" >
-	      <md-card class="whiteBg" md-theme-watch>
-	        <md-card-title>
-	          <md-card-title-text>
-	            <span class="md-headline">Last favourites</span>
-	            <span class="md-subhead">Large</span>
-	          </md-card-title-text>
-	          <md-card-title-media>
-	            <div class="md-media-lg card-media"></div>
-	          </md-card-title-media>
-	        </md-card-title>
-	        <md-card-actions layout="row" layout-align="end center">
-	          <md-button>Action 1</md-button>
-	          <md-button>Action 2</md-button>
-	        </md-card-actions>
-	      </md-card>
-	    </div>
-    </div>
-    <div layout="row" flex="100" layout-align="center center">
-	    <md-button class="md-fab"></md-button>
-    </div>
-    <div layout="row"  flex="100">
-	    <div layout="column" flex-xs flex-gt-xs="50" >
-	      <md-card class="whiteBg" md-theme-watch>
-	        <md-card-title>
-	          <md-card-title-text>
-	            <span class="md-headline">Last favourites</span>
-	            <span class="md-subhead">Large</span>
-	          </md-card-title-text>
-	          <md-card-title-media>
-	            <div class="md-media-lg card-media"></div>
-	          </md-card-title-media>
-	        </md-card-title>
-	        <md-card-actions layout="row" layout-align="end center">
-	          <md-button>Action 1</md-button>
-	          <md-button>Action 2</md-button>
-	        </md-card-actions>
-	      </md-card>
-	    </div>
-	    <div layout="column" flex-xs flex-gt-xs="50" >
-	      <md-card class="whiteBg" md-theme-watch>
-	        <md-card-title>
-	          <md-card-title-text>
-	            <span class="md-headline">Last favourites</span>
-	            <span class="md-subhead">Large</span>
-	          </md-card-title-text>
-	          <md-card-title-media>
-	            <div class="md-media-lg card-media"></div>
-	          </md-card-title-media>
-	        </md-card-title>
-	        <md-card-actions layout="row" layout-align="end center">
-	          <md-button>Action 1</md-button>
-	          <md-button>Action 2</md-button>
-	        </md-card-actions>
-	      </md-card>
-	    </div>
-    </div>
+  <md-content>
+	<div layout="row" flex="100" class="height50perc">
+	</div>
+	<div layout="row"  flex="100"  class="height50perc">
+		<div layout="column" flex-xs flex-gt-xs="30" >
+		  <md-card class="whiteBg" md-theme-watch>
+			<md-card-title>
+			  <md-card-title-text>
+				<span class="md-headline">Last 3 favourites</span>
+			  </md-card-title-text>
+			</md-card-title>
+			<md-card-content layout="row" class="height100perc">
+				<md-list flex >
+					<md-list-item
+						class=" md-1-line animate-repeat"                       
+						ng-repeat="(key, boardgame) in user.profile_details.favourites |orderObjectBy: 'inserted_at':true| objLimitTo: 3"
+						ng-href="#/boardgames/{{boardgame.bggId}}">
+						<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+						<div layout="column">
+							<div layout="row">
+								<h4> {{boardgame.name}}</h4>
+							</div>
+						</div>
+						<i 
+						aria-label="remove favourite"
+						ng-if="user.profile_details.favourites[boardgame.bggId]" 
+						class="icon-heart md-secondary" 
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="hCtrl.toggleFavourite(boardgame)">
+							<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+						</i>
+						<i 
+						aria-label="add favourite"
+						ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+						class="icon-heart-o md-secondary" 
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="hCtrl.toggleFavourite(boardgame)">
+							<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+						</i>
+					</md-list-item>
+				</md-list>
+			</md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+			  <md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+			</md-card-actions>
+		  </md-card>
+		</div>
+		<div layout="column" flex-xs flex-gt-xs="40" class="height100perc" >
+		  <md-card class="whiteBg" class="height100perc" >
+			<md-card-content class="height100perc">
+				<div layout="row" class="pad20">
+					<div layout="column" flex  layout-align="center center">
+						<div layout="row">
+							<h1>{{100*user.profile_details.match_won/user.profile_details.match_played | number:2}}%</h1>
+						</div>
+						<div layout="row">match won</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match played</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_played}}</h3>
+						</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match in progress</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_played-user.profile_details.match_finished}}</h3>
+						</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match won</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_won}}</h3>
+						</div>
+					</div>
+				</div>
+			</md-card-content>
+		  </md-card>
+		</div>
+		<div layout="column" flex-xs flex-gt-xs="30" >
+		  <md-card class="whiteBg" class="height100perc">
+			<md-card-title>
+			  <md-card-title-text>
+				<span class="md-headline">Last 3 played games</span>
+			  </md-card-title-text>
+			</md-card-title>
+			<md-card-content layout="row" class="height100perc">
+				<md-list flex >
+					<md-list-item
+						class=" md-1-line animate-repeat"                       
+						ng-repeat="boardgame in hCtrl.games |orderBy: 'lastMatchTime'| limitTo: 3"
+						ng-href="#/boardgames/{{boardgame.bggId}}">
+						<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+						<div layout="column">
+							<div layout="row">
+								<h4> {{boardgame.name}}</h4>
+							</div>
+						</div>
+						<i 
+						aria-label="remove favourite"
+						ng-if="user.profile_details.favourites[boardgame.bggId]" 
+						class="icon-heart md-secondary" 
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="hCtrl.toggleFavourite(boardgame)">
+							<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+						</i>
+						<i 
+						aria-label="add favourite"
+						ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+						class="icon-heart-o md-secondary" 
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="hCtrl.toggleFavourite(boardgame)">
+							<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+						</i>
+					</md-list-item>
+				</md-list>
+			</md-card-content>
+			<md-card-actions layout="row" layout-align="end center">
+			  <md-button  ng-click="goTo('matches/')">See All</md-button>
+			</md-card-actions>
+		  </md-card>
+		</div>
+	</div>
   </md-content>
 </div>

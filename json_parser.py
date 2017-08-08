@@ -171,8 +171,8 @@ if __name__ == "__main__":
             }
         }
     }
-    #current_boardgames =boardgames_ref.get()
-    current_boardgames = ref.set("")
+    current_boardgames =boardgames_ref.get()
+    #current_boardgames = ref.set("")
     thread_num = 20
 
     in_files = [f for f in listdir("jsons") if isfile(join("jsons", f))]

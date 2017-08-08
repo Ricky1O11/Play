@@ -4,27 +4,30 @@ angular.module('play')
 	.when('/', {
 		templateUrl: 'templates/home/index.html',
 		controller: 'homeController',
-		controllerAs: 'pCtrl',
+		controllerAs: 'hCtrl',
 		resolve: {
-		      // controller will not be loaded until $waitForSignIn resolves
-		      // Auth refers to our $firebaseAuth wrapper in the factory below
 		      "currentAuth": ["Auth", function(Auth) {
-		        // $waitForSignIn returns a promise so the resolve waits for it to complete
 		        return Auth.$waitForSignIn();
 		      }]}
-		/*templateUrl: 'templates/home/index.html',
-		controller: 'homeController',
-		controllerAs: 'hCtrl'*/
 	})
 	.when('/profile', {
 		templateUrl: 'templates/profile/index.html',
 		controller: 'profileController',
 		controllerAs: 'pCtrl'
 	})
+	.when('/profile/:id', {
+		templateUrl:'templates/profile/index.html',
+		controller: 'profileController',
+		controllerAs: 'pCtrl'
+	})
 	.when('/home', {
 		templateUrl: 'templates/home/index.html',
 		controller: 'homeController',
-		controllerAs: 'hCtrl'
+		controllerAs: 'hCtrl',
+		resolve: {
+		      "currentAuth": ["Auth", function(Auth) {
+		        return Auth.$waitForSignIn();
+		      }]}
 	})
 	.when('/favourites', {
 		templateUrl: 'templates/favourites/index.html',
