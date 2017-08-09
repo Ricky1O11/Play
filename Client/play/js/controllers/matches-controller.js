@@ -5,17 +5,6 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 	this.loaded=true;
 	this.toggleFavourite = Utils.toggleFavourite;
 	controller=this;
-	//api call to the list of user matches
-	Api.matches(currentAuth.uid).$loaded().then(function(data){
-		controller.games=data;
-		for(i = 0; i< controller.games.length; i++){
-			controller.games[i].visible = false;
-			controller.games[i].lastMatchTime = 0;
-			for(match in controller.games[i].matches)
-				controller.games[i].lastMatchTime = Math.max(controller.games[i].lastMatchTime, controller.games[i].matches[match].time);
-		}
-		controller.loaded = true;
-	});
 	
 	//create ordered list of numbers
 	this.range = Utils.range;
@@ -31,9 +20,9 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 	}
 
 	this.setVisible = function(id){
-		for(i = 0; i<controller.games.length; i++){
-			if(controller.games[i].$id == id){
-				controller.games[i].visible = !controller.games[i].visible;
+		for(i = 0; i<$rootScope.games.length; i++){
+			if($rootScope.games[i].$id == id){
+				$rootScope.games[i].visible = !$rootScope.games[i].visible;
 			}
 		}
 	}

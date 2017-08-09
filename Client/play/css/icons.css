@@ -311,3 +311,6 @@
 .icon-angry:before {
   content: "\7c";
 }
+.icon-icon:before {
+  content: "\7d";
+}

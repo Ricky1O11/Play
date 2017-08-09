@@ -1,4 +1,4 @@
-(function(){
+ (function(){
 	// Initialize Firebase
 	var config = {
 	    apiKey: "AIzaSyBI2Uab-jJ5RVzVppEvibmOlnHJRBgScnQ",
@@ -59,7 +59,7 @@
 						var friends = Api.friends($rootScope.user.uid);
 						friends.$bindTo($rootScope, "user.friends");
 						var matches = Api.matches($rootScope.user.uid);
-						matches.$loaded().then(Utils.getUserData);
+						matches.$loaded().then(Utils.getUserMatches);
 						$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
 					}
 		    });

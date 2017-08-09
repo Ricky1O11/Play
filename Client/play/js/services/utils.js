@@ -1,7 +1,7 @@
 angular.module("play")
 .factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast){
-  return {
-            toggleFavourite: function(boardgame) {
+  obj = {};
+            obj.toggleFavourite = function(boardgame) {
               console.log(boardgame)
               date = new Date();
                     if("favourites" in $rootScope.user["profile_details"]){
@@ -26,9 +26,9 @@ angular.module("play")
                           "inserted_at": date.getTime()
                         }
                     }
-            },
+            }
           
-            timestampToDate: function(timestamp){
+            obj.timestampToDate = function(timestamp){
                 return date = new Date(timestamp*1000);
                 // Hours part from the timestamp
                 var hours = date.getHours();
@@ -39,9 +39,9 @@ angular.module("play")
 
                 // Will display time in 10:30:23 format
                 var formattedTime = hours + ':' + minutes.substr(-2) + ':' + seconds.substr(-2);
-            },
+            }
 
-            getMax: function(array, field){
+            obj.getMax = function(array, field){
               max = 0;
               id = "";
 
@@ -52,25 +52,25 @@ angular.module("play")
                 }
               }
               return id;
-            },
+            }
 
-            range: function(min, max, step) {
+            obj.range = function(min, max, step) {
               step = step || 1;
               var input = [];
               for (var i = min; i <= max; i += step) {
                 input.push(i);
               }
               return input;
-            },
+            }
 
-            goTo: function(url, id) {
+            obj.goTo = function(url, id) {
               if(id >=0){
                 url += id
               }
               $location.path(url);
-            },
+            }
 
-            showPopup: function(ev, user_pk, string, additional_field) {
+            obj.showPopup = function(ev, user_pk, string, additional_field) {
               boardgame = additional_field? additional_field : -1;
               $mdDialog.show({
                 locals:{user_pk : user_pk, boardgame: boardgame},
@@ -83,9 +83,9 @@ angular.module("play")
                 preserveScope:true, 
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
               })  
-            },
+            }
 
-            showImage: function(ev, url) {
+            obj.showImage = function(ev, url) {
               $mdDialog.show({
                 locals:{url : url},
                 controller: 'imageDialogController',
@@ -98,9 +98,9 @@ angular.module("play")
                 clickOutsideToClose:true,
                 //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
               })  
-            },
+            }
 
-            getRandomColor: function(pk){
+            obj.getRandomColor = function(pk){
               rnd = Math.floor(Math.random()*7);
               switch (rnd){
                 case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
@@ -112,41 +112,78 @@ angular.module("play")
                 case 6: $rootScope.randomColors[pk] = {'background-color':'#F06292'}; break; //pink
                 default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
               }
-            },
+            }
 
-            showToast: function(string){
+            obj.showToast = function(string){
               $mdToast.show(
                   $mdToast.simple()
                   .textContent(string)
                   .hideDelay(3000)
                   .position('top right')
               );
-            },
+            }
 
-            getUserData: function(data){
+            obj.getUserMatches = function(data){
               $rootScope.games=data;
               match_played = 0;
               match_finished = 0;
               match_won = 0;
+              most_played_game = "";
+              most_played_game_amount = 0;
+
+              companions = {};
+
               for(i = 0; i< $rootScope.games.length; i++){
-                $rootScope.games[i].visible = false;
-                $rootScope.games[i].lastMatchTime = 0;
-                for(match in $rootScope.games[i].matches){
-                  $rootScope.games[i].lastMatchTime = Math.max($rootScope.games[i].lastMatchTime, $rootScope.games[i].matches[match].time);
-                  if($rootScope.games[i].matches[match].completed){
+                game = $rootScope.games[i];
+                game.visible = false;
+                game.lastMatchTime = 0;
+
+                //get most played game
+                played_matches = Object.keys(game.matches);
+                if(played_matches.length >most_played_game_amount){
+                  most_played_game_amount = played_matches;
+                  most_played_game = game.name;
+                }
+
+                for(m in game.matches){
+                  match = game.matches[m];
+                  game.lastMatchTime = Math.max(game.lastMatchTime, match.time);
+                  
+                  //get finished, won and played matches
+                  if(match.completed){
                     match_finished++; 
-                    if($rootScope.games[i].matches[match].winner == $rootScope.user.uid)
+                    if(match.winner == $rootScope.user.uid)
                       match_won++;
                   }
                   match_played++;
+
+                  for(p in match.players){
+                    player = match.players[p];
+                    if(p != $rootScope.user.uid){
+                      if(p in companions){
+                        companions[p]["amount"] += 1
+                      }
+                      else{
+                        companions[p] = {}
+                        companions[p]["amount"] = 1
+                        companions[p]["username"] = player.username;
+                        companions[p]["image"] = player.image;
+                      }
+                    }
+                  }
+
                 }
               }
+
               $rootScope.user.profile_details.match_played = match_played;
               $rootScope.user.profile_details.match_won = match_won;
               $rootScope.user.profile_details.match_finished = match_finished;
-            },
+              $rootScope.user.profile_details.most_played_game = most_played_game;
+              $rootScope.user.profile_details.most_played_game_amount = most_played_game_amount;
+              $rootScope.user.profile_details.most_frequent_companion = companions;
+            }
 
-            playNewFriendNotification: function(newData, oldData) {
+            obj.playNewFriendNotification = function(newData, oldData) {
               if(oldData){
                 if((oldData.inbound == null 
                     && newData.inbound != null) 
@@ -158,22 +195,23 @@ angular.module("play")
                         audio.play();
                 }
               }
-            },
+            }
 
-            addFriend: function(user){
+            obj.addFriend = function(user){
               Api.friendspost($rootScope.user, user).then(function(response){
                 $rootScope.showToast("Good job! You have a new friend!");
               }, function errorCallback(response){
                 console.log(response);
               });
-            },
+            }
 
-            removeFriend: function(user_id){
+            obj.removeFriend = function(user_id){
               Api.frienddelete($rootScope.user.uid, user_id).then(function(response){
                 $rootScope.showToast("What a pity! You lose a companion");
               }, function errorCallback(response){
                 console.log(response);
               });
             }
-          }
+          
+    return obj;
 });

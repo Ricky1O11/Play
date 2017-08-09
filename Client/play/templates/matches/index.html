@@ -42,7 +42,7 @@
 										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
 											<md-list-item
 												class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-												ng-repeat-start="boardgame in (msCtrl.games | filter:{name:query} | filter: msCtrl.timeGreaterThanGame) | orderBy:msCtrl.getOrderingField():true"
+												ng-repeat-start="boardgame in (games | filter:{name:query} | filter: msCtrl.timeGreaterThanGame) | orderBy:msCtrl.getOrderingField():true"
 												ng-click="msCtrl.setVisible(boardgame.$id)" ng-if="boardgame.hasOwnProperty('matches')">
 												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 												<div layout="column">
@@ -95,7 +95,7 @@
 										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
 											<md-list-item
 												class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-												ng-repeat-start="boardgame in msCtrl.games | filter:{name:query} | orderBy:msCtrl.getOrderingField():true"
+												ng-repeat-start="boardgame in games | filter:{name:query} | orderBy:msCtrl.getOrderingField():true"
 												ng-click="msCtrl.setVisible(boardgame.$id)" ng-if="boardgame.hasOwnProperty('matches')">
 												<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 												<div layout="column">

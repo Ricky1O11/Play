@@ -13,20 +13,12 @@ angular.module('play')
 	.when('/profile', {
 		templateUrl: 'templates/profile/index.html',
 		controller: 'profileController',
-		controllerAs: 'pCtrl',
-		resolve: {
-		      "currentAuth": ["Auth", function(Auth) {
-		        return Auth.$waitForSignIn();
-		      }]}
+		controllerAs: 'pCtrl'
 	})
 	.when('/profile/:id', {
 		templateUrl:'templates/profile/index.html',
 		controller: 'profileController',
-		controllerAs: 'pCtrl',
-		resolve: {
-		      "currentAuth": ["Auth", function(Auth) {
-		        return Auth.$waitForSignIn();
-		      }]}
+		controllerAs: 'pCtrl'
 	})
 	.when('/home', {
 		templateUrl: 'templates/home/index.html',

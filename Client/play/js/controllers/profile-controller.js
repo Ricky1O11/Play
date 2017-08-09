@@ -1,5 +1,5 @@
-  //controller for user profile
-angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams, currentAuth) {
+//controller for user profile
+angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
 	this.params=$routeParams;
 	controller = this;
 	console.log(this.params)
@@ -11,19 +11,15 @@ angular.module("play").controller('profileController', function(Api, $rootScope,
 	}
 	controllerSidebar=this;
 
-	//api call to the list of user matches
-	Api.matches(currentAuth.uid).$loaded().then(function(data){
-		controller.games=data;
-	});
-
 	this.countMatchesWith = function(friend_id){
 		match_played_with = 0;
 		match_won_with = 0;
-		for(game in controller.games){
-			for(match in controller.games[game].matches){
-				if(friend_id in controller.games[game].matches[match].players){
+		for(game in $rootScope.games){
+			
+			for(match in $rootScope.games[game].matches){
+				if(friend_id in $rootScope.games[game].matches[match].players){
 					match_played_with++;
-					if(controller.games[game].matches[match] && controller.games[game].matches[match].winner == $rootScope.user.uid)
+					if($rootScope.games[game].matches[match] && $rootScope.games[game].matches[match].winner == $rootScope.user.uid)
 						match_won_with++;
 				}
 			}
