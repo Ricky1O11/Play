@@ -89,7 +89,7 @@
 						</div>
 						<div layout="column" class="pad10l pad3t" layout-align="center center">
 
-							<h5 ng-click="showPopup($event, user_pk, 'friends')" class="clickable" 
+							<h5 ng-click="showPopup($event, user.uid, 'friends')" class="clickable" 
 								md-colors="{color: 'myTheme-accent'}">
 								ADD FRIEND
 							</h5>
@@ -106,7 +106,7 @@
 							<md-button 
 								aria-label="Edit match info" 
 								class="md-fab md-mini absolute1">
-									{{friend.match_played_with}}
+									{{pCtrl.countMatchesWith(key)[0]}} / {{pCtrl.countMatchesWith(key)[1]}}
 								<md-tooltip md-direction="bottom" md-delay="200">Matches played together</md-tooltip>
 							</md-button>
 						</div>
@@ -132,9 +132,10 @@
 			</div>
 		</div>
 	</div>
+	{{pCtrl.currentTab}}
 	<div layout="row" flex="grow">
 		<div layout="column" flex="100">
-			<md-tabs  md-selected="pCtrl.currentTab"
+			<md-tabs  md-selected="pCtrl.currT"
 			md-stretch-tabs="always" flex>
 			<md-tab label="Favourites" >
 				<md-content class="pad5l pad10t">
@@ -153,25 +154,6 @@
 								<div layout="row" class="mrg20b"><h1>You don't have any favourite game</h1></div>
 								<div layout="row" class="blue-grey clickable decoNone" ng-click="goTo('boardgames/')"><h2><i class="icon-plus-1 mrg10r"></i>Browse the list and add one of them</h2></div>
 						</div>
-					</div>
-				</md-content>
-			</md-tab>
-			<md-tab label="Recents" >
-				<md-content class="pad5l pad10t">
-					<div layout="row" layout-wrap>
-						<div layout="column" class="pad20l pad20t clickable" flex="none" ng-repeat="r in pCtrl.recents" 
-						ng-click="goTo('boardgames/'+r.pk)">
-							<div class="circleBase imgBoardgameProfile hideScrollbar shadowed-box">
-								<div class="circleBase imgBoardgameProfile" layout-align="center center" back-img="{{r.img}}">
-									<div class="circleBase" style="font-size:50px;"></div>
-								</div>
-							<md-tooltip md-direction="bottom" md-delay="200">{{r.title}}</md-tooltip>
-							</div>
-						</div>
-						<div layout="column" layout-align="center center" ng-if="pCtrl.recents.length == 0" flex="100">
-						  	<div layout="row" class="size-72 mrg20b">:(</div>
-						  	<div layout="row" class="mrg20b"><h1>Hey you! This area seems to be quite empty! Fill it!</h1></div>
-						  	<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches')"><h2><i class="icon-plus-1 mrg10r"></i>Play!</h2></div>
 					</div>
 				</md-content>
 			</md-tab>
@@ -305,8 +287,7 @@
 							</div>
 						</div>
 				</md-content>
-			</md-tab>
-			</md-tabs>
+			</md-tab>			
 		</div>
 	</div>
 </div>

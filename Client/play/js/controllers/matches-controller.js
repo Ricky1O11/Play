@@ -5,7 +5,7 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 	this.loaded=true;
 	this.toggleFavourite = Utils.toggleFavourite;
 	controller=this;
-	//api call to the list of boardgames
+	//api call to the list of user matches
 	Api.matches(currentAuth.uid).$loaded().then(function(data){
 		controller.games=data;
 		for(i = 0; i< controller.games.length; i++){
@@ -18,22 +18,8 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 	});
 	
 	//create ordered list of numbers
-	this.range = function(a, b, step) {
-		step = step || 1;
-		var input = [];
-		if(a>b){
-		  for (var i = a; i >= b; i -= step) {
-			input.push(i);
-		  }
-		}
-		else{
-		  for (var i = a; i <= b; i += step) {
-			input.push(i);
-		  }
-		}
-		return input;
-	};
-	
+	this.range = Utils.range;
+
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
 		controller.orderingField = field;

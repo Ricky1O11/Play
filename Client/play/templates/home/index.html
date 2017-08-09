@@ -1,20 +1,18 @@
 <div>
-  <md-content>
-	<div layout="row" flex="100" class="height50perc">
-	</div>
-	<div layout="row"  flex="100"  class="height50perc">
-		<div layout="column" flex-xs flex-gt-xs="30" >
-		  <md-card class="whiteBg" md-theme-watch>
+  <md-content class="pad10l pad10r" layout="row">
+	<div layout="column" flex-xs flex-gt-xs="30" >
+		<div layout="row" class="height55perc">
+		  <md-card layout="column" flex class="whiteBg" class="height100perc">
 			<md-card-title>
 			  <md-card-title-text>
-				<span class="md-headline">Last 3 favourites</span>
+				<span class="md-headline">Last 5 favourites</span>
 			  </md-card-title-text>
 			</md-card-title>
-			<md-card-content layout="row" class="height100perc">
+			<md-card-content layout="row" class="overflowScroll">
 				<md-list flex >
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
-						ng-repeat="(key, boardgame) in user.profile_details.favourites |orderObjectBy: 'inserted_at':true| objLimitTo: 3"
+						ng-repeat="(key, boardgame) in user.profile_details.favourites |orderObjectBy: 'inserted_at':true| objLimitTo: 5"
 						ng-href="#/boardgames/{{boardgame.bggId}}">
 						<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
 						<div layout="column">
@@ -41,14 +39,126 @@
 					</md-list-item>
 				</md-list>
 			</md-card-content>
-			<md-card-actions layout="row" layout-align="end center">
-			  <md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+			<md-card-actions layout="row">
+				<div layout="column" flex layout-align="center start">
+			  		<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+			  	</div>
+			  	<div layout="column" flex layout-align="center end" class="relative">
+		  		 	<md-button 
+			          		aria-label="Boardgames list" 
+			          		class="md-fab md-mini md-raised md-primary absolute4" 
+							ng-click="goTo('boardgames/')">
+			            <i class="icon-plus-1"></i>
+			        </md-button>
+			  	</div>
 			</md-card-actions>
 		  </md-card>
 		</div>
-		<div layout="column" flex-xs flex-gt-xs="40" class="height100perc" >
-		  <md-card class="whiteBg" class="height100perc" >
-			<md-card-content class="height100perc">
+		<div layout="row" class="height5perc">
+		</div>
+		<div layout="row" class="height40perc">
+		  <md-card layout="column" flex class="whiteBg" class="height100perc">
+			<md-card-title class="relative height10perc">
+			  <md-card-title-text layout-align="center start">
+				<span class="md-headline">Last 3 friends</span>
+			  </md-card-title-text>
+				<md-button 
+		          		aria-label="Boardgames list" 
+		          		class="md-fab md-mini md md-raised md-primary absolute7" 
+						ng-click="showPopup($event, user.uid, 'friends')">
+		            <i class="icon-plus-1"></i>
+		        </md-button>
+			</md-card-title>
+			<md-card-content layout="row" class="overflowScroll height80perc">
+				<md-list flex >
+					<md-list-item
+						class=" md-1-line animate-repeat"                       
+						ng-repeat="(key, friend) in user.friends.outbound | orderObjectBy: 'inserted_at':true| objLimitTo: 3"
+						ng-href="#/user/{{friend.key}}">
+						<md-button 	ng-click="goTo('users/'+friend.key)" class="mrg0l mrg8t mrg8b mrg16r md-fab md-mini" ng-style="randomColors[friend.key] || getRandomColor(friend.key)" >
+							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div>
+						</md-button>
+						<div layout="column">
+							<div layout="row">
+								<h4> {{friend.username}}</h4>
+							</div>
+						</div>
+						<i 
+						aria-label="remove friend"
+						class="icon-close-round md-secondary" 
+						md-colors="{color: 'myTheme-accent'}"
+						ng-click="hCtrl.removeFriend(friend.key)">
+							<md-tooltip md-direction="left" md-delay="200">Remove friend</md-tooltip>
+						</i>
+					</md-list-item>
+				</md-list>
+			</md-card-content>
+			<md-card-actions layout="row" layout-align="end center" class="height10perc">
+				<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+			</md-card-actions>
+		  </md-card>
+		</div>
+	</div>
+
+	<div layout="column" flex-xs flex-gt-xs="40">
+		<div layout="row"  flex="100"  class="height50perc">
+		  <md-card class="whiteBg" flex>
+			<md-card-content class="height100perc overflowScroll">
+				<div layout="row" class="pad20">
+					<div layout="column" flex  layout-align="center center">
+						<div layout="row">
+							<h1>{{100*user.profile_details.match_won/user.profile_details.match_played | number:2}}%</h1>
+						</div>
+						<div layout="row">match won</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match played</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_played}}</h3>
+						</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match in progress</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_played-user.profile_details.match_finished}}</h3>
+						</div>
+					</div>
+				</div>
+				<div layout="row"  class="pad20">
+					<div layout="column" flex="70"  layout-align="center start">
+						<div layout="row">
+							<h3>Match won</h3>
+						</div>
+					</div>
+					<div layout="column" flex="70"  layout-align="center end">
+						<div layout="row">
+							<h3>{{user.profile_details.match_won}}</h3>
+						</div>
+					</div>
+				</div>
+			</md-card-content>
+			<md-card-actions layout="row">
+				<div layout="column" flex layout-align="center start">
+			  		<md-button  ng-click="goTo('profile/', 2)">See All</md-button>
+			  	</div>
+			</md-card-actions>
+		  </md-card>
+		</div>
+		<div layout="row"  flex="100"  class="height50perc">
+		  <md-card class="whiteBg" flex>
+			<md-card-content class="height100perc overflowScroll">
 				<div layout="row" class="pad20">
 					<div layout="column" flex  layout-align="center center">
 						<div layout="row">
@@ -96,48 +206,115 @@
 			</md-card-content>
 		  </md-card>
 		</div>
-		<div layout="column" flex-xs flex-gt-xs="30" >
-		  <md-card class="whiteBg" class="height100perc">
-			<md-card-title>
+	</div>
+
+	<div layout="column" flex-xs flex-gt-xs="30" >
+		<div layout="row" class="height40perc">
+		  <md-card layout="column" flex class="whiteBg" class="height100perc">
+			<md-card-title class="height10perc">
 			  <md-card-title-text>
-				<span class="md-headline">Last 3 played games</span>
+				<span class="md-headline">Last 3 contributions</span>
 			  </md-card-title-text>
 			</md-card-title>
-			<md-card-content layout="row" class="height100perc">
+			<md-card-content layout="row" class="overflowScroll height80perc">
 				<md-list flex >
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
-						ng-repeat="boardgame in hCtrl.games |orderBy: 'lastMatchTime'| limitTo: 3"
-						ng-href="#/boardgames/{{boardgame.bggId}}">
-						<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+						ng-repeat="(key, template) in hCtrl.templates |orderObjectBy: 'inserted_at':true| objLimitTo: 3"
+						ng-href="#/boardgames/{{template.boardgame.bggId}}">
+						<img ng-src="{{template.boardgame.image}}" class="md-avatar" alt="{{template.boardgame.name}}" />
 						<div layout="column">
 							<div layout="row">
-								<h4> {{boardgame.name}}</h4>
+								<h4> {{template.name}}</h4>
 							</div>
 						</div>
 						<i 
 						aria-label="remove favourite"
-						ng-if="user.profile_details.favourites[boardgame.bggId]" 
+						ng-if="user.profile_details.favourites[template.boardgame.bggId]" 
 						class="icon-heart md-secondary" 
 						md-colors="{color: 'myTheme-accent'}"
-						ng-click="hCtrl.toggleFavourite(boardgame)">
+						ng-click="hCtrl.toggleFavourite(template.boardgame)">
 							<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
 						</i>
 						<i 
 						aria-label="add favourite"
-						ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+						ng-if="!user.profile_details.favourites[template.boardgame.bggId]" 
 						class="icon-heart-o md-secondary" 
 						md-colors="{color: 'myTheme-accent'}"
-						ng-click="hCtrl.toggleFavourite(boardgame)">
+						ng-click="hCtrl.toggleFavourite(template.boardgame)">
 							<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
 						</i>
 					</md-list-item>
 				</md-list>
 			</md-card-content>
-			<md-card-actions layout="row" layout-align="end center">
-			  <md-button  ng-click="goTo('matches/')">See All</md-button>
+			<md-card-actions layout="row">
+				<div layout="column" flex layout-align="center start" class="relative">
+		  		 	<md-button 
+			          		aria-label="Boardgames list" 
+			          		class="md-fab md-mini md md-raised md-primary absolute6" 
+							ng-click="goTo('boardgames/')">
+			            <i class="icon-plus-1"></i>
+			        </md-button>
+			  	</div>
+				<div layout="column" flex layout-align="center end">
+			  		<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+			  	</div>
 			</md-card-actions>
 		  </md-card>
+		</div>
+		<div layout="row" class="height5perc">
+		</div>
+		<div layout="row" class="height55perc">
+		  	<md-card layout="column" flex class="whiteBg" class="height100perc">
+				<md-card-title class="relative">
+					<md-button 
+			          		aria-label="Boardgames list" 
+			          		class="md-fab md-mini md md-raised md-primary absolute5" 
+							 ng-click="showPopup($event, user.uid, 'matches')">
+			            <i class="icon-plus-1"></i>
+			        </md-button>
+				  <md-card-title-text layout-align="center end">
+					<span class="md-headline">Last 5 matches</span>
+				  </md-card-title-text>
+				</md-card-title>
+				<md-card-content layout="row" class="overflowScroll">
+					<md-list flex >
+						<md-list-item
+							class=" md-1-line animate-repeat"                       
+							ng-repeat="boardgame in hCtrl.games |orderBy: 'lastMatchTime'| limitTo: 5"
+							ng-href="#/boardgames/{{boardgame.bggId}}">
+							<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+							<div layout="column">
+								<div layout="row">
+									<h4> {{boardgame.name}}</h4>
+								</div>
+							</div>
+							<i 
+							aria-label="remove favourite"
+							ng-if="user.profile_details.favourites[boardgame.bggId]" 
+							class="icon-heart md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="hCtrl.toggleFavourite(boardgame)">
+								<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+							</i>
+							<i 
+							aria-label="add favourite"
+							ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+							class="icon-heart-o md-secondary" 
+							md-colors="{color: 'myTheme-accent'}"
+							ng-click="hCtrl.toggleFavourite(boardgame)">
+								<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+							</i>
+						</md-list-item>
+					</md-list>
+				</md-card-content>
+				<md-card-actions layout="row">
+					<div layout="column" flex layout-align="center start">
+				  		<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
+				  	</div>
+				</md-card-actions>
+				
+		  	</md-card>
 		</div>
 	</div>
   </md-content>

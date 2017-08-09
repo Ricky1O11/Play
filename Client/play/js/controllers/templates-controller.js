@@ -1,5 +1,5 @@
 //controller for the popup dialog used to insert a new match
-angular.module("play").controller('templatesController', function($scope, Api, $rootScope, $mdDialog, $location) {
+angular.module("play").controller('templatesController', function($scope, Utils, Api, $rootScope, $mdDialog, $location) {
 	// list of `state` value/display objects
 	templateController=this;
 	
@@ -23,14 +23,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 	templateController.selecting = false;
 	templateController.saving = false;
 
-	templateController.range = function(min, max, step) {
-		step = step || 1;
-		var input = [];
-		for (var i = min; i <= max; i += step) {
-			input.push(i);
-		}
-		return input;
-	};
+	templateController.range = Utils.range;
 
 	//Search for boardagames
 	templateController.querySearchBoardgames = function (query) {
@@ -41,10 +34,6 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 					templateController.boardgames[i] = response[i];
 				}
 			}
-			//	if(response[i].expands.length == 0)
-			//		console.log(response[i])
-			//		templateController.boardgames.push({display:response[i].title, value:response[i].title.toLowerCase(), id:response[i].pk, thumbnail:response[i].thumbnail, img:response[i].img, expansions:response[i].expansions})
-			//}
 			return templateController.boardgames;
 		});
 	}
@@ -106,7 +95,7 @@ angular.module("play").controller('templatesController', function($scope, Api, $
 			};
 		
 		//post template
-		Api.templatespost(templateController.selectedValues.boardgame.bggId, $rootScope.user.uid, templateController.postValues.template).$loaded().then(
+		Api.templatespost(templateController.selectedValues.boardgame, $rootScope.user.uid, templateController.postValues.template).$loaded().then(
 			function(response){
 				templateController.currentTab++;
 			},

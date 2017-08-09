@@ -56,7 +56,6 @@
 		<script src="js/controllers/matches-controller.js"></script>
 		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/profile-controller.js"></script>
-		<script src="js/controllers/recents-controller.js"></script>
 		<script src="js/controllers/register-controller.js"></script>
 		<script src="js/controllers/sidebar-controller.js"></script>
 		<script src="js/controllers/templates-controller.js"></script>
@@ -75,9 +74,9 @@
 					>
 					<div ng-controller="sidebarController as sCtrl">
 						<div layout="row">
-							<div layout="column" flex="100" md-colors="{background: 'myTheme-primary'}" class="greyBg blue-grey shadowed-box" >
+							<div layout="column" flex="100" md-colors="{background: 'myTheme-primary'}" class="relative blue-grey shadowed-box" >
 								<div layout="row" class="clickable">	
-									<div layout="column" flex="70" layout-align="center center" class="height150 pad10" ng-click="goTo('profile/')">
+									<div layout="column" flex="100" layout-align="center center" class="height150 pad10" ng-click="goTo('profile/')">
 										<div class="row">
 											<div class="imgProfile circleBase borderWhite" layout-align="center center">
 												<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
@@ -91,37 +90,31 @@
 											</div>
 										</div>
 									</div>
-									<div layout="column" class="height150 size-18" flex="30">
-										
-										<div layout="row" class="height25perc whiteBg borderGrey mrg10t mrg5b mrg5l mrg5r pad10">
-												<div layout="column" flex="50" layout-align="center center">
-													<i md-colors="{color: 'myTheme-accent'}" class="size-20 icon-user-add"></i>
-												</div>
-												<div md-colors="{color: 'myTheme-accent'}" layout="column" flex="50" class="size-18" layout-align="center center">{{user.friends.inbound | keylength }}</div>
-												<md-tooltip md-direction="top">Friends request</md-tooltip>
-										</div>
-										
-										<div layout="row" class="height25perc whiteBg borderGrey mrg5 pad10">
-											<div layout="column" flex="50" layout-align="center end">
-												<i md-colors="{color: 'myTheme-accent'}" class="size-24 icon-puzzle"></i>
-											</div>
-											<div md-colors="{color: 'myTheme-accent'}" layout="column" flex="50" class="size-18" layout-align="center center">{{user.profile_details.match_played}}</div>
-											<md-tooltip md-direction="top">Match played</md-tooltip>
-										</div>
-										
-										<div layout="row" class="height25perc whiteBg borderGrey mrg5 pad10">
-											<div layout="column" flex="50" class="pad1t"  layout-align="center center">
-												<i md-colors="{color: 'myTheme-accent'}" class="size-21 icon-trophy-2"></i>
-											</div>
-											<div md-colors="{color: 'myTheme-accent'}" layout="column" flex="50" class="size-18" layout-align="center center">{{user.profile_details.match_won}}</div>
-											<md-tooltip md-direction="top">Match won</md-tooltip>
-										</div>								
+								</div>
+								<div layout="row" class="clickable absolute3 width100perc">
+									<div layout="column" class="size-18" flex="35" layout-align="center center">
+										<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('/')">
+											<i class="icon-home"></i>
+											<md-tooltip md-direction="bottom" md-delay="200">Home</md-tooltip>
+										</md-button>	
+									</div>
+									<div layout="column" class="size-18" flex="30" layout-align="center center">
+										<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('profile/', 3)">
+											<i class="icon-cog"></i>
+											<md-tooltip md-direction="bottom" md-delay="200">Settings</md-tooltip>
+								 		</md-button>
+									</div>
+									<div layout="column" class="size-18" flex="35" layout-align="center center">
+										<md-button class="md-fab md-mini" aria-label="Logout" ng-click="sCtrl.logout()">
+											<i class="icon-log-out"></i>
+											<md-tooltip md-direction="bottom" md-delay="200">Logout</md-tooltip>
+								 		</md-button>
 									</div>
 								</div>
 							</div>
 						</div>
 						<md-divider ></md-divider> <!--md-inset-->
-						<div layout="row" class="pad10b">
+						<div layout="row" class="pad10b pad20t">
 							<div layout="column" flex="100"  class="pad10l pad10t">
 								<div layout="row" md-colors="{color: 'myTheme-primary'}"><h5>PROFILE</h5></div>
 								<div layout="row">
@@ -177,7 +170,7 @@
 											</div>
 											<div layout="column" flex="85" layout-align="center start">Matches</div>
 										</a>
-										<a layout="row"  class="pad10t decoNone clickable" ng-click="showPopup($event, user_pk, 'matches')">
+										<a layout="row"  class="pad10t decoNone clickable" ng-click="showPopup($event, user.uid, 'matches')">
 											<div layout="column" flex="15" layout-align="center center">
 												<i class="icon-plus-1"></i>
 											</div>
@@ -225,18 +218,6 @@
 							</div>
 						</div>
 						<md-divider ></md-divider> <!--md-inset-->
-						<div layout="row"  class="pad10b">
-							<div layout="column" flex="50" layout-align="center center"  class="pad10l pad10t">
-								<a ng-click="goTo('profile/', 3)" class="clickable size-18 icon-cog decoNone blue-grey">
-									<md-tooltip md-direction="down">Settings</md-tooltip>
-								</a>
-							</div>
-							<div layout="column" flex="50" layout-align="center center"  class="pad10l pad10t">
-								<a ng-click="sCtrl.logout()" class="clickable size-18 icon-log-out decoNone blue-grey">
-									<md-tooltip md-direction="down">Logout</md-tooltip>
-								</a>
-							</div>
-						</div>
 					</div> 
 				</md-sidenav>
 				<md-content layout="column" ng-if="user && user.emailVerified" flex ng-view></md-content>

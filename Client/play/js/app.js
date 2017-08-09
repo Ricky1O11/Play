@@ -46,141 +46,44 @@
 	      showLines: true
 	    });
 	}])
-	.run(function(Auth, $rootScope, $location, $timeout, $mdDialog, Api, $mdToast, $cookies, $location, jwtHelper) {
+
+	.run(function(Utils, Auth, $rootScope, $timeout, Api) {
 			$rootScope.lang = "it";
+
 			// any time auth state changes, add the user data to scope
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 			      	$rootScope.user = firebaseUser;
 			      	if($rootScope.user){
-
 				      	var dbuser = Api.user($rootScope.user.uid);
 						dbuser.$bindTo($rootScope, "user.profile_details");
-						
 						var friends = Api.friends($rootScope.user.uid);
 						friends.$bindTo($rootScope, "user.friends");
-
 						var matches = Api.matches($rootScope.user.uid);
-						matches.$loaded().then(function(data){
-							$rootScope.games=data;
-							match_played = 0;
-							match_finished = 0;
-							match_won = 0;
-							for(i = 0; i< $rootScope.games.length; i++){
-								$rootScope.games[i].visible = false;
-								$rootScope.games[i].lastMatchTime = 0;
-								for(match in $rootScope.games[i].matches){
-									$rootScope.games[i].lastMatchTime = Math.max($rootScope.games[i].lastMatchTime, $rootScope.games[i].matches[match].time);
-									if($rootScope.games[i].matches[match].completed){
-										match_finished++; 
-										if($rootScope.games[i].matches[match].winner == $rootScope.user.uid)
-											match_won++;
-									}
-									match_played++;
-								}
-							}
-							$rootScope.user.profile_details.match_played = match_played;
-							$rootScope.user.profile_details.match_won = match_won;
-							$rootScope.user.profile_details.match_finished = match_finished;
-							console.log($rootScope.user.profile_details.match_won);
-						});
-
-						$rootScope.$watch('user.friends', function(newData, oldData) {
-							if(oldData){
-								if((oldData.inbound == null 
-										&& newData.inbound != null) 
-									|| 
-									(oldData.inbound != null 
-											&& newData.inbound != null 
-											&& Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
-									  var audio = new Audio('audio/song.mp3');
-			        					audio.play();
-		        				}
-		        			}
-						
-
-						});
+						matches.$loaded().then(Utils.getUserData);
+						$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
 					}
 		    });
-			$timeout(function () {
-				       $rootScope.l = true;
-				    }, 3000);
 
+			$timeout(function () {
+		       $rootScope.l = true;
+		    }, 300);
+
+
+			$rootScope.randomColors = {};
 			$rootScope.match = {};
 
-			$rootScope.goTo = function(url, id) {
-				if(id >=0){
-					url += id
-				}
-				console.log(url)
-				$location.path(url);
-			};
+			$rootScope.goTo = Utils.goTo;
 			
-			$rootScope.currentTab = 0;
-			$rootScope.setCurrentTab = function(tab){
-				$rootScope.currentTab = tab;
-			}
-
-			$rootScope.$on('$locationChangeStart', function(){
-				if($rootScope.randomColors === undefined){
-					$rootScope.randomColors = {};
-				}
-			});
 			
-			$rootScope.showPopup = function(ev, user_pk, string, additional_field) {
-				boardgame = additional_field? additional_field : -1;
-				$mdDialog.show({
-					locals:{user_pk : user_pk, boardgame: boardgame},
-					controller: string+'DialogController',
-					controllerAs: string.substring(0,1)+'dCtrl',
-					templateUrl: 'templates/'+string+'dialog.html',
-					parent: angular.element(document.body),
-					targetEvent: ev,
-					scope:$rootScope,
-					preserveScope:true,	
-					//fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-				})	
-			}
-			$rootScope.showImage = function(ev, url) {
-				$mdDialog.show({
-					locals:{url : url},
-					controller: 'imageDialogController',
-					controllerAs: 'iCtrl',
-					templateUrl: 'templates/imagedialog.html',
-					parent: angular.element(document.body),
-					targetEvent: ev,
-					scope:$rootScope,
-					preserveScope:true,	
-					clickOutsideToClose:true,
-					//fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
-				})	
-			}
+			$rootScope.showPopup = Utils.showPopup;
+			$rootScope.showImage = Utils.showImage;
+			$rootScope.getRandomColor = Utils.getRandomColor;
+			$rootScope.showToast = Utils.showToast;
 
-			//randomly color the avatars of players without a profile picture
-			
-
-			$rootScope.getRandomColor = function(pk){
-				rnd = Math.floor(Math.random()*7);
-				switch (rnd){
-					case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
-					case 1: $rootScope.randomColors[pk] = {'background-color':'#FF5252'}; break; //red
-					case 2: $rootScope.randomColors[pk] = {'background-color':'#7C4DFF'}; break; //deep purple
-					case 3: $rootScope.randomColors[pk] = {'background-color':'#4DB6AC'}; break; //teal
-					case 4: $rootScope.randomColors[pk] = {'background-color':'#FF9800'}; break; //orange
-					case 5: $rootScope.randomColors[pk] = {'background-color':'#4DD0E1'}; break; //cyan
-					case 6: $rootScope.randomColors[pk] = {'background-color':'#F06292'}; break; //pink
-					default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
-				}
-			}			
-			//$rootScope.userRandomColor = $rootScope.getRandomColor();
-
-			$rootScope.showToast=function(string){
-				$mdToast.show(
-						$mdToast.simple()
-						.textContent(string)
-						.hideDelay(3000)
-						.position('top right')
-				);
-			}
+			//$rootScope.currentTab = 0;
+			//$rootScope.setCurrentTab = function(tab){
+			//	$rootScope.currentTab = tab;
+			//}
 
 		})
 })();

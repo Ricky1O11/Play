@@ -82,7 +82,8 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 
 	this.setCompletionStatus = function(completed){
 		if($scope.match.completed != completed)
-			Api.matchput(completed, $scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id);
+			winner = Utils.getMax($scope.match.players, "points");
+			Api.matchput(completed, $scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id,winner);
 	}
 
 	//this.getWinner = function(){

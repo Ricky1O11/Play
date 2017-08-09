@@ -129,6 +129,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ap
 	}
 
 	this.selectTemplate = function(template){
+		for(j = 0; j< template.scoring_fields.length; j++){
+			delete  template.scoring_fields[j]["$$hashKey"]
+		}
 		self.selectedValues.template = {
 			id:template.$id,
 			scoring_fields:template.scoring_fields,

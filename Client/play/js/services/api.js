@@ -1,5 +1,5 @@
  angular.module('play')
-.factory('Api', function ApiFactory($firebaseObject, $firebaseArray, Utils){
+.factory('Api', function ApiFactory($firebaseObject, $firebaseArray){
 	//var BASE_URL = "http://127.0.0.1:8000/server"
 	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
@@ -42,14 +42,17 @@
 					},
 
 		friendspost:	function(user,friend){
-						var ref = firebase.database().ref().child("friends").child(user.uid).child("outbound").child(friend.$id).set({"username":friend.username, "image":friend.image, "accepted":true});
-						var ref = firebase.database().ref().child("friends").child(friend.$id).child("inbound").child(user.uid).set({"username":user.profile_details.username, "image":user.profile_details.image, "accepted":false});
+						date = new Date();
+						var ref = firebase.database().ref().child("friends").child(user.uid).child("outbound").child(friend.$id).set({"username":friend.username, "image":friend.image, "accepted":true, "inserted_at":date.getTime()});
+						var ref = firebase.database().ref().child("friends").child(friend.$id).child("inbound").child(user.uid).set({"username":user.profile_details.username, "image":user.profile_details.image, "accepted":false, "inserted_at":date.getTime()});
 						
 						return ref;
 
 					},
 
 		frienddelete:	function(user_id,friend_id){
+			console.log(user_id)
+			console.log(friend_id)
 						var ref = firebase.database().ref().child("friends").child(user_id).child("outbound").child(friend_id).remove();
 						var ref = firebase.database().ref().child("friends").child(friend_id).child("inbound").child(user_id).remove();
 						return ref;
@@ -171,8 +174,7 @@
 						return obj;
 					},
 
-		matchput:function(completed, bggId, players, match_id){
-						winner = Utils.getMax(players, "points");
+		matchput:function(completed, bggId, players, match_id, winner){
 						update = {
 							"completed": completed,
 							"winner": (completed)? winner : ""
@@ -203,11 +205,23 @@
 			var syncArray = $firebaseArray(ref);
 			return syncArray;
 					},
+
+		user_templates:	function(uid){
+			var ref = firebase.database().ref().child("user_posted_templates").child(uid);
+			var syncArray = $firebaseArray(ref);
+			return syncArray;
+					},
 		
 		templatespost:	function(boardgame, user, template){
-			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame).push(template);
+			var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame.bggId).push(template);
 			var syncObject = $firebaseObject(ref);
-			var ref = firebase.database().ref().child("user_posted_templates").child(""+user).child(syncObject.$id).set(true);
+			template["boardgame"] = {}
+			template["boardgame"]["bggId"] = boardgame["bggId"]
+			template["boardgame"]["name"] = boardgame["name"]
+			template["boardgame"]["search_name"] = boardgame["search_name"]
+			template["boardgame"]["image"] = boardgame["image"]
+			template["boardgame"]["thumbnail"] = boardgame["thumbnail"]
+			var ref = firebase.database().ref().child("user_posted_templates").child(""+user).child(syncObject.$id).set(template);
 
 			return syncObject;
 					},

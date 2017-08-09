@@ -10,7 +10,7 @@
 				<md-button 
 					aria-label="Edit match info" 
 					class="md-fab md-primary absolute"
-					ng-click="uCtrl.addFriend()"
+					ng-click="uCtrl.addFriend(uCtrl.user)"
 					ng-if="!user.friends.outbound[uCtrl.user.$id] && !user.friends.inbound[uCtrl.user.$id]">
 					<i class="icon-user-add size-18"></i>
 					<md-tooltip md-direction="bottom" md-delay="200">Add friend</md-tooltip>
@@ -18,7 +18,7 @@
 				<md-button 
 					aria-label="Edit match info"
 					class="md-fab md-accent absolute"
-					ng-click="uCtrl.removeFriend()"
+					ng-click="uCtrl.removeFriend(uCtrl.user.$id)"
 					ng-if="user.friends.outbound[uCtrl.user.$id] || user.friends.inbound[uCtrl.user.$id]">
 					
 					<i class="icon-close-round size-18"></i>

@@ -1,42 +1,37 @@
   //controller for user profile
-angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams) {
-	this.user = {};
-	this.friends = [];
-	//hold the number of favourites for the current user
-	this.favourites = [];
-	//hold the number of matches played by the current user
-	this.recents = [];
-
-	this.infoChanged = false;
-	this.settingsChanged = false;
+angular.module("play").controller('profileController', function(Api, $rootScope, $scope, $routeParams, currentAuth) {
 	this.params=$routeParams;
-
+	controller = this;
 	console.log(this.params)
 	if(this.params){
-		this.currentTab = this.params.id
+		controller.currT = this.params.id;
 	}
 	else{
-		this.currentTab = 0
+		controller.currT = 0
 	}
-	controller = this;
 	controllerSidebar=this;
 
-	//are there less then 4 boardgames in the "arg" (favourites / recents) list?
-	this.lessThenFour = function(arg){
-		if(controller[arg].length < 4)
-			return true;
-		else 
-			return false;
-	}
-	
-	//is the "title" game a favourite for the current user?
-	this.inFavourites = function(title){
-		for(f=0; f<controller.favourites.length; f++){
-			if(title == controller.favourites[f].title)
-				return true;
+	//api call to the list of user matches
+	Api.matches(currentAuth.uid).$loaded().then(function(data){
+		controller.games=data;
+	});
+
+	this.countMatchesWith = function(friend_id){
+		match_played_with = 0;
+		match_won_with = 0;
+		for(game in controller.games){
+			for(match in controller.games[game].matches){
+				if(friend_id in controller.games[game].matches[match].players){
+					match_played_with++;
+					if(controller.games[game].matches[match] && controller.games[game].matches[match].winner == $rootScope.user.uid)
+						match_won_with++;
+				}
+			}
 		}
-		return false;
+		return [match_won_with,match_played_with];
 	}
+
+	console.log($rootScope.user);
 
 	$scope.labels = ["January", "February", "March", "April", "May", "June", "July"];
 	$scope.series = ['Series A', 'Series B'];

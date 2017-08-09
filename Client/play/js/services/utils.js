@@ -1,5 +1,5 @@
 angular.module("play")
-.factory('Utils', function($rootScope){
+.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast){
   return {
             toggleFavourite: function(boardgame) {
               console.log(boardgame)
@@ -52,7 +52,128 @@ angular.module("play")
                 }
               }
               return id;
+            },
 
+            range: function(min, max, step) {
+              step = step || 1;
+              var input = [];
+              for (var i = min; i <= max; i += step) {
+                input.push(i);
+              }
+              return input;
+            },
+
+            goTo: function(url, id) {
+              if(id >=0){
+                url += id
+              }
+              $location.path(url);
+            },
+
+            showPopup: function(ev, user_pk, string, additional_field) {
+              boardgame = additional_field? additional_field : -1;
+              $mdDialog.show({
+                locals:{user_pk : user_pk, boardgame: boardgame},
+                controller: string+'DialogController',
+                controllerAs: string.substring(0,1)+'dCtrl',
+                templateUrl: 'templates/'+string+'dialog.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                scope:$rootScope,
+                preserveScope:true, 
+                //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+              })  
+            },
+
+            showImage: function(ev, url) {
+              $mdDialog.show({
+                locals:{url : url},
+                controller: 'imageDialogController',
+                controllerAs: 'iCtrl',
+                templateUrl: 'templates/imagedialog.html',
+                parent: angular.element(document.body),
+                targetEvent: ev,
+                scope:$rootScope,
+                preserveScope:true, 
+                clickOutsideToClose:true,
+                //fullscreen: $scope.customFullscreen // Only for -xs, -sm breakpoints.
+              })  
+            },
+
+            getRandomColor: function(pk){
+              rnd = Math.floor(Math.random()*7);
+              switch (rnd){
+                case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
+                case 1: $rootScope.randomColors[pk] = {'background-color':'#FF5252'}; break; //red
+                case 2: $rootScope.randomColors[pk] = {'background-color':'#7C4DFF'}; break; //deep purple
+                case 3: $rootScope.randomColors[pk] = {'background-color':'#4DB6AC'}; break; //teal
+                case 4: $rootScope.randomColors[pk] = {'background-color':'#FF9800'}; break; //orange
+                case 5: $rootScope.randomColors[pk] = {'background-color':'#4DD0E1'}; break; //cyan
+                case 6: $rootScope.randomColors[pk] = {'background-color':'#F06292'}; break; //pink
+                default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
+              }
+            },
+
+            showToast: function(string){
+              $mdToast.show(
+                  $mdToast.simple()
+                  .textContent(string)
+                  .hideDelay(3000)
+                  .position('top right')
+              );
+            },
+
+            getUserData: function(data){
+              $rootScope.games=data;
+              match_played = 0;
+              match_finished = 0;
+              match_won = 0;
+              for(i = 0; i< $rootScope.games.length; i++){
+                $rootScope.games[i].visible = false;
+                $rootScope.games[i].lastMatchTime = 0;
+                for(match in $rootScope.games[i].matches){
+                  $rootScope.games[i].lastMatchTime = Math.max($rootScope.games[i].lastMatchTime, $rootScope.games[i].matches[match].time);
+                  if($rootScope.games[i].matches[match].completed){
+                    match_finished++; 
+                    if($rootScope.games[i].matches[match].winner == $rootScope.user.uid)
+                      match_won++;
+                  }
+                  match_played++;
+                }
+              }
+              $rootScope.user.profile_details.match_played = match_played;
+              $rootScope.user.profile_details.match_won = match_won;
+              $rootScope.user.profile_details.match_finished = match_finished;
+            },
+
+            playNewFriendNotification: function(newData, oldData) {
+              if(oldData){
+                if((oldData.inbound == null 
+                    && newData.inbound != null) 
+                  || 
+                  (oldData.inbound != null 
+                      && newData.inbound != null 
+                      && Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
+                    var audio = new Audio('audio/song.mp3');
+                        audio.play();
+                }
+              }
+            },
+
+            addFriend: function(user){
+              Api.friendspost($rootScope.user, user).then(function(response){
+                $rootScope.showToast("Good job! You have a new friend!");
+              }, function errorCallback(response){
+                console.log(response);
+              });
+            },
+
+            removeFriend: function(user_id){
+              Api.frienddelete($rootScope.user.uid, user_id).then(function(response){
+                $rootScope.showToast("What a pity! You lose a companion");
+              }, function errorCallback(response){
+                console.log(response);
+              });
             }
           }
 });
