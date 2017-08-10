@@ -107,7 +107,7 @@
 								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
-							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
+							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''" ng-click="goTo('users/'+key)">
 							</div>
 
 							<md-button 
@@ -124,7 +124,7 @@
 								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
-							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
+							<div ng-click="goTo('users/'+key)" class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
 							</div>
 
 							<md-button 

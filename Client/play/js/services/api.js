@@ -48,7 +48,7 @@
 								for(m in game.matches){
 									match = game.matches[m];
 									update['matches/'+m+'/players/'+user_id+'/'+field] = value;
-									update['user_played_matches/'+user_id+'/'+g+'/matches/'+m+'/players/'+user_id+'/'+field] = value;
+									update['user_played_matches/'+u+'/'+g+'/matches/'+m+'/players/'+user_id+'/'+field] = value;
 								}
 							}
 						}

@@ -2,11 +2,13 @@
 	<div layout="row" flex="none" class="height250 pad20l pad20r mrg10b mrg10r">
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
-				<div class="circleBase imgUser hideScrollbar shadowed-box" >
+				<div class="circleBase imgUser hideScrollbar shadowed-box"  ng-if="uCtrl.user.profile_details.image == ''">
 					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[uCtrl.user.$id] || getRandomColor(uCtrl.user.$id)" alt="profile image">
 						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{uCtrl.user.username.substring(0,1).toUpperCase()}}</div>
 					</div>
 				</div>
+				<div class="circleBase imgUser" layout-align="center center" alt="profile image" back-img="{{uCtrl.user.image}}" ng-if="uCtrl.user.image != ''">
+					</div>
 				<md-button 
 					aria-label="Edit match info" 
 					class="md-fab md-primary absolute"
