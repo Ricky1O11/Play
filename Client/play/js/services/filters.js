@@ -7,6 +7,7 @@ angular.module("play")
     return Object.keys(input).length;
   }
 })
+
 .filter('secondsToTime', [function() {
     return function(seconds) {
         return new Date(1970, 0, 1).setSeconds(seconds);
@@ -25,6 +26,7 @@ angular.module("play")
     if(reverse) filtered.reverse();
     return filtered;
   };
+
 }).filter('objLimitTo',function(){
     return function(obj, limit){
         var keys = Object.keys(obj);
@@ -42,5 +44,14 @@ angular.module("play")
             count++;
         });
         return ret;
+    };
+}).filter('countObjectByProperty',function(){
+    return function(obj, query, value){
+        count = 0;
+        for(o in obj){
+            if(obj[o][query] == value)
+            count++;
+        };
+        return count;
     };
 });

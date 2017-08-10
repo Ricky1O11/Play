@@ -1,5 +1,5 @@
 angular.module("play")
-.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast){
+.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav){
   obj = {};
 			obj.toggleFavourite = function(boardgame) {
 			  console.log(boardgame)
@@ -224,6 +224,10 @@ angular.module("play")
 			  });
 			}
 
+			obj.acceptFriend = function(user_id) {
+				$rootScope.user.friends.inbound[user_id].accepted = true;
+			}
+
 			obj.uploadImage = function(blob) {
 				time = new Date();
 				fileName = $rootScope.user.uid + "_" + time.getTime();
@@ -237,5 +241,11 @@ angular.module("play")
 					});
 				});
 			}
+
+			obj.showNotifications = function() {
+				$mdSidenav("right").toggle();
+			}
+
+
 	return obj;
 });

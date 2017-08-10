@@ -80,6 +80,8 @@
 			$rootScope.getRandomColor = Utils.getRandomColor;
 			$rootScope.showToast = Utils.showToast;
 			$rootScope.uploadImage = Utils.uploadImage;
+			$rootScope.showNotifications = Utils.showNotifications;
+			$rootScope.acceptFriend = Utils.acceptFriend;
 
 			//$rootScope.currentTab = 0;
 			//$rootScope.setCurrentTab = function(tab){

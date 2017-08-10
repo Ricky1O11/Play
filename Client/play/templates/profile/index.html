@@ -16,7 +16,7 @@
 					layout-align="center center">
 					<i class="icon-pencil absolute8">
 					</i> 
-					<input id="fileInput" name="file" type="file" class="ng-hide" multiple>
+					<input id="fileInput" name="file" type="file" class="ng-hide" accept="image/*">
 					<md-tooltip md-direction="bottom" md-delay="200">Edit profile picture</md-tooltip>
 				</label>
 			</div>
@@ -118,17 +118,20 @@
 							</md-button>
 						</div>
 						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)">
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
 								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
+							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
+							</div>
+
 							<md-button 
 								aria-label="Edit match info" 
 								class="md-fab md-mini absolute1">
-									{{friend.match_played_with}}
-								<md-tooltip md-direction="bottom" md-delay="200">Matches played together</md-tooltip>
+									{{user.profile_details.most_frequent_companion[key].won}} / {{user.profile_details.most_frequent_companion[key].amount}}
+								<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
 							</md-button>
 						</div>
 					</div>

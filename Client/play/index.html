@@ -65,7 +65,7 @@
 	<!--md-colors="{background: 'myTheme-primary'}"-->
 	<body ng-app="play" layout="row" flex ng-cloak="" class="ng-cloak" >
 		<div ng-show="l" layout="column" flex>
-			<div layout="row" id="container" flex>
+			<section layout="row" id="container" class="hideScrollbar" flex>
 				<md-sidenav
 					ng-if="user && user.emailVerified"
 					class="md-sidenav-left height100perc"
@@ -98,21 +98,26 @@
 								</div>
 								<div layout="row" class="clickable absolute3 width100perc">
 									<div layout="column" class="size-18" flex="35" layout-align="center center">
-										<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('/')">
+										<md-button class="md-fab md-mini md-primary" aria-label="Settings" ng-click="goTo('/')">
 											<i class="icon-home"></i>
 											<md-tooltip md-direction="bottom" md-delay="200">Home</md-tooltip>
 										</md-button>	
 									</div>
 									<div layout="column" class="size-18" flex="30" layout-align="center center">
-										<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('profile/', 3)">
-											<i class="icon-cog"></i>
-											<md-tooltip md-direction="bottom" md-delay="200">Settings</md-tooltip>
+										<md-button  ng-if="(user.friends.inbound | countObjectByProperty : 'accepted':false) > 0" class="md-fab md-mini relative" aria-label="Settings" ng-click="showNotifications()">
+											<i class="absolute8 icon-user-add white60perc"></i>
+											<div class="size-24">{{user.friends.inbound | countObjectByProperty : 'accepted':false }}</div>
+											<md-tooltip md-direction="bottom" md-delay="200">Friend request</md-tooltip>
+								 		</md-button>
+								 		<md-button  ng-if="(user.friends.inbound | countObjectByProperty : 'accepted':false) == 0" class="md-fab md-mini md-primary" aria-label="Settings" ng-click="showNotifications()">
+											<i class="icon-user-add"></i>
+											<md-tooltip md-direction="bottom" md-delay="200">Friend request</md-tooltip>
 								 		</md-button>
 									</div>
 									<div layout="column" class="size-18" flex="35" layout-align="center center">
-										<md-button class="md-fab md-mini" aria-label="Logout" ng-click="sCtrl.logout()">
+										<md-button class="md-fab md-mini md-primary" aria-label="Logout" >
 											<i class="icon-log-out"></i>
-											<md-tooltip md-direction="bottom" md-delay="200">Logout</md-tooltip>
+											<md-tooltip md-direction="bottom" md-delay="200">Messages</md-tooltip>
 								 		</md-button>
 									</div>
 								</div>
@@ -223,10 +228,61 @@
 							</div>
 						</div>
 						<md-divider ></md-divider> <!--md-inset-->
+						<div layout="row">
+							<div layout="column" class="size-18" flex="50" layout-align="center center">
+								<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('profile/', 3)">
+									<i class="icon-cog"></i>
+									<md-tooltip md-direction="bottom" md-delay="200">Settings</md-tooltip>
+						 		</md-button>
+							</div>
+							<div layout="column" class="size-18" flex="50" layout-align="center center">
+								<md-button class="md-fab md-mini" aria-label="Logout" ng-click="sCtrl.logout()">
+									<i class="icon-log-out"></i>
+									<md-tooltip md-direction="bottom" md-delay="200">Logout</md-tooltip>
+						 		</md-button>
+							</div>
+						</div> 
 					</div> 
 				</md-sidenav>
 				<md-content layout="column" ng-if="user && user.emailVerified" flex ng-view></md-content>
-			</div>
+
+				<md-sidenav class="md-sidenav-right height100perc md-sidenav-right" md-component-id="right" >
+
+			      <md-toolbar class="md-primary">
+			        <h1 class="md-toolbar-tools">Friends Request</h1>
+			      </md-toolbar>
+
+			      <md-content>
+			        <md-list flex>
+						<md-list-item
+							class=" md-1-line animate-repeat"                       
+							ng-repeat="(key, friend) in user.friends.inbound | orderObjectBy: 'inserted_at':true| objLimitTo: 3"
+							ng-href="#/user/{{friend.key}}" ng-if="!friend.accepted">
+							
+							<md-button 	ng-if="friend.image == ''" ng-click="goTo('users/'+friend.key)" class="mrg0l mrg8t mrg8b mrg16r md-fab md-mini" ng-style="randomColors[friend.key] || getRandomColor(friend.key)" >
+								<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div>
+							</md-button>
+							<img ng-if="friend.image != ''" ng-src="{{friend.image}}" class="md-avatar shadowed-box" alt="{{friend.username}}"/>
+
+							<div layout="column">
+								<div layout="row">
+									<h4> {{friend.username}}</h4>
+								</div>
+							</div>
+							<i 
+							aria-label="add friend"
+							class="icon-user-add md-secondary" 
+							md-colors="{color: 'myTheme-primary'}"
+							ng-click="acceptFriend(friend.key)">
+								<md-tooltip md-direction="left" md-delay="200">Add friend</md-tooltip>
+							</i>
+						</md-list-item>
+					</md-list>
+			      </md-content>
+
+			    </md-sidenav>
+
+			</section>
 			<div id="tabs" ng-hide="user">
 				<md-tabs  md-selected="currentTab"
 				md-stretch-tabs="always" class="height100perc" >
