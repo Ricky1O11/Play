@@ -3,16 +3,16 @@
 	<div layout="column" flex-xs flex-gt-xs="30" >
 		<div layout="row" class="height55perc">
 		  <md-card layout="column" flex class="whiteBg" class="height100perc">
-			<md-card-title>
+			<md-card-title class="height10perc">
 			  <md-card-title-text>
 				<span class="md-headline">Last 5 favourites</span>
 			  </md-card-title-text>
 			</md-card-title>
-			<md-card-content layout="row" class="overflowScroll">
+			<md-card-content layout="row" class="height80perc overflowScroll">
 				<md-list flex >
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
-						ng-repeat="(key, boardgame) in user.profile_details.favourites |orderObjectBy: 'inserted_at':true| objLimitTo: 5"
+						ng-repeat="(key, boardgame) in user.profile_details.favourites | orderObjectBy: 'inserted_at':true | objLimitTo: 5"
 						ng-href="#/boardgames/{{boardgame.bggId}}">
 						<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
 						<div layout="column">
@@ -39,7 +39,7 @@
 					</md-list-item>
 				</md-list>
 			</md-card-content>
-			<md-card-actions layout="row">
+			<md-card-actions layout="row" class="height10perc">
 				<div layout="column" flex layout-align="center start">
 			  		<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
 			  	</div>
@@ -75,9 +75,12 @@
 						class=" md-1-line animate-repeat"                       
 						ng-repeat="(key, friend) in user.friends.outbound | orderObjectBy: 'inserted_at':true| objLimitTo: 3"
 						ng-href="#/user/{{friend.key}}">
-						<md-button 	ng-click="goTo('users/'+friend.key)" class="mrg0l mrg8t mrg8b mrg16r md-fab md-mini" ng-style="randomColors[friend.key] || getRandomColor(friend.key)" >
+						
+						<md-button 	ng-if="friend.image == ''" ng-click="goTo('users/'+friend.key)" class="mrg0l mrg8t mrg8b mrg16r md-fab md-mini" ng-style="randomColors[friend.key] || getRandomColor(friend.key)" >
 							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div>
 						</md-button>
+						<img ng-if="friend.image != ''" ng-src="{{friend.image}}" class="md-avatar shadowed-box" alt="{{friend.username}}"/>
+
 						<div layout="column">
 							<div layout="row">
 								<h4> {{friend.username}}</h4>
@@ -178,43 +181,69 @@
 				</md-card-title>
 				<md-card-content class="height100perc overflowScroll">
 					<div layout="column" flex>
-						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount'" class="mrg10b"  ng-if="$first">
+						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="$first">
 							<div layout="column" flex="45" layout-align="center end">
-								<div class="circleBase imgProfileMedium hideScrollbar shadowed-box" >
+								
+								<div class="circleBase imgProfileMedium hideScrollbar shadowed-box"  ng-if="user.profile_details.image == ''">
 									<div class="circleBase imgProfileMedium" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
-										<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-72">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 									</div>
 								</div>
+								<div class="circleBase imgProfileMedium" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
+								</div>
+
+
+
 							</div>
 							<div layout="column" flex="10" layout-align="center center">
-								<i class="icon-icon size-72 shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+								<div layout="row">
+									<i class="icon-icon size-48 shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+								</div>
+								<div layout="row">
+									{{companion.won}}/{{companion.amount}}
+									<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
+								</div>
 							</div>
-							<div layout="column" flex="45"  layout-align="center start" class="pad10l">
-								<div class="circleBase imgProfileMedium hideScrollbar shadowed-box" >
+							<div layout="column" flex="45"  layout-align="center start">
+								<div class="circleBase imgProfileMedium hideScrollbar shadowed-box"  ng-if="companion.image == ''">
 									<div class="circleBase imgProfileMedium" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
-										<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{companion.username.substring(0,1).toUpperCase()}}</div>
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-72">{{companion.username.substring(0,1).toUpperCase()}}</div>
 									</div>
 								</div>
+								<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{companion.image}}" ng-if="companion.image != ''">
+								</div>
+
+
 							</div>
 						</div>
 
-						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount'" class="mrg10b"  ng-if="!$first">
+						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="!$first">
 							<div layout="column" flex="45" layout-align="center end">
-								<div class="circleBase imgProfile hideScrollbar shadowed-box" >
+								<div class="circleBase imgProfile hideScrollbar shadowed-box"  ng-if="user.profile_details.image == ''">
 									<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
-										<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-72">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 									</div>
+								</div>
+								<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
 								</div>
 							</div>
 							<div layout="column" flex="10" layout-align="center center">
-								<i class="icon-icon size-48 shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+								<div layout="row">
+									<i class="icon-icon size-48 shadowed" md-colors="{color: 'myTheme-accent'}"></i>
+								</div>
+								<div layout="row">
+									{{companion.won}}/{{companion.amount}}
+								</div>
 							</div>
 							<div layout="column" flex="45"  layout-align="center start">
-								<div class="circleBase imgProfile hideScrollbar shadowed-box" >
+								<div class="circleBase imgProfile hideScrollbar shadowed-box"  ng-if="companion.image == ''">
 									<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 										<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{companion.username.substring(0,1).toUpperCase()}}</div>
 									</div>
 								</div>
+								<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{companion.image}}" ng-if="companion.image != ''">
+								</div>
+
 							</div>
 						</div>
 					</div>
@@ -293,11 +322,11 @@
 							 ng-click="showPopup($event, user.uid, 'matches')">
 			            <i class="icon-plus-1"></i>
 			        </md-button>
-				  <md-card-title-text layout-align="center end">
+				  <md-card-title-text layout-align="center end"  class="height10perc">
 					<span class="md-headline">Last 5 matches</span>
 				  </md-card-title-text>
 				</md-card-title>
-				<md-card-content layout="row" class="overflowScroll">
+				<md-card-content layout="row" class="overflowScroll  height80perc">
 					<md-list flex >
 						<md-list-item
 							class=" md-1-line animate-repeat"                       
@@ -328,7 +357,7 @@
 						</md-list-item>
 					</md-list>
 				</md-card-content>
-				<md-card-actions layout="row">
+				<md-card-actions layout="row"  class="height10perc">
 					<div layout="column" flex layout-align="center start">
 				  		<md-button  ng-click="goTo('profile/', 0)">See All</md-button>
 				  	</div>

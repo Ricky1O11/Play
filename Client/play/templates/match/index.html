@@ -188,12 +188,12 @@
 									class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 									ng-repeat="player in match.players | orderObjectBy:'points':true "
 									ng-click="mCtrl.setLeaderboardVisible(details.pk)">
-										<div layout="column">
+										<div layout="column" ng-if="player.image == ''">
 											<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
 												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 											</md-button>
 										</div>
-										<!--<img ng-src="{{play.user_details.profile.img}}" class="md-avatar shadowed-box" ng-style="randomColors[play.user_details.pk] || getRandomColor(play.user_details.pk)" alt="{{play.user_details.username}}"/>-->
+										<img ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
 										<div layout="column" flex="95">
 											<div layout="row">
 												<h3>{{player.username}}</h3>
@@ -223,11 +223,12 @@
 									class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 									ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 									ng-click="mCtrl.setVisible(play.key)">
-										<div layout="column">
-											<md-button 	ng-click="goTo('users/'+friend.pk)" class="md-fab md-mini" ng-style="randomColors[play.user] || getRandomColor(play.user)" >
+										<div layout="column" ng-if="match.players[play.user].image == ''">
+											<md-button 	ng-click="goTo('users/'+play.user)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(play.user)" >
 												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
 											</md-button>
 										</div>
+										<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}"/>
 										<div layout="column" flex="95">
 											<div layout="row">
 												<h3>{{match.players[play.user].username}}</h3>

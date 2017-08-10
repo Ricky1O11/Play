@@ -544,8 +544,8 @@ text-align:center;
 /*end OTHER STUFF MANAGEMENT*/
 
 .imgProfileMedium{
-	height:9em;
-	width: 9em;
+	height:8em;
+	width: 8em;
 	overflow:hidden;
 }
 
@@ -706,6 +706,11 @@ figcaption{
 	position:absolute;
 	top:-25;
 	right:0;
+}
+.absolute8{
+	position:absolute;
+	top:13;
+	left:13;
 }
 
 #dialog md-tabs-wrapper{

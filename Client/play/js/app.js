@@ -5,7 +5,7 @@
 	    authDomain: "play-4fd54.firebaseapp.com",
 	    databaseURL: "https://play-4fd54.firebaseio.com/",
 	    projectId: "play-4fd54",
-	    storageBucket: "",
+	    storageBucket: "gs://play-4fd54.appspot.com",
 	    messagingSenderId: "603822728152"
 	};
 	firebase.initializeApp(config);
@@ -79,6 +79,7 @@
 			$rootScope.showImage = Utils.showImage;
 			$rootScope.getRandomColor = Utils.getRandomColor;
 			$rootScope.showToast = Utils.showToast;
+			$rootScope.uploadImage = Utils.uploadImage;
 
 			//$rootScope.currentTab = 0;
 			//$rootScope.setCurrentTab = function(tab){

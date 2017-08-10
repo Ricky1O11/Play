@@ -78,11 +78,16 @@
 								<div layout="row" class="clickable">	
 									<div layout="column" flex="100" layout-align="center center" class="height150 pad10" ng-click="goTo('profile/')">
 										<div class="row">
-											<div class="imgProfile circleBase borderWhite" layout-align="center center">
+											
+											<div class="imgProfile circleBase borderWhite" layout-align="center center" ng-if="user.profile_details.image == ''">
 												<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
 													<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 												</div>
 											</div>
+
+											<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
+											</div>
+
 										</div>
 										<div layout="row">
 											<div layout="column" id="username" class="size-18 pad5t" flex="50" layout-align="center start">

@@ -23,23 +23,56 @@
 				return "success"
 					},
 
-		user:		function(user_id){
+		user:	function(user_id){
 				var ref = firebase.database().ref().child("profiles").child(user_id);
 				var syncObject = $firebaseObject(ref);
 				return syncObject;
 					},
 				
-		users:		function(){
-				var ref = firebase.database().ref().child("profiles");
-				var syncArray = $firebaseArray(ref);
-				return syncArray;
-					},
+		users:	function(){
+					var ref = firebase.database().ref().child("profiles");
+					var syncArray = $firebaseArray(ref);
+					return syncArray;
+				},
+		userput:	function(user_id, field, value){
+					rootRef = firebase.database().ref();
+
+					user_ref = firebase.database().ref().child("profiles").child(user_id);
+					user_matches_ref = firebase.database().ref().child("user_played_matches");
+					return user_matches_ref.once('value').then(snap=>{
+						update = {};
+						for(u in snap.val()){
+							user = snap.val()[u];
+							for(g in user){
+								game = user[g];
+								for(m in game.matches){
+									match = game.matches[m];
+									update['matches/'+m+'/players/'+user_id+'/'+field] = value;
+									update['user_played_matches/'+user_id+'/'+g+'/matches/'+m+'/players/'+user_id+'/'+field] = value;
+								}
+							}
+						}
+						friends_ref = firebase.database().ref().child("friends").child(user_id);
+						friends_ref.once('value').then(sn=>{
+							for(f in sn.val()["outbound"]){
+								update['friends/'+f+'/inbound/'+user_id+'/'+field] = value;
+							}
+							for(f in sn.val()["inbound"]){
+									update['friends/'+f+'/outbound/'+user_id+'/'+field] = value;
+							}
+							update['profiles/'+user_id+'/'+field] = value;
+							return rootRef.update(update);
+						})
+
+
+					})
+				},
 		
 		friends:	function(user_id){
-						var ref = firebase.database().ref().child("friends").child(user_id);
-						var syncObject = $firebaseObject(ref);
-						return syncObject;
-					},
+					var ref = firebase.database().ref().child("friends").child(user_id);
+					var syncObject = $firebaseObject(ref);
+					return syncObject;
+				},
 
 		friendspost:	function(user,friend){
 						date = new Date();

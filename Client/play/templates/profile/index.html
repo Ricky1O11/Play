@@ -3,21 +3,25 @@
 		<div layout="column" flex="none" layout-align="center center">
 			<div layout="row" class="relative" flex="none">
 				<div class="circleBase imgUser hideScrollbar shadowed-box" >
-					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
+					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image" ng-if="user.profile_details.image == ''">
 						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 					</div>
+					<div class="circleBase imgUser" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
+					</div>
 				</div>
-				<md-button 
+				<label for="fileInput"
 					aria-label="Edit match info" 
-					class="md-fab md-mini absolute"
-					ng-click = "uploadFile()">
-					<i class="icon-pencil">
+					class="md-button md-fab md-mini absolute"
+					md-colors="{background: 'myTheme-accent'}"
+					layout-align="center center">
+					<i class="icon-pencil absolute8">
 					</i> 
+					<input id="fileInput" name="file" type="file" class="ng-hide" multiple>
 					<md-tooltip md-direction="bottom" md-delay="200">Edit profile picture</md-tooltip>
-				</md-button>
+				</label>
 			</div>
 			<div layout="row" class="mrg10t blue-grey">
-				<h1> {{user.profile_details.username}}</h1>
+				<h1> {{user.profile_details.username}} {{selectedFile}}</h1>
 			</div>
 		</div>
 		<div layout="column" class="blue-grey pad20l" flex>
@@ -97,17 +101,20 @@
 					</div>
 					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) > 0" flex-xs="noshrink">
 						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.outbound" ng-if="friend.accepted">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)">
+							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
 								 </div>
 								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 							</div>
+							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
+							</div>
+
 							<md-button 
 								aria-label="Edit match info" 
 								class="md-fab md-mini absolute1">
-									{{pCtrl.countMatchesWith(key)[0]}} / {{pCtrl.countMatchesWith(key)[1]}}
-								<md-tooltip md-direction="bottom" md-delay="200">Matches played together</md-tooltip>
+									{{user.profile_details.most_frequent_companion[key].won}} / {{user.profile_details.most_frequent_companion[key].amount}}
+								<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
 							</md-button>
 						</div>
 						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
