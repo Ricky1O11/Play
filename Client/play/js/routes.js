@@ -70,7 +70,11 @@ angular.module('play')
 	.when('/users/:id', {
 		templateUrl: 'templates/user/index.html',
 		controller: 'userController',
-		controllerAs: 'uCtrl'
+		controllerAs: 'uCtrl',
+		resolve: {
+		      "currentAuth": ["Auth", function(Auth) {
+		        return Auth.$waitForSignIn();
+		      }]}
 	})
 	.when('/designers/:id', {
 		templateUrl: 'templates/designer/index.html',

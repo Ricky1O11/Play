@@ -27,7 +27,12 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 
 	//Search for boardagames
 	templateController.querySearchBoardgames = function (query) {
-		return Api.boadgames(query.toLowerCase(), 20, "search_name", 10, "").$loaded().then(function(response){
+		query = query.toLowerCase();
+		if (query != ""){
+			controller.endAt = query.substring(0, query.length-1) + 
+								Utils.changeLetter(query.substring(query.length-1, query.length-0))
+		}
+		return Api.boadgames(query, 20, "search_name", controller.endAt, "").$loaded().then(function(response){
 			templateController.boardgames = [];
 			for (i=0; i<response.length; i++){
 				if(response[i].search_name.indexOf(query.toLowerCase()) !== -1){

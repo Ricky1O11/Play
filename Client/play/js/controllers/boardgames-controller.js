@@ -61,12 +61,14 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 			lp = this.loadedPages; 
 			ps = this.PAGE_SIZE;
 			//api call to the list of boardgames
-			console.log(controller.searchKey)
+			if (controller.searchKey != ""){
+				controller.endAt = controller.searchKey.substring(0, controller.searchKey.length-1) + 
+									Utils.changeLetter(controller.searchKey.substring(controller.searchKey.length-1, controller.searchKey.length-0))
+			}
 			Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
 			.then(function(response){
 				if(controller.actualOrderingField != "search_name"){
 					if(controller.searchKey != ""){
-						console.log("searchkey")
 						response.sort(function(a,b) {return (a.average < b.average) ? 1 : ((b.average < a.average) ? -1 : 0);} );
 					}
 					else{

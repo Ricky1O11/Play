@@ -2,7 +2,6 @@ angular.module("play")
 .factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav){
   obj = {};
 			obj.toggleFavourite = function(boardgame) {
-			  console.log(boardgame)
 			  date = new Date();
 					if("favourites" in $rootScope.user["profile_details"]){
 					  if(boardgame.bggId in $rootScope.user["profile_details"]["favourites"]){
@@ -157,7 +156,6 @@ angular.module("play")
 				  }
 				  match_played++;
 
-				console.log(match)
 				  for(p in match.players){
 					player = match.players[p];
 					if(p != $rootScope.user.uid){
@@ -170,16 +168,16 @@ angular.module("play")
 									companions[p]["won"] = 1
 						}
 						else{
-						companions[p] = {}
-						companions[p]["amount"] = 1
-						if(match.winner == $rootScope.user.uid)
-							companions[p]["won"] = 1
-						else{
-							companions[p]["won"] = 0
-						}
-						companions[p]["username"] = player.username;
-						companions[p]["image"] = player.image;
-					  }
+							companions[p] = {}
+							companions[p]["amount"] = 1
+							if(match.winner == $rootScope.user.uid)
+								companions[p]["won"] = 1
+							else{
+								companions[p]["won"] = 0
+							}
+							companions[p]["username"] = player.username;
+							companions[p]["image"] = player.image;
+					 	}
 					}
 				  }
 
@@ -212,20 +210,27 @@ angular.module("play")
 			  Api.friendspost($rootScope.user, user).then(function(response){
 				$rootScope.showToast("Good job! You have a new friend!");
 			  }, function errorCallback(response){
-				console.log(response);
 			  });
 			}
 
 			obj.removeFriend = function(user_id){
-			  Api.frienddelete($rootScope.user.uid, user_id).then(function(response){
-				$rootScope.showToast("What a pity! You lose a companion");
-			  }, function errorCallback(response){
-				console.log(response);
-			  });
+				if("outbound" in $rootScope.user.friends && user_id in $rootScope.user.friends.outbound){
+					Api.frienddelete($rootScope.user.uid, user_id, "out").then(function(response){
+						$rootScope.showToast("What a pity! You lose a companion");
+					}, function errorCallback(response){
+					});
+				}
+				else{
+					Api.frienddelete($rootScope.user.uid, user_id, "in").then(function(response){
+						$rootScope.showToast("What a pity! You lose a companion");
+					}, function errorCallback(response){
+					});
+				}
 			}
 
-			obj.acceptFriend = function(user_id) {
-				$rootScope.user.friends.inbound[user_id].accepted = true;
+			obj.acceptFriend = function(friend_id) {
+				$rootScope.user.friends.inbound[friend_id].accepted = true;
+				Api.friendput(friend_id, $rootScope.user.uid);
 			}
 
 			obj.uploadImage = function(blob) {
@@ -246,6 +251,21 @@ angular.module("play")
 				$mdSidenav("right").toggle();
 			}
 
-
+			obj.changeLetter = function(i) {
+			    if (122 == i.charCodeAt(0)) {
+		            result = "zz";
+		        // handle "Z"
+		        } else if (90 == i.charCodeAt(0)) {
+		            result += "zz";
+		        // handle all other letter characters
+		        } else if ((65 <= i.charCodeAt(0) && i.charCodeAt(0) <= 89) ||
+		                   (97 <= i.charCodeAt(0) && i.charCodeAt(0) <= 121)) {
+		            result = String.fromCharCode(i.charCodeAt(0) + 1);
+		        // append all other characters unchanged
+		        } else {
+		            result = i;
+		        }
+			    return result;
+			}
 	return obj;
 });
