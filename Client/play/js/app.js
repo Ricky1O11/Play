@@ -54,13 +54,17 @@
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 			      	$rootScope.user = firebaseUser;
 			      	if($rootScope.user){
+
 				      	var dbuser = Api.user($rootScope.user.uid);
 						dbuser.$bindTo($rootScope, "user.profile_details");
+
 						var friends = Api.friends($rootScope.user.uid);
 						friends.$bindTo($rootScope, "user.friends");
-						var matches = Api.matches($rootScope.user.uid);
-						matches.$loaded().then(Utils.getUserMatches);
 						$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
+						
+						var matches = Api.matches($rootScope.user.uid);
+						matches.$loaded().then(Utils.updateUserStats);
+						matches.$ref().on('value', Utils.getUserMatches);
 					}
 		    });
 

@@ -68,7 +68,7 @@
 									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{uCtrl.user.match_played}} match played</h2>
+									<h2>{{toDO}} match played</h2>
 								</div>
 							</div>
 						</div>
@@ -83,7 +83,7 @@
 									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{uCtrl.user.match_won}} match won</h2>
+									<h2>{{toDO}} match won</h2>
 								</div>
 								
 							</div>
@@ -99,7 +99,7 @@
 									</i>
 								</div>
 								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{bCtrl.boardgame.playingtime}} minute played</h2>
+									<h2>{{toDo}} minute played</h2>
 								</div>
 							</div>	
 						</div>
@@ -137,12 +137,12 @@
 			<md-content>
 				<md-list-item
 					class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-					ng-repeat-start="boardgame in uCtrl.common_matches"
-					ng-click="uCtrl.setVisible(boardgame.$id)" ng-if="boardgame.hasOwnProperty('matches')">
+					ng-repeat-start="boardgame in games | filter: uCtrl.user.username"
+					ng-click="uCtrl.setVisible(boardgame.bggId)" ng-if="boardgame.hasOwnProperty('matches')">
 					<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 					<div layout="column">
 						<div layout="row">
-							<h3> {{boardgame.name}}</h3>
+							<h3>{{boardgame.name}}</h3>
 						</div>
 						<div layout="row">
 							<i>{{boardgame.matches | keylength}} matches</i>

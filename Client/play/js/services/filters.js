@@ -18,8 +18,6 @@ angular.module("play")
 }])
 
 
-
-
 .filter('orderObjectBy', function() {
  	return function(items, field, reverse, second_level) {
 		var filtered = [];

@@ -16,6 +16,7 @@
 					obj.match_won = 0;
 					obj.match_played = 0;
 					obj.match_finished = 0;
+					obj.most_played_game = "None";
 
 					obj.$save();
 					return "success"

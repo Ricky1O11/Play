@@ -1,5 +1,5 @@
 angular.module("play")
-.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav){
+.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav, $routeParams){
   obj = {};
 			obj.toggleFavourite = function(boardgame) {
 			  date = new Date();
@@ -122,74 +122,115 @@ angular.module("play")
 			  );
 			}
 
-			obj.getUserMatches = function(data){
-			  $rootScope.games=data;
-			  match_played = 0;
-			  match_finished = 0;
-			  match_won = 0;
-			  most_played_game = "";
-			  most_played_game_amount = 0;
 
-			  companions = {};
-
-			  for(i = 0; i< $rootScope.games.length; i++){
-				game = $rootScope.games[i];
-				game.visible = false;
-				game.lastMatchTime = 0;
-
-				//get most played game
-				played_matches = Object.keys(game.matches);
-				if(played_matches.length >most_played_game_amount){
-				  most_played_game_amount = played_matches;
-				  most_played_game = game.name;
-				}
-
-				for(m in game.matches){
-				  match = game.matches[m];
-				  game.lastMatchTime = Math.max(game.lastMatchTime, match.time);
-				  
-				  //get finished, won and played matches
-				  if(match.completed){
-					match_finished++; 
-					if(match.winner == $rootScope.user.uid)
-					  match_won++;
-				  }
-				  match_played++;
-
-				  for(p in match.players){
-					player = match.players[p];
-					if(p != $rootScope.user.uid){
-						if(p in companions){
-							companions[p]["amount"] += 1
-							if(match.winner == $rootScope.user.uid)
-								if("won" in companions[p])
-									companions[p]["won"] += 1
-								else
-									companions[p]["won"] = 1
-						}
+			obj.updateCommonMatches = function(){
+				controller.common_matches = [];
+				console.log($rootScope.games);
+				for(g in $rootScope.games){
+					controller.common_matches[g] = {}
+					for(c in $rootScope.games[g]){
+						if(c != "matches")
+							controller.common_matches[g][c] = $rootScope.games[g][c];
 						else{
-							companions[p] = {}
-							companions[p]["amount"] = 1
-							if(match.winner == $rootScope.user.uid)
-								companions[p]["won"] = 1
-							else{
-								companions[p]["won"] = 0
+							controller.common_matches[g].matches = {}
+							for(m in $rootScope.games[g].matches){
+								console.log($rootScope.games[g].matches[m])
+								if($routeParams.id in $rootScope.games[g].matches[m].players)
+									controller.common_matches[g].matches[m] = $rootScope.games[g].matches[m];
 							}
-							companions[p]["username"] = player.username;
-							companions[p]["image"] = player.image;
-					 	}
+						}
 					}
-				  }
-
 				}
-			  }
+				console.log(controller.common_matches);
+			}
 
-			  $rootScope.user.profile_details.match_played = match_played;
-			  $rootScope.user.profile_details.match_won = match_won;
-			  $rootScope.user.profile_details.match_finished = match_finished;
-			  $rootScope.user.profile_details.most_played_game = most_played_game;
-			  $rootScope.user.profile_details.most_played_game_amount = most_played_game_amount;
-			  $rootScope.user.profile_details.most_frequent_companion = companions;
+
+			obj.updateUserStats = function(data){
+				console.log(data)
+				$rootScope.games=data;
+				if($rootScope.games){
+					match_played = 0;
+					match_finished = 0;
+					match_won = 0;
+					most_played_game = "";
+					most_played_game_amount = 0;
+
+					companions = {};
+					for(i = 0; i< $rootScope.games.length; i++){
+						game = $rootScope.games[i];
+						game.visible = false;
+						game.lastMatchTime = 0;
+
+						//get most played game
+						played_matches = Object.keys(game.matches);
+						if(played_matches.length > most_played_game_amount){
+							most_played_game_amount = played_matches;
+							most_played_game = game.name;
+						}
+
+						for(m in game.matches){
+							match = game.matches[m];
+							game.lastMatchTime = Math.max(game.lastMatchTime, match.time);
+							
+							//get finished, won and played matches
+							if(match.completed){
+								match_finished++; 
+								if(match.winner == $rootScope.user.uid)
+								  match_won++;
+						}
+						match_played++;
+
+						for(p in match.players){
+								player = match.players[p];
+								if(p != $rootScope.user.uid){
+									if(p in companions){
+										companions[p]["amount"] += 1
+										if(match.winner == $rootScope.user.uid)
+											if("won" in companions[p])
+												companions[p]["won"] += 1
+											else
+												companions[p]["won"] = 1
+									}
+									else{
+										companions[p] = {}
+										companions[p]["amount"] = 1
+										if(match.winner == $rootScope.user.uid)
+											companions[p]["won"] = 1
+										else{
+											companions[p]["won"] = 0
+										}
+										companions[p]["username"] = player.username;
+										companions[p]["image"] = player.image;
+								 	}
+								}
+							}
+						}
+					}
+					$rootScope.profile_stats = {}
+					$rootScope.profile_stats.match_played = match_played;
+					$rootScope.profile_stats.match_won = match_won;
+					$rootScope.profile_stats.match_finished = match_finished;
+					$rootScope.profile_stats.most_played_game = most_played_game;
+					$rootScope.profile_stats.most_played_game_amount = most_played_game_amount;
+					$rootScope.profile_stats.most_frequent_companion = companions;
+				}
+
+			};
+
+
+
+			obj.getUserMatches = function(data){
+				//$rootScope.games.$watch(function() {
+				//  obj.updateUserStats();
+				//});
+				var array = $.map(data, function(value, index) {
+				    return [value];
+				});
+				obj.updateUserStats(array);
+			}	
+
+			obj.watchMatches = function(newData, oldData){
+				console.log(newData)
 			}
 
 			obj.playNewFriendNotification = function(newData, oldData) {

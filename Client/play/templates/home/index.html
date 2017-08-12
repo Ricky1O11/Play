@@ -110,7 +110,7 @@
 				<div layout="row" class="pad10">
 					<div layout="column" flex  layout-align="center center">
 						<div layout="row">
-							<h1>{{100*user.profile_details.match_won/user.profile_details.match_played | number:2}}%</h1>
+							<h1>{{100*profile_stats.match_won/profile_stats.match_played | number:2}}%</h1>
 						</div>
 						<div layout="row">match won</div>
 					</div>
@@ -123,7 +123,7 @@
 					</div>
 					<div layout="column" flex="70"  layout-align="center end">
 						<div layout="row">
-							<h3>{{user.profile_details.match_played}}</h3>
+							<h3>{{profile_stats.match_played}}</h3>
 						</div>
 					</div>
 				</div>
@@ -135,7 +135,7 @@
 					</div>
 					<div layout="column" flex="70"  layout-align="center end">
 						<div layout="row">
-							<h3>{{user.profile_details.match_played-user.profile_details.match_finished}}</h3>
+							<h3>{{profile_stats.match_played-profile_stats.match_finished}}</h3>
 						</div>
 					</div>
 				</div>
@@ -147,7 +147,7 @@
 					</div>
 					<div layout="column" flex="70"  layout-align="center end">
 						<div layout="row">
-							<h3>{{user.profile_details.match_won}}</h3>
+							<h3>{{profile_stats.match_won}}</h3>
 						</div>
 					</div>
 				</div>
@@ -159,7 +159,7 @@
 					</div>
 					<div layout="column" flex="70"  layout-align="center end">
 						<div layout="row">
-							<h3>{{user.profile_details.most_played_game}}</h3>
+							<h3>{{profile_stats.most_played_game}}</h3>
 						</div>
 					</div>
 				</div>
@@ -201,7 +201,7 @@
 				</md-card-title>
 				<md-card-content class="height100perc overflowScroll">
 					<div layout="column" flex>
-						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="$first">
+						<div layout="row" ng-repeat="(key, companion) in profile_stats.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="$first">
 							<div layout="column" flex="45" layout-align="center end">
 								
 								<div class="circleBase imgProfileMedium hideScrollbar shadowed-box clickable"  ng-if="user.profile_details.image == ''">
@@ -238,7 +238,7 @@
 							</div>
 						</div>
 
-						<div layout="row" ng-repeat="(key, companion) in user.profile_details.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="!$first">
+						<div layout="row" ng-repeat="(key, companion) in profile_stats.most_frequent_companion | orderObjectBy:'amount':true" class="mrg10b"  ng-if="!$first">
 							<div layout="column" flex="45" layout-align="center end">
 								<div class="circleBase imgProfile hideScrollbar shadowed-box clickable"  ng-if="user.profile_details.image == ''"  ng-click="goTo('profile')">
 									<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
@@ -379,7 +379,7 @@
 					<md-list flex >
 						<md-list-item
 							class=" md-1-line animate-repeat"                       
-							ng-repeat="boardgame in games |orderBy: 'lastMatchTime'| limitTo: 5"
+							ng-repeat="boardgame in games |orderBy: '-lastMatchTime'| limitTo: 5"
 							ng-href="#/boardgames/{{boardgame.bggId}}">
 							<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
 							<div layout="column">
