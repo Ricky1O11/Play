@@ -63,8 +63,8 @@
 						$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
 						
 						var matches = Api.matches($rootScope.user.uid);
-						matches.$loaded().then(Utils.updateUserStats);
-						matches.$ref().on('value', Utils.getUserMatches);
+						//matches.$loaded().then(Utils.updateUserStats);
+						matches.$ref().on('value', Utils.updateUserStats);
 					}
 		    });
 

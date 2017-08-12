@@ -140,17 +140,20 @@
 					.child(""+syncObject.$id)
 					.set(simpleObject);
 
-					for(player in values.players){
+					for(p in values.players){
+						player = values.players[p];
+
 						var ref = firebase.database().ref();
 						ref.child("user_played_matches")
-						.child(""+values.players[player].uid)
+						.child(""+player.uid)
 						.child(""+values.boardgame.bggId)
 						.child("matches")
 						.child(""+syncObject.$id)
 						.set(simpleObject);
 
+
 						ref.child("user_played_matches")
-						.child(""+values.players[player].uid)
+						.child(""+player.uid)
 						.child(""+values.boardgame.bggId).
 						update({
 							"name":values.boardgame.name,

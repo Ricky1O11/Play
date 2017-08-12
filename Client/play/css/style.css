@@ -424,6 +424,10 @@ md-card{
 	overflow-y:auto;
 }
 
+.overflowXHidden{
+	overflow-x:hidden;
+}
+
 /*end SCROLL BAR MANAGEMENT*/
 
 /*OTHER STUFF MANAGEMENT*/

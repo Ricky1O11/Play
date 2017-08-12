@@ -20,9 +20,10 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 	}
 
 	this.setVisible = function(id){
-		for(i = 0; i<$rootScope.games.length; i++){
-			if($rootScope.games[i].$id == id){
-				$rootScope.games[i].visible = !$rootScope.games[i].visible;
+		for(game in $rootScope.games){
+			console.log($rootScope.games[game].bggId)
+			if($rootScope.games[game].bggId == id){
+				$rootScope.games[game].visible = !$rootScope.games[game].visible;
 			}
 		}
 	}

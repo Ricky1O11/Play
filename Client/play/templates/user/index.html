@@ -137,7 +137,7 @@
 			<md-content>
 				<md-list-item
 					class=" md-3-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"						
-					ng-repeat-start="boardgame in games | filter: uCtrl.user.username"
+					ng-repeat-start="(key, boardgame) in games | orderObjectBy:'lastMatchTime':true | filter: uCtrl.user.username"
 					ng-click="uCtrl.setVisible(boardgame.bggId)" ng-if="boardgame.hasOwnProperty('matches')">
 					<img ng-src="{{boardgame.thumbnail}}" class="md-avatar" alt="match {{boardgame.name}}" />
 					<div layout="column">

@@ -146,17 +146,19 @@ angular.module("play")
 
 
 			obj.updateUserStats = function(data){
-				console.log(data)
-				$rootScope.games=data;
-				if($rootScope.games){
-					match_played = 0;
-					match_finished = 0;
-					match_won = 0;
-					most_played_game = "";
-					most_played_game_amount = 0;
+                $rootScope.games=data.val();
+				match_played = 0;
+				match_finished = 0;
+				match_won = 0;
+				most_played_game = "-";
+				most_played_game_amount = 0;
+                
+                companions = {};
+                
+                if($rootScope.games){
 
-					companions = {};
-					for(i = 0; i< $rootScope.games.length; i++){
+                        console.log($rootScope.games.length)
+                    for(i in $rootScope.games){
 						game = $rootScope.games[i];
 						game.visible = false;
 						game.lastMatchTime = 0;
@@ -206,14 +208,14 @@ angular.module("play")
 							}
 						}
 					}
-					$rootScope.profile_stats = {}
-					$rootScope.profile_stats.match_played = match_played;
-					$rootScope.profile_stats.match_won = match_won;
-					$rootScope.profile_stats.match_finished = match_finished;
-					$rootScope.profile_stats.most_played_game = most_played_game;
-					$rootScope.profile_stats.most_played_game_amount = most_played_game_amount;
-					$rootScope.profile_stats.most_frequent_companion = companions;
-				}
+                }
+				$rootScope.profile_stats = {}
+				$rootScope.profile_stats.match_played = match_played;
+				$rootScope.profile_stats.match_won = match_won;
+				$rootScope.profile_stats.match_finished = match_finished;
+				$rootScope.profile_stats.most_played_game = most_played_game;
+				$rootScope.profile_stats.most_played_game_amount = most_played_game_amount;
+				$rootScope.profile_stats.most_frequent_companion = companions;
 
 			};
 

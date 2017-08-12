@@ -108,9 +108,9 @@
 		  <md-card class="whiteBg" flex>
 			<md-card-content class="height100perc overflowScroll">
 				<div layout="row" class="pad10">
-					<div layout="column" flex  layout-align="center center">
+					<div layout="column" flex  layout-align="center center" ng-if="profile_stats.match_played != 0">
 						<div layout="row">
-							<h1>{{100*profile_stats.match_won/profile_stats.match_played | number:2}}%</h1>
+							<h1 >{{100*profile_stats.match_won/profile_stats.match_played | number:2}}%</h1>
 						</div>
 						<div layout="row">match won</div>
 					</div>
@@ -315,7 +315,7 @@
 			  </md-card-title-text>
 			</md-card-title>
 			<md-card-content layout="row" class="overflowScroll height80perc">
-				<md-list flex >
+				<md-list flex ng-if="hCtrl.templates.length > 0">
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
 						ng-repeat="(key, template) in hCtrl.templates |orderObjectBy: 'inserted_at':true| objLimitTo: 3"
@@ -344,6 +344,10 @@
 						</i>
 					</md-list-item>
 				</md-list>
+				<div ng-if="hCtrl.templates.length == 0" layout="column" flex layout-align="center center">
+					<div layout="row" class="size-72 mrg20b">;)</div>
+					<div layout="row" class="mrg20b"><h1>Help us adding new templates!</h1></div>	
+				</div>
 			</md-card-content>
 			<md-card-actions layout="row">
 				<div layout="column" flex layout-align="center start" class="relative">
@@ -376,10 +380,10 @@
 				  </md-card-title-text>
 				</md-card-title>
 				<md-card-content layout="row" class="overflowScroll  height80perc">
-					<md-list flex >
+					<md-list flex ng-if="(games | keylength) > 0">
 						<md-list-item
 							class=" md-1-line animate-repeat"                       
-							ng-repeat="boardgame in games |orderBy: '-lastMatchTime'| limitTo: 5"
+							ng-repeat="boardgame in games |orderObjectBy: 'lastMatchTime':true| limitTo: 5"
 							ng-href="#/boardgames/{{boardgame.bggId}}">
 							<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
 							<div layout="column">
@@ -405,6 +409,10 @@
 							</i>
 						</md-list-item>
 					</md-list>
+					<div ng-if="(games | keylength) == 0" layout="column" flex layout-align="center center">
+						<div layout="row" class="size-72 mrg20b">:(</div>
+						<div layout="row" class="mrg20b"><h1>You didn't play any match</h1></div>	
+					</div>
 				</md-card-content>
 				<md-card-actions layout="row"  class="height10perc">
 					<div layout="column" flex layout-align="center start">
