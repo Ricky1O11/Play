@@ -1,4 +1,4 @@
- (function(){
+  (function(){
 	// Initialize Firebase
 	var config = {
 	    apiKey: "AIzaSyBI2Uab-jJ5RVzVppEvibmOlnHJRBgScnQ",
@@ -65,12 +65,14 @@
 						var matches = Api.matches($rootScope.user.uid);
 						//matches.$loaded().then(Utils.updateUserStats);
 						matches.$ref().on('value', Utils.updateUserStats);
+
+						$rootScope.loaded = true;
 					}
 		    });
 
 			$timeout(function () {
 		       $rootScope.l = true;
-		    }, 300);
+		    }, 3000);
 
 
 			$rootScope.randomColors = {};

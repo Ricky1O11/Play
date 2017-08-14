@@ -1,4 +1,4 @@
-<html>
+ <html>
 	<head>
 		<title>Play</title>
 		<meta charset="UTF-8">
@@ -65,7 +65,7 @@
 	<!--md-colors="{background: 'myTheme-primary'}"-->
 	<body ng-app="play" layout="row" flex ng-cloak="" class="ng-cloak" >
 		<div ng-show="l" layout="column" flex>
-			<section layout="row" id="container" class="hideScrollbar" flex>
+			<section layout="row" id="container" class="hideScrollbar" flex ng-show="loaded">
 				<md-sidenav
 					ng-if="user && user.emailVerified"
 					class="md-sidenav-left height100perc"

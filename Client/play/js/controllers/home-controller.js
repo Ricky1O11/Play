@@ -1,4 +1,4 @@
-//controller for the home page screen
+ //controller for the home page screen
 angular.module("play").controller('homeController', function(Api, Utils, $scope, currentAuth) {
 	homeContr = this;
 	homeContr.toggleFavourite = Utils.toggleFavourite;
