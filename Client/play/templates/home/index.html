@@ -9,7 +9,7 @@
 			  </md-card-title-text>
 			</md-card-title>
 			<md-card-content layout="row" class="height80perc overflowScroll">
-				<md-list flex >
+				<md-list flex ng-if="(user.profile_details.favourites |keylength) > 0">
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
 						ng-repeat="(key, boardgame) in user.profile_details.favourites | orderObjectBy: 'inserted_at':true | objLimitTo: 5"
@@ -38,6 +38,10 @@
 						</i>
 					</md-list-item>
 				</md-list>
+				<div ng-if="(user.profile_details.favourites | keylength) == 0" layout="column" flex layout-align="center center">
+					<div layout="row" class="size-48 mrg20b"><i class="icon-heart-o"></i></div>
+					<div layout="row" class="mrg20b"><h3>Start adding your favourites!</h3></div>	
+				</div>
 			</md-card-content>
 			<md-card-actions layout="row" class="height10perc">
 				<div layout="column" flex layout-align="center start">
@@ -70,7 +74,7 @@
 		        </md-button>
 			</md-card-title>
 			<md-card-content layout="row" class="overflowScroll height80perc">
-				<md-list flex >
+				<md-list flex ng-if="(user.friends.outbound |keylength) + (user.friends.inbound |keylength) > 0">
 					<md-list-item
 						class=" md-1-line animate-repeat"                       
 						ng-repeat="friend in user.friends | orderObjectBy: 'inserted_at':true:true| objLimitTo: 3"
@@ -95,6 +99,10 @@
 						</i>
 					</md-list-item>
 				</md-list>
+				<div ng-if="!user.friends || (user.friends.outbound |keylength) + (user.friends.inbound |keylength) <= 0" layout="column" flex layout-align="center center">
+					<div layout="row" class="size-48 mrg20b"><i class="icon-user-add"></i></div>
+					<div layout="row" class="mrg20b"><h3>Start adding friends!</h3></div>	
+				</div>
 			</md-card-content>
 			<md-card-actions layout="row" layout-align="end center" class="height10perc">
 				<md-button  ng-click="goTo('profile/')">See All</md-button>
@@ -278,34 +286,6 @@
 		</div>
 	</div>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 	<div layout="column" flex-xs flex-gt-xs="30" >
 		<div layout="row" class="height40perc">
 		  <md-card layout="column" flex class="whiteBg" class="height100perc">
@@ -345,8 +325,8 @@
 					</md-list-item>
 				</md-list>
 				<div ng-if="hCtrl.templates.length == 0" layout="column" flex layout-align="center center">
-					<div layout="row" class="size-72 mrg20b">;)</div>
-					<div layout="row" class="mrg20b"><h1>Help us adding new templates!</h1></div>	
+					<div layout="row" class="size-48 mrg20b">;)</div>
+					<div layout="row" class="mrg20b"><h3>Help us adding new templates!</h3></div>	
 				</div>
 			</md-card-content>
 			<md-card-actions layout="row">

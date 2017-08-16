@@ -125,7 +125,6 @@ def addBoardgame(i, game):
 
     new_boardgame = boardgames_ref.child(str(i)).set(gameCompleteObject)
 
-
 def addFields(field, val, boardgame):
     for key in val:
         vals = {}

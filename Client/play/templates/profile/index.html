@@ -100,7 +100,7 @@
 						</div>
 					</div>
 					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) > 0" flex-xs="noshrink">
-						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.outbound" ng-if="friend.accepted">
+						<div layout="column"  class="relative  mrg20r pad10 clickable" ng-repeat="(key, friend) in user.friends.outbound" ng-if="friend.accepted">
 							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
@@ -117,7 +117,7 @@
 								<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
 							</md-button>
 						</div>
-						<div layout="column"  class="relative  mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
+						<div layout="column"  class="relative clickable mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
 							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
 								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
@@ -159,7 +159,7 @@
 							</div>
 							<md-tooltip md-direction="bottom" md-delay="200">{{value.name}}</md-tooltip>
 						</div>
-						<div layout="column" layout-align="center center" ng-if="user.profile_details.favourites.length == 0" flex="100">
+						<div layout="column" layout-align="center center" ng-if="(user.profile_details.favourites |keylength) == 0" flex="100">
 								<div layout="row" class="size-72 mrg20b">:(</div>
 								<div layout="row" class="mrg20b"><h1>You don't have any favourite game</h1></div>
 								<div layout="row" class="blue-grey clickable decoNone" ng-click="goTo('boardgames/')"><h2><i class="icon-plus-1 mrg10r"></i>Browse the list and add one of them</h2></div>
@@ -216,16 +216,16 @@
 									<div layout="row" class="height80">
 										<div layout="column" flex="90">
 											<md-input-container>
-												<label>First name</label>
-												<input ng-model="user.profile_details.first_name">
+												<label>Name</label>
+												<input ng-model="user.displayName">
 											</md-input-container>
 										</div>
 									</div>
 									<div layout="row">
 										<div layout="column" flex="90">
 											<md-input-container>
-												<label>Last name</label>
-												<input ng-model="user.profile_details.last_name">
+												<label>Username</label>
+												<input ng-model="user.profile_details.username">
 											</md-input-container>
 										</div>
 									</div>

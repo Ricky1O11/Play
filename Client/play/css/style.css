@@ -427,7 +427,9 @@ md-card{
 .overflowXHidden{
 	overflow-x:hidden;
 }
-
+.overflowYHidden{
+	overflow-y:hidden;
+}
 /*end SCROLL BAR MANAGEMENT*/
 
 /*OTHER STUFF MANAGEMENT*/
@@ -579,8 +581,8 @@ text-align:center;
 }
 
 .imgBoardgame{
-    height: 15em;
-    width: 15em;
+    height: 12em;
+    width: 12em;
     overflow:hidden;
 }
 
@@ -598,8 +600,8 @@ text-align:center;
 
 
 .imgBoardgameProfile{
-    height: 15em;
-    width: 15em;
+    height: 10em;
+    width: 10em;
     overflow:hidden;
 }
 
@@ -607,6 +609,21 @@ text-align:center;
     height: 12em;
     width: 12em;
     overflow:hidden;
+}
+
+#loginArea md-content{
+	
+	background: -webkit-linear-gradient(left,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
+	background: -o-linear-gradient(right,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
+	background: -moz-linear-gradient(right,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
+	background: linear-gradient(to right, rgba(0,0,0,0.6) 30%, rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
+
+
+
+
+
+	background-repeat: no-repeat;
+	background-size: cover;
 }
 
 /*OVERRIDES*/

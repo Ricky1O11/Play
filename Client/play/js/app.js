@@ -47,39 +47,33 @@
 	    });
 	}])
 
-	.run(function(Utils, Auth, $rootScope, $timeout, Api) {
-			$rootScope.lang = "it";
-
+	.run(function(Utils, Auth, $route, $rootScope, $timeout, Api) {
+			
 			// any time auth state changes, add the user data to scope
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
-			      	$rootScope.user = firebaseUser;
-			      	if($rootScope.user){
+		      	$rootScope.user = firebaseUser;
+		      	if($rootScope.user){
 
-				      	var dbuser = Api.user($rootScope.user.uid);
-						dbuser.$bindTo($rootScope, "user.profile_details");
+			      	var dbuser = Api.user($rootScope.user.uid);
+					dbuser.$bindTo($rootScope, "user.profile_details");
 
-						var friends = Api.friends($rootScope.user.uid);
-						friends.$bindTo($rootScope, "user.friends");
-						$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
-						
-						var matches = Api.matches($rootScope.user.uid);
-						//matches.$loaded().then(Utils.updateUserStats);
-						matches.$ref().on('value', Utils.updateUserStats);
+					var friends = Api.friends($rootScope.user.uid);
+					friends.$bindTo($rootScope, "user.friends");
+					$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
+					
+					var matches = Api.matches($rootScope.user.uid);
+					//matches.$loaded().then(Utils.updateUserStats);
+					matches.$ref().on('value', Utils.updateUserStats);
 
-						$rootScope.loaded = true;
-					}
+					$rootScope.loaded = true;
+					$route.reload();
+				}
 		    });
-
-			$timeout(function () {
-		       $rootScope.l = true;
-		    }, 3000);
-
 
 			$rootScope.randomColors = {};
 			$rootScope.match = {};
 
 			$rootScope.goTo = Utils.goTo;
-			
 			
 			$rootScope.showPopup = Utils.showPopup;
 			$rootScope.showImage = Utils.showImage;
@@ -88,6 +82,7 @@
 			$rootScope.uploadImage = Utils.uploadImage;
 			$rootScope.showNotifications = Utils.showNotifications;
 			$rootScope.acceptFriend = Utils.acceptFriend;
+			$rootScope.logout = Utils.logout;
 
 			//$rootScope.currentTab = 0;
 			//$rootScope.setCurrentTab = function(tab){

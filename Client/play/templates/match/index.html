@@ -193,7 +193,7 @@
 												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 											</md-button>
 										</div>
-										<img ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
+										<img ng-click="goTo('users/'+player.key)" ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
 										<div layout="column" flex="95">
 											<div layout="row">
 												<h3>{{player.username}}</h3>
@@ -224,11 +224,11 @@
 									ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 									ng-click="mCtrl.setVisible(play.key)">
 										<div layout="column" ng-if="match.players[play.user].image == ''">
-											<md-button 	ng-click="goTo('users/'+play.user)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(play.user)" >
+											<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
 												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
 											</md-button>
 										</div>
-										<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}"/>
+										<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
 										<div layout="column" flex="95">
 											<div layout="row">
 												<h3>{{match.players[play.user].username}}</h3>

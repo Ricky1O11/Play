@@ -144,24 +144,24 @@
 						player = values.players[p];
 
 						var ref = firebase.database().ref();
-						ref.child("user_played_matches")
-						.child(""+player.uid)
-						.child(""+values.boardgame.bggId)
+						var user_played_matches_ref = ref.child("user_played_matches")
+														.child(""+player.uid)
+														.child(""+values.boardgame.bggId)
+						update = {
+								"name":values.boardgame.name,
+								"thumbnail":values.boardgame.thumbnail,
+								"image":values.boardgame.image,
+								"bggId":values.boardgame.bggId,
+								"last_inserted_at":values.inserted_at,
+								};
+
+						user_played_matches_ref.update(update)
+						
+						user_played_matches_ref
 						.child("matches")
 						.child(""+syncObject.$id)
 						.set(simpleObject);
 
-
-						ref.child("user_played_matches")
-						.child(""+player.uid)
-						.child(""+values.boardgame.bggId).
-						update({
-							"name":values.boardgame.name,
-							"thumbnail":values.boardgame.thumbnail,
-							"image":values.boardgame.image,
-							"bggId":values.boardgame.bggId,
-							"last_inserted_at":values.inserted_at,
-						})
 					}
 
 					return syncObject;

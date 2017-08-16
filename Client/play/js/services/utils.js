@@ -1,5 +1,5 @@
 angular.module("play")
-.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav, $routeParams){
+.factory('Utils', function(Api, $rootScope, $location, $mdDialog, $mdToast, $mdSidenav, $window, $routeParams){
   obj = {};
 			obj.toggleFavourite = function(boardgame) {
 			  date = new Date();
@@ -157,7 +157,6 @@ angular.module("play")
                 
                 if($rootScope.games){
 
-                        console.log($rootScope.games.length)
                     for(i in $rootScope.games){
 						game = $rootScope.games[i];
 						game.visible = false;
@@ -237,11 +236,11 @@ angular.module("play")
 
 			obj.playNewFriendNotification = function(newData, oldData) {
 			  if(oldData){
-				if((oldData.inbound == null 
-					&& newData.inbound != null) 
+				if((!oldData.hasOwnProperty('inbound') 
+					&& newData.hasOwnProperty('inbound')) 
 				  || 
-				  (oldData.inbound != null 
-					  && newData.inbound != null 
+				  (oldData.hasOwnProperty('inbound') 
+					  && newData.hasOwnProperty('inbound')
 					  && Object.keys(oldData.inbound).length < Object.keys(newData.inbound).length)){
 					var audio = new Audio('audio/song.mp3');
 						audio.play();
@@ -309,6 +308,15 @@ angular.module("play")
 		            result = i;
 		        }
 			    return result;
+			}
+
+			obj.logout = function(){
+				firebase.auth().signOut().then(function() {
+					$window.location.reload();
+				  // Sign-out successful.
+				}, function(error) {
+				  // An error happened.
+				});
 			}
 	return obj;
 });

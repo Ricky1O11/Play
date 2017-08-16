@@ -100,36 +100,6 @@
 										</md-button>
 									</div>
 								</div>
-								<div layout="row" layout-wrap>
-									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.is_expanded_by">
-										<div class="absolute2 pad5 size-12 dark54perc">EXPANSIONS</div>
-										<div layout="row">
-											<div layout="column" class="clickable pad10l" flex="none" ng-repeat="(key,exp) in bCtrl.boardgame.is_expanded_by"
-											ng-click="goTo('boardgames/'+key)">
-												<div class="circleBase imgExpansion hideScrollbar shadowed-box">
-													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.thumbnail}}">
-														<div class="circleBase" style="font-size:50px;"></div>
-													</div>
-												</div>
-												<md-tooltip md-direction="bottom" md-delay="200">{{exp.name}}</md-tooltip>
-											</div>
-										</div>
-									</div>
-									<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10l mrg10t shadowed-box whiteBg" ng-if="bCtrl.boardgame.expands">
-										<div class="absolute pad5 size-12 dark54perc">EXPANDS</div>
-										<div layout="row" layout-wrap>
-											<div layout="column" class="clickable pad10l" flex ng-repeat="exp in bCtrl.boardgame.expands"
-											ng-click="goTo('boardgames/'+exp.pk)">
-												<div class="circleBase imgExpansion hideScrollbar shadowed-box">
-													<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.thumbnail}}">
-														<div class="circleBase" style="font-size:50px;"></div>
-													</div>
-												</div>
-												<md-tooltip md-direction="bottom" md-delay="200">{{exp.name}}</md-tooltip>
-											</div>
-										</div>
-									</div>
-								</div>
 							</md-content>
 						</md-tab>
 						<md-tab label="Description" class="hideScrollbar">
@@ -149,6 +119,68 @@
 									</div>
 								</div>
 							</md-content>
+						</md-tab>
+						<md-tab label="Expansions"  ng-if="(bCtrl.boardgame.is_expanded_by | keylength) > 0">
+							<md-list">
+								<md-list-item
+									class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
+									ng-repeat="(key,boardgame) in bCtrl.boardgame.is_expanded_by"
+									ng-href="#/boardgames/{{key}}">
+									<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+									<div layout="column">
+										<div layout="row">
+											<h4> {{boardgame.name}}</h4>
+										</div>
+									</div>
+									<i 
+									aria-label="remove favourite"
+									ng-if="user.profile_details.favourites[boardgame.bggId]" 
+									class="icon-heart md-secondary" 
+									md-colors="{color: 'myTheme-accent'}"
+									ng-click="hCtrl.toggleFavourite(boardgame)">
+										<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+									</i>
+									<i 
+									aria-label="add favourite"
+									ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+									class="icon-heart-o md-secondary" 
+									md-colors="{color: 'myTheme-accent'}"
+									ng-click="hCtrl.toggleFavourite(boardgame)">
+										<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+									</i>
+								</md-list-item>
+							</md-list>
+						</md-tab>
+						<md-tab label="Expands" ng-if="(bCtrl.boardgame.expands | keylength) > 0">
+							<md-list">
+								<md-list-item
+									class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
+									ng-repeat="(key,boardgame) in bCtrl.boardgame.expands"
+									ng-href="#/boardgames/{{key}}">
+									<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+									<div layout="column">
+										<div layout="row">
+											<h4> {{boardgame.name}}</h4>
+										</div>
+									</div>
+									<i 
+									aria-label="remove favourite"
+									ng-if="user.profile_details.favourites[boardgame.bggId]" 
+									class="icon-heart md-secondary" 
+									md-colors="{color: 'myTheme-accent'}"
+									ng-click="hCtrl.toggleFavourite(boardgame)">
+										<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+									</i>
+									<i 
+									aria-label="add favourite"
+									ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+									class="icon-heart-o md-secondary" 
+									md-colors="{color: 'myTheme-accent'}"
+									ng-click="hCtrl.toggleFavourite(boardgame)">
+										<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+									</i>
+								</md-list-item>
+							</md-list>
 						</md-tab>
 					</md-tabs>
 				</div>

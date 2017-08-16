@@ -19,10 +19,6 @@ angular.module("play").controller('userController', function(Api, Utils, $routeP
 	this.removeFriend = Utils.removeFriend;
 
 	this.setVisible = function(id){
-		for(i = 0; i<controller.common_matches.length; i++){
-			if(controller.common_matches[i].$id == id){
-				controller.common_matches[i].visible = !controller.common_matches[i].visible;
-			}
-		}
+		$rootScope.games[id].visible = !$rootScope.games[id].visible;
 	}
 });

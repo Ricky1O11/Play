@@ -1,0 +1,48 @@
+<section id="loginArea" ng-if="!user" ng-show="!user" ng-cloak>
+	<md-content
+	ng-controller="loginController as lCtrl"
+	class="height100perc" >
+		<div layout="row" class="height100perc whiteTxt">
+			<div layout="column" flex="20" layout-align="center center">
+					<img ng-src="img/play.png"  id="logo" flex="none"/>
+			</div>
+			<div layout="column" flex="50">
+				<div layout="row" flex>
+					<div layout="column" flex="30" layout-align="center center">
+						<i class="icon-puzzle size-48 pad10"></i>
+					</div>
+					<div layout="column" flex="70" layout-align="center start">
+						<b>Discover</b></br> Search for new funny games to play
+					</div>
+				</div>
+				<div layout="row" flex class="mrg20t">
+					<div layout="column" flex="30" layout-align="center center">
+						<i class="icon-trophy size-48 pad10"></i>
+					</div>
+					<div layout="column" flex="70" layout-align="center start">
+						<b>Play</b></br> Challange your friends and keep track of your matches
+					</div>
+				</div>
+				<div layout="row" flex class="mrg20t">
+					<div layout="column" flex="30" layout-align="center center">
+						<i class="icon-stats-bars size-48 pad10"></i>
+					</div>
+					<div layout="column" flex="70" layout-align="center start">
+						<b>Monitor</b></br> Have a look to your statistics and try to improve them
+					</div>
+				</div>
+				<div layout="row" flex class="mrg20t">
+					<div layout="column" flex="30" layout-align="center center">
+						<i class="icon-chart-line size-48 pad10"></i>
+					</div>
+					<div layout="column" flex="70" layout-align="center start">
+						<b>Compete</b></br> take part in tournaments and try to climb the global leaderboards
+					</div>
+				</div>
+			</div>
+			<div layout="column" flex="30" layout-align="center end">
+				<div layout="row" class="mrg20" layout-align="center center" id="firebase-ui"></div>
+			</div>
+		</div>
+	</md-content>
+</section>

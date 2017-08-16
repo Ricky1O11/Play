@@ -314,3 +314,6 @@
 .icon-icon:before {
   content: "\7d";
 }
+.icon-chart-line:before {
+  content: "\7e";
+}

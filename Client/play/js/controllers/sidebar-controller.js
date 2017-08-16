@@ -1,4 +1,4 @@
-angular.module("play").controller('sidebarController', function(Auth, $rootScope, $cookies, $window, Api, $mdDialog, $scope, $cookies, jwtHelper) {
+angular.module("play").controller('sidebarController', function($scope) {
 
 	controllerSidebar=this;
 
@@ -9,7 +9,4 @@ angular.module("play").controller('sidebarController', function(Auth, $rootScope
 			return true;
 	}
 
-	this.logout = function(){
-		Auth.$signOut()
-	}
 });
