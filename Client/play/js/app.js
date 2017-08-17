@@ -28,17 +28,24 @@
 	.config(['ChartJsProvider', function (ChartJsProvider) {
 	    // Configure all charts
 	    ChartJsProvider.setOptions({
-	      chartColors: ['#3F51B5', '#FF6E40'],
-	      responsive: true,
-	      scales : {
-		        yAxes: [{
-		            display: true,
-		            ticks: {
-		                suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
-		                // OR //
-		                beginAtZero: true   // minimum value will be 0.
-		            }
-		        }]
+			maintainAspectRatio: false,
+		    chartColors: ['#3F51B5', '#FF6E40'],
+		    responsive: true,
+		    scales : {
+		    		xAxes: [{
+	                  display: true,
+	                  ticks: {
+	                      beginAtZero:true,
+	                  }
+	              }],
+			      yAxes: [{
+			          display: true,
+			          ticks: {
+			              suggestedMin: 0,    // minimum will be 0, unless there is a lower value.
+			              // OR //
+			              beginAtZero: true   // minimum value will be 0.
+			          }
+			      }]
     		}
 	    });
 	    // Configure all line charts
@@ -62,19 +69,16 @@
 					$rootScope.$watch('user.friends', Utils.playNewFriendNotification);
 					
 					var matches = Api.matches($rootScope.user.uid);
-					//matches.$loaded().then(Utils.updateUserStats);
 					matches.$ref().on('value', Utils.updateUserStats);
 
 					$rootScope.loaded = true;
 					$route.reload();
 				}
 		    });
-
+ 
 			$rootScope.randomColors = {};
-			$rootScope.match = {};
 
-			$rootScope.goTo = Utils.goTo;
-			
+			$rootScope.goTo = Utils.goTo;		
 			$rootScope.showPopup = Utils.showPopup;
 			$rootScope.showImage = Utils.showImage;
 			$rootScope.getRandomColor = Utils.getRandomColor;
@@ -83,11 +87,6 @@
 			$rootScope.showNotifications = Utils.showNotifications;
 			$rootScope.acceptFriend = Utils.acceptFriend;
 			$rootScope.logout = Utils.logout;
-
-			//$rootScope.currentTab = 0;
-			//$rootScope.setCurrentTab = function(tab){
-			//	$rootScope.currentTab = tab;
-			//}
 
 		})
 })();

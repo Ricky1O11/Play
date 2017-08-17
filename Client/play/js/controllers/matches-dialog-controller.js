@@ -157,6 +157,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			simpleObject = {};
 			angular.copy(self.selectedValues, simpleObject);
 			delete simpleObject["boardgame"]
+			delete simpleObject["plays"]
 			
 			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
 				function(response){

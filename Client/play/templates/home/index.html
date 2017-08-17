@@ -250,7 +250,7 @@
 							<div layout="column" flex="45" layout-align="center end">
 								<div class="circleBase imgProfile hideScrollbar shadowed-box clickable"  ng-if="user.profile_details.image == ''"  ng-click="goTo('profile')">
 									<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image">
-										<div layout="column" layout-align="center center" class="height100perc white80perc size-72">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-48">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
 									</div>
 								</div>
 								<div class="circleBase imgProfile clickable shadowed-box" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''" ng-click="goTo('profile')">

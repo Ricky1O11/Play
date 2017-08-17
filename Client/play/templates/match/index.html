@@ -190,7 +190,7 @@
 									ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 										<div layout="column" ng-if="player.image == ''">
 											<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
-												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
+												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
 											</md-button>
 										</div>
 										<img ng-click="goTo('users/'+player.key)" ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
@@ -206,12 +206,14 @@
 									</md-list-item>
 								</md-list>
 							</div>
+							<div layout="row" flex>	
+								<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
+							</div>
 						</md-content>
 					</md-tab>
 				</md-tabs>
 			</div>
 			<div layout="column" flex="60" class="pad20l">
-			<!--ng-if="mCtrl.loadedLeaderboard"-->
 				<md-tabs  md-selected="mCtrl.currentTab" 
 				md-stretch-tabs="always" flex-gt-xs flex-xs>
 					<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">

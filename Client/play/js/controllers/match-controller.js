@@ -1,5 +1,5 @@
-//controller for the single match page
-angular.module("play").controller('matchController', function(Api, Utils, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $scope) {
+ //controller for the single match page
+angular.module("play").controller('matchController', function(Api, Utils, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $rootScope) {
 	this.fabOpen = false;
 	this.editMode = false;
 	this.anim = "md-scale";
@@ -17,31 +17,30 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 
 	dbMatch = Api.match(controller.params.id);
 
-	dbMatch.$loaded().then(
-		function(response){
+	
+	dbMatch.$bindTo($rootScope, "match");
+
+	dbMatch.$ref().on('value',displayPlay);
+	
+	function displayPlay(response){
+			match = response.val();
 			controller.loaded = true;
-			if($rootScope.user.uid in response.players){
+			if($rootScope.user.uid in match.players){
 				controller.allowed = true;
 			}
-			controller.time = new Date(response.time);
-			controller.plays = response.plays;
-			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(response.players);
-		}, function errorCallback(response){
-			$rootScope.showToast("You are not allowed to see this match!");
-			//$location.path("matches/");			
-		}
-	);
-	
-	dbMatch.$bindTo($scope, "match");
-	
+			controller.time = new Date(match.time);
+			controller.plays = match.plays;
+			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(match.players);
+	}
+
 	this.updateScore = function(play_id, detailed_point_id, val){
-		prev = $scope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
+		prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 		update = val-prev;
 		
-		$scope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
+		$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 		controller.plays[play_id]["points"] += update;
-		$scope.match.plays[play_id]["points"] += update;
-		$scope.match.players[$scope.match.plays[play_id]["user"]]["points"] += update;
+		$rootScope.match.plays[play_id]["points"] += update;
+		$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += update;
 	}
 
 	this.setVisible = function(i){
@@ -57,7 +56,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	}
 
 	this.endEditMode = function(wantToSave){
-		$scope.match.time = controller.time.getTime();
+		$rootScope.match.time = controller.time.getTime();
 		controller.editMode = !controller.editMode;
 	}
 	
@@ -69,7 +68,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	      .cancel('No');
 	
 	    $mdDialog.show(confirm).then(function() {
-	    	Api.matchdelete($scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id)
+	    	Api.matchdelete($rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id)
 	    	.then(function(data){
 	    			$rootScope.showToast("Match successfully removed!");
 	    			$location.path("matches/");
@@ -81,22 +80,11 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	}
 
 	this.setCompletionStatus = function(completed){
-		if($scope.match.completed != completed)
-			winner = Utils.getMax($scope.match.players, "points");
-			Api.matchput(completed, $scope.match.boardgame.bggId, $scope.match.players, $scope.match.$id,winner);
+		if($rootScope.match.completed != completed)
+			winner = Utils.getMax($rootScope.match.players, "points");
+			Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
 	}
 
-	//this.getWinner = function(){
-	//	winner_pk = null;
-	//	winner_points = 0;
-	//	for(i = 0; i<controller.match.leaderboardArray.length; i++){
-	//		if(controller.match.leaderboardArray[i].points > winner_points){
-	//			winner_pk = controller.match.leaderboardArray[i].pk;
-	//			winner_points = controller.match.leaderboardArray[i].points;
-	//		}	
-	//	}
-	//	return winner_pk;
-	//}
 
 	//this.updateDuration = function(){
 	//	$timeout.cancel(controller.timer);
@@ -116,44 +104,33 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	//}
 
 	//create ordered list of numbers
-	this.range = function(a, b, step) {
-		step = step || 1;
-		var input = [];
-		if(a>b){
-		  for (var i = a; i >= b; i -= step) {
-			input.push(i);
-		  }
-		}
-		else{
-		  for (var i = a; i <= b; i += step) {
-			input.push(i);
-		  }
-		}
-		return input;
-	};
+	this.range = Utils.range
 
 	this.postPlay = function(){
-		for(player in $scope.match.players){
+		for(player in $rootScope.match.players){
 			play = {}
 			play["user"] = player;
 			play["round"] = this.total_rounds+1;
 			play["detailed_points"] = {};
 			play["points"] = 0;
 
-			for(j in $scope.match.template.scoring_fields){
-				scoring_field = $scope.match.template.scoring_fields[j];
+			for(j in $rootScope.match.template.scoring_fields){
+				scoring_field = $rootScope.match.template.scoring_fields[j];
 				play["detailed_points"][j] = scoring_field;
 				play["detailed_points"][j]["points"] = 0;
 			}
-			play_post = Api.playpost($scope.match.$id, play);
+			play_post = Api.playpost($rootScope.match.$id, play);
 			play_post.$loaded().then(function(response){
-				controller.plays = $scope.match.plays;
-				
+				controller.plays = $rootScope.match.plays;
 			})
 
 
 		}
 		controller.total_rounds += 1;
+	}
+
+	this.managePlayers = function(){
+		dialog = $rootScope.showPopup("", $rootScope.user.uid, 'manageplayers', {'match': $rootScope.match, 'rounds': controller.total_rounds});
 	}
 
 	function startTime() {
@@ -171,7 +148,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 
 	//$window.onbeforeunload =  controller.updateDuration;
 
-	$scope.$on('$destroy', function(){
+	$rootScope.$on('$destroy', function(){
 	    //controller.updateDuration();
 	});
 });

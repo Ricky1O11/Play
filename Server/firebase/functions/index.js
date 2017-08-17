@@ -55,10 +55,11 @@ exports.updateImages = functions.database.ref('profiles/{user_id}').onWrite(even
 
 exports.addUserInDb = functions.auth.user().onCreate(event => {
   	const user = event.data; // The Firebase user
+  	const username = user.email.split("@")[0];
   	var db = admin.database();
   	var db_ref = db.ref()
 	obj = {}
-	obj.username = 'your username';
+	obj.username = username;
 	obj.image = '';
 	obj.visibility_group = 0;
 	obj.fav_setting = true;
@@ -66,6 +67,7 @@ exports.addUserInDb = functions.auth.user().onCreate(event => {
 
  	return db_ref.child('profiles').child(user.uid).set(obj);
 });
+
 
 exports.removeUserFromDb = functions.auth.user().onDelete(event => {
   	const user = event.data; // The Firebase user

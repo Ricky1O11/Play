@@ -1,7 +1,6 @@
 //controller for login
 angular.module("play").controller('loginController', function(Api, Auth, $scope, $cookies, $rootScope, $route, $window) {
 	
-	console.log(firebase.auth.GoogleAuthProvider);
 	var uiConfig = {
         signInFlow: 'popup',
         signInOptions: [
@@ -11,7 +10,7 @@ angular.module("play").controller('loginController', function(Api, Auth, $scope,
         credentialHelper: firebaseui.auth.CredentialHelper.NONE,
         callbacks: {
           signInSuccess: function(currentUser, credential, redirectUrl) {
-            $scope.user = firebaseUser;
+            $scope.user = currentUser;
 			$route.reload();
             return true;
           }

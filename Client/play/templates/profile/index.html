@@ -175,20 +175,21 @@
 								<h2>PLAYED MATCHES</h2>
 							</div>
 							<div layout="row">
-								<canvas class="chart chart-bar" chart-data="pCtrl.user.most_played_game.data" chart-labels="pCtrl.user.most_played_game.labels" chart-click="onClick"></canvas>
+								<canvas class="chart chart-bar height100perc" chart-data="chart.games.values" chart-labels="chart.games.labels" 
+								chart-series="series" chart-click="onClick"></canvas>
 							</div>
 						</div>
+						
 						<div layout="column" flex="50" class="pad20">
 							<div layout="row" class="pad10" layout-align="center center">
 								<h2>MINUTES SPENT</h2>
 							</div>
 							<div layout="row">
-								<canvas class="chart chart-line" chart-data="data" chart-labels="labels" 
-								chart-series="series" chart-click="onClick"></canvas> 
+								<canvas  id="pie" class="chart chart-pie height100perc" chart-data="chart.companions.values.played" chart-labels="chart.companions.labels"></canvas>
 							</div>
 							
 						</div>
-					
+					</div>
 				</md-content>
 			</md-tab>
 			<md-tab label="Settings" >

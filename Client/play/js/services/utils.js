@@ -72,7 +72,7 @@ angular.module("play")
 			obj.showPopup = function(ev, user_pk, string, additional_field) {
 			  boardgame = additional_field? additional_field : -1;
 			  $mdDialog.show({
-				locals:{user_pk : user_pk, boardgame: boardgame},
+				locals:{user_pk : user_pk, boardgame: boardgame, additional_field:additional_field},
 				controller: string+'DialogController',
 				controllerAs: string.substring(0,1)+'dCtrl',
 				templateUrl: 'templates/'+string+'dialog.html',
@@ -152,20 +152,34 @@ angular.module("play")
 				match_won = 0;
 				most_played_game = "-";
 				most_played_game_amount = 0;
-                
                 companions = {};
+
+
+                $rootScope.chart = {};
+                $rootScope.chart.games = {};
+                $rootScope.chart.games["labels"] = [];
+                $rootScope.chart.games["values"] = [];
+                $rootScope.chart.companions = {}
+				$rootScope.chart.companions["labels"] = []
+				$rootScope.chart.companions["values"] = {}
+				$rootScope.chart.companions["values"]["won"] = []
+				$rootScope.chart.companions["values"]["played"] = []
                 
                 if($rootScope.games){
 
                     for(i in $rootScope.games){
+
 						game = $rootScope.games[i];
 						game.visible = false;
 						game.lastMatchTime = 0;
-
-						//get most played game
 						played_matches = Object.keys(game.matches);
+
+                		$rootScope.chart.games["labels"].push(game.name);
+                		$rootScope.chart.games["values"].push(played_matches.length);
+						
+						//get most played game
 						if(played_matches.length > most_played_game_amount){
-							most_played_game_amount = played_matches;
+							most_played_game_amount = played_matches.length;
 							most_played_game = game.name;
 						}
 
@@ -208,6 +222,11 @@ angular.module("play")
 						}
 					}
                 }
+                for(c in companions){
+                	$rootScope.chart.companions["labels"].push(companions[c].username);
+                	$rootScope.chart.companions["values"]["played"].push(companions[c].amount);
+                	$rootScope.chart.companions["values"]["won"].push(companions[c].won);
+                }
 				$rootScope.profile_stats = {}
 				$rootScope.profile_stats.match_played = match_played;
 				$rootScope.profile_stats.match_won = match_won;
@@ -215,6 +234,8 @@ angular.module("play")
 				$rootScope.profile_stats.most_played_game = most_played_game;
 				$rootScope.profile_stats.most_played_game_amount = most_played_game_amount;
 				$rootScope.profile_stats.most_frequent_companion = companions;
+
+				
 
 			};
 

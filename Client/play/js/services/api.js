@@ -213,6 +213,82 @@
 					var syncObject = $firebaseObject(ref);
 					return syncObject;
 				},
+
+		playerpost:	function(match, simpleObject, player){
+					delete simpleObject["$id"]
+					delete simpleObject["$priority"]
+
+					var ref = firebase.database().ref()
+					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).set(player);
+					
+					var players_ref = ref.child("matches").child(""+match.$id).child("players");
+
+					players_ref.once('value').then(function(snapshot) {
+						players = snapshot.val();
+
+					  	for(p in players){
+							var user_played_matches_ref = ref.child("user_played_matches")
+														.child(""+players[p].uid)
+														.child(""+match.boardgame.bggId)
+							update = {
+									"name":match.boardgame.name,
+									"thumbnail":match.boardgame.thumbnail,
+									"image":match.boardgame.image,
+									"bggId":match.boardgame.bggId,
+									"last_inserted_at":match.inserted_at,
+									};
+
+							user_played_matches_ref.update(update)
+
+							user_played_matches_ref
+							.child("matches")
+							.child(""+match.$id)
+							.set(simpleObject);
+						}
+					});
+
+					return ref;
+				},
+
+		playerdelete:	function(match, player){
+					var ref = firebase.database().ref()
+					
+					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).remove()
+					
+					var plays_ref = ref.child("matches").child(""+match.$id).child("plays");
+					plays_ref.once('value').then(function(snapshot) {
+						plays = snapshot.val();
+					  for(play in plays){
+							if(plays[play].user == player.uid){
+								ref.child("matches").child(""+match.$id).child("plays").child(play).remove()
+							}
+						}
+					});
+
+					var players_ref = ref.child("matches").child(""+match.$id).child("players");
+						
+					players_ref.once('value').then(function(snapshot) {
+						players = snapshot.val();
+						console.log(players)
+					  	for(p in players){
+							var user_played_matches_ref = ref.child("user_played_matches")
+																.child(""+players[p].uid)
+																.child(""+match.boardgame.bggId)
+																.child("matches")
+																.child(""+match.$id)
+																.child("players")
+																.child(player.uid)
+																.remove();
+						}
+					});
+					var user_played_matches_ref = ref.child("user_played_matches")
+																.child(""+player.uid)
+																.child(""+match.boardgame.bggId)
+																.child("matches")
+																.child(""+match.$id).
+																remove();
+					return $firebaseObject(plays_ref);
+				},
 		
 		templates:	function(boardgame){
 					var ref = firebase.database().ref().child("boardgame_has_templates").child(""+boardgame);

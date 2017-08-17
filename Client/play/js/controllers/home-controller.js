@@ -7,7 +7,6 @@ angular.module("play").controller('homeController', function(Api, Utils, $scope,
 
 	Api.user_templates(currentAuth.uid).$loaded().then(function(data){
 		homeContr.templates=data;
-		console.log(homeContr.templates);
 		
 	});
 });
