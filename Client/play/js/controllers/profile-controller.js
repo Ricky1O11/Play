@@ -11,17 +11,4 @@ angular.module("play").controller('profileController', function(Api, Utils, $roo
 	controllerSidebar=this;
 
 	console.log($rootScope);
-
-
-	var fileInput = document.getElementById('fileInput');
-	fileInput.addEventListener('change', changeInput);
-
-	function changeInput() {
-		var file = fileInput.files[0];
-		var reader = new FileReader();
-		reader.readAsDataURL(file);
-		 reader.onload = function(e) {
-			Utils.uploadImage(file);
-	    };
-	}
 });

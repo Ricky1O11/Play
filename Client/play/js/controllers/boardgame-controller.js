@@ -19,7 +19,7 @@ angular.module("play").controller('boardgameController', function(Api, Utils, $f
 		var input = [];
 		if(a>b){
 		  for (var i = a; i >= b; i -= step) {
-			input.push(i);
+ 			input.push(i);
 		  }
 		}
 		else{

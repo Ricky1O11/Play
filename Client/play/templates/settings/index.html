@@ -1,0 +1,135 @@
+ <div class="container-fluid" layout="column"  layout-padding ng-cloak>
+	<div layout="column" flex="none" layout-align="center center">
+		<div layout="row" class="relative" flex="none">
+			<div class="circleBase imgUser hideScrollbar shadowed-box" >
+				<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image" ng-if="user.profile_details.image == ''">
+					<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
+				</div>
+				<div class="circleBase imgUser" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
+				</div>
+			</div>
+			<label for="fileInput"
+				aria-label="Edit match info" 
+				class="md-button md-fab md-mini absolute"
+				md-colors="{background: 'myTheme-accent'}"
+				layout-align="center center">
+				<i class="icon-pencil absolute8">
+				</i> 
+				<input id="fileInput" name="file" type="file" class="ng-hide" accept="image/*">
+				<md-tooltip md-direction="bottom" md-delay="200">Edit profile picture</md-tooltip>
+			</label>
+		</div>
+		<div layout="row" class="mrg10t blue-grey">
+			<h1> {{user.profile_details.username}} {{selectedFile}}</h1>
+		</div>
+	</div>
+	<div layout="row" flex="grow">
+		<div layout="column" flex="100">
+					<div layout="row" class="pad10t" layout-wrap>
+						<div 
+							layout="column" 
+							flex-gt-xs="50" 
+							flex-xs="100" 
+							class="shadowed-box whiteBg mrg10t">
+							<div layout="row" class=" mrg16">
+								<div layout="column" flex="10" layout-align="center start" >
+									<i class="size-24 icon-user" md-colors="{color: 'myTheme-accent'}" >
+										<md-tooltip md-direction="top" md-delay="200">User informations</md-tooltip>
+									</i>
+								</div>
+								<div layout="column" flex="70" layout-align="center start" >
+									<h2 class="mrg10">
+										Personal data
+									</h2>
+								</div>
+							</div>
+							<div layout="row">
+								<div layout="column" flex="100" class="pad10l">
+									<div layout="row" class="height80">
+										<div layout="column" flex="90">
+											<md-input-container>
+												<label>Name</label>
+												<input ng-model="user.displayName">
+											</md-input-container>
+										</div>
+									</div>
+									<div layout="row">
+										<div layout="column" flex="90">
+											<md-input-container>
+												<label>Username</label>
+												<input ng-model="user.profile_details.username">
+											</md-input-container>
+										</div>
+									</div>
+
+									<div layout="row">
+										<div layout="column" flex="90">
+											<md-input-container>
+												<label>Email</label>
+												<input ng-model="user.email">
+											</md-input-container>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div 
+							layout="column" 
+							flex-gt-xs="50" 
+							flex-xs="100" 
+							class="pad10l pad0lxs mrg10t">
+							<div class="shadowed-box whiteBg">
+								<div layout="row" class=" mrg16">
+									<div layout="column" flex="10" layout-align="center start" >
+										<i class="size-24 icon-cog" md-colors="{color: 'myTheme-accent'}" >
+											<md-tooltip md-direction="top" md-delay="200">User settings</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="70" layout-align="center start" >
+										<h2 class="mrg10">
+											Settings
+										</h2>
+									</div>
+								</div>
+								<div layout="row"  class="pad20l">
+									<div layout="column" class="mrg10l">
+										<div layout="row" flex>
+											<div>
+												<div layout="row" class="mrg20b">
+													<div>Select who can view your profile</div>
+												</div>
+												<div layout="row"  class="mrg20b">
+													<div layout = "column" flex="100">
+															<md-radio-group ng-model="user.profile_details.visibility_group">
+																<md-radio-button value="0">All</md-radio-button>
+																<md-radio-button value="1">Friends</md-radio-button>
+																<md-radio-button value="2">None</md-radio-button>
+														    </md-radio-group>
+													</div>
+												</div>
+												
+											</div>
+										</div>
+										<div layout="row">
+											<div>
+												<md-checkbox ng-model="user.profile_details.fav_setting" aria-label="Toggle favourite visibility to viewers">
+													Let viewers see your favourites
+												</md-checkbox>
+											</div>
+										</div>
+										<div layout="row">
+											<div>
+												<md-checkbox ng-model="user.profile_details.rec_setting" aria-label="Toggle recents visibility to viewers">
+													Let viewers see your recent matches
+												</md-checkbox>
+											</div>
+										</div>
+										<div layout="row" class="relative" flex="none">
+				
+									</div>
+								</div>
+							</div>
+						</div>
+		</div>
+	</div>
+</div>

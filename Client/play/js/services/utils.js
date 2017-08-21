@@ -100,17 +100,9 @@ angular.module("play")
 			}
 
 			obj.getRandomColor = function(pk){
-			  rnd = Math.floor(Math.random()*7);
-			  switch (rnd){
-				case 0: $rootScope.randomColors[pk] = {'background-color':'#448AFF'}; break; //blue
-				case 1: $rootScope.randomColors[pk] = {'background-color':'#FF5252'}; break; //red
-				case 2: $rootScope.randomColors[pk] = {'background-color':'#7C4DFF'}; break; //deep purple
-				case 3: $rootScope.randomColors[pk] = {'background-color':'#4DB6AC'}; break; //teal
-				case 4: $rootScope.randomColors[pk] = {'background-color':'#FF9800'}; break; //orange
-				case 5: $rootScope.randomColors[pk] = {'background-color':'#4DD0E1'}; break; //cyan
-				case 6: $rootScope.randomColors[pk] = {'background-color':'#F06292'}; break; //pink
-				default: $rootScope.randomColors[pk] = {'background-color':'#FFD740'}; break; //amber
-			  }
+			  	rnd = Math.floor(Math.random()*16);
+			  	colors = ['#3949AB', '#1E88E5', '#039BE5', '#00ACC1', '#00897B', '#43A047', '#7CB342', '#C0CA33', '#FDD835', '#FFB300', '#FB8C00', '#F4511E', '#e53935', '#D81B60', '#8E24AA', '#5E35B1']
+				$rootScope.randomColors[pk] = {'background-color':colors[rnd]};
 			}
 
 			obj.showToast = function(string){

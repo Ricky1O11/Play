@@ -141,7 +141,7 @@ md-card{
 	height:80px !important;
 }
 .height100{
-	height:100px;
+	height:100px !important;
 }
 .height125{
 	height:125px;
@@ -234,6 +234,9 @@ md-card{
 .pad5r{
 	padding-right: 5px;
 }
+.pad5b{
+	padding-bottom: 5px;
+}
 
 .pad10{
 	padding: 10px;
@@ -270,6 +273,9 @@ md-card{
 
 .pad50{
 	padding: 50px !important;
+}
+.pad100{
+	padding: 100px !important;
 }
 
 .pad50b{
@@ -375,6 +381,8 @@ md-card{
 
 .size-24 { font-size: 24px;}
 
+.size-30 { font-size: 30px; }
+
 .size-36 { font-size: 36px; }
 
 .size-48 { font-size: 48px; }
@@ -421,7 +429,7 @@ md-card{
 }
 
 .overflowScroll{
-	overflow-y:auto;
+	overflow-y:auto !important;
 }
 
 .overflowXHidden{
@@ -448,6 +456,10 @@ md-card{
 	text-align: center;
 }
 
+.right-align{
+	text-align: right;
+}
+
 
 .clickable{
 	cursor:pointer;
@@ -466,7 +478,6 @@ md-card{
 }
 .borderAccent{
 	border-bottom:3px solid #FF3D00;
-	box-shadow: 0 2px 5px 0 rgba(0,0,0,.26);
 }
 
 .borderGrey{
@@ -737,6 +748,16 @@ figcaption{
 	top:13;
 	left:13;
 }
+.absolute9{
+	position:absolute;
+	bottom:13;
+	right:13;
+}
+.absolute10{
+	position:absolute;
+	top:20;
+	right:20;
+}
 
 #dialog md-tabs-wrapper{
 	/*display: none !important;*/
@@ -787,4 +808,9 @@ figcaption{
 
 .clear{
 	clear:both;
+}
+
+#youAndTabs .md-tab{
+    background: rgb(57, 73, 171);
+    color: #ffffff;
 }

@@ -91,6 +91,11 @@ angular.module('play')
 		controller: 'templatesController',
 		controllerAs: 'tCtrl'
 	})
+	.when('/settings', {
+		templateUrl: 'templates/settings/index.html',
+		controller: 'settingsController',
+		controllerAs: 'tCtrl'
+	})
 	.otherwise({
 		redirectTo: '/',
 	})

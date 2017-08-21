@@ -1,15 +1,15 @@
-<section layout="row" id="container" class="overflowYHidden height100perc" flex ng-cloak>
+<div layout="row" id="container" class="overflowYHidden height100perc" flex ng-cloak>
 	<md-sidenav
 		ng-if="user && user.emailVerified"
 		class="md-sidenav-left height100perc"
 		md-is-locked-open="$mdMedia('gt-sm')"
 		id="sidebar" 				
 		>
-		<div ng-controller="sidebarController as sCtrl">
-			<div layout="row">
-				<div layout="column" flex="100" md-colors="{background: 'myTheme-primary'}" class="relative blue-grey shadowed-box" >
+		<div ng-controller="sidebarController as sCtrl" layout="column">
+			<div layout="row" flex="none" class="height150">
+				<div layout="column" flex="100" md-colors="{background: 'myTheme-primary'}" class="relative blue-grey shadowed-box borderAccent" >
 					<div layout="row" class="clickable">	
-						<div layout="column" flex="100" layout-align="center center" class="height150 pad10" ng-click="goTo('profile/')">
+						<div layout="column" flex="100" layout-align="center center" class="pad10" ng-click="goTo('profile/')">
 							<div class="row">
 								
 								<div class="imgProfile circleBase borderWhite" layout-align="center center" ng-if="user.profile_details.image == ''">
@@ -56,133 +56,137 @@
 					</div>
 				</div>
 			</div>
-			<div layout="row" class="pad10b pad20t">
-				<div layout="column" flex="100"  class="pad10l pad10t">
-					<div layout="row">
-						<div layout="column" flex="100" >
-							<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('/')"
-							>
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/profile/0') >= 0)}">
-									<i class="size-18 icon-home"></i>
+			<div class="overflowScroll">
+				<div layout="column"  flex="noshrink">
+					<div layout="row" class="pad10b pad20t">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('/')"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/profile/0') >= 0)}">
+											<i class="size-18 icon-home"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Dashboard</div>
+									</a>
 								</div>
-								<div layout="column" flex="85" layout-align="center start">Dashboard</div>
-							</a>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<md-divider ></md-divider> <!--md-inset-->
-			<div layout="row" class="pad10b pad20t">
-				<div layout="column" flex="100"  class="pad10l pad10t">
-					<div layout="row" md-colors="{color: 'myTheme-primary'}"><h5>PROFILE</h5></div>
-					<div layout="row">
-						<div layout="column" flex="100" >
-							<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('profile/', 0)"
-							>
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/profile/0') >= 0)}">
-									<i class="size-18 icon-heart-o"></i>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row" class="pad10b pad20t">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row" md-colors="{color: 'myTheme-primary'}"><h5>PROFILE</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('profile/', 0)"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/profile/0') >= 0)}">
+											<i class="size-18 icon-heart-o"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Favourites</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('profile/', 1)">
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/profile/1') >= 0)}">
+											<i class="icon-stats-bars"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Stats</div>
+									</a>
+									
 								</div>
-								<div layout="column" flex="85" layout-align="center start">Favourites</div>
-							</a>
-							<a layout="row"  class="pad10t decoNone clickable" ng-click="goTo('profile/', 1)">
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/profile/1') >= 0)}">
-									<i class="icon-stats-bars"></i>
-								</div>
-								<div layout="column" flex="85" layout-align="center start">Stats</div>
-							</a>
-							
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<md-divider ></md-divider> <!--md-inset-->
-			<div layout="row" class="pad10b">
-				<div layout="column" flex="100"  class="pad10l pad10t">
-					<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>BORDGAMES</h5></div>
-					<div layout="row">
-						<div layout="column" flex="100" >
-							<a 
-							layout="row"  
-							class="pad10t decoNone" 
-							href="#/boardgames"
-							>
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/boardgames') >= 0)}">
-									<i class="size-18 icon-list-bullet"></i>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row" class="pad10b">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>BORDGAMES</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a 
+									layout="row"  
+									class="pad10t decoNone" 
+									href="#/boardgames"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/boardgames') >= 0)}">
+											<i class="size-18 icon-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">List</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone" href="#/matches">
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/matches') >= 0)}">
+											<i class="size-18 icon-die-five"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Matches</div>
+									</a>
+									<a layout="row"  class="pad10t decoNone clickable" ng-click="showPopup($event, user.uid, 'matches')">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="icon-plus-1"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">New Match</div>
+									</a>
 								</div>
-								<div layout="column" flex="85" layout-align="center start">List</div>
-							</a>
-							<a layout="row"  class="pad10t decoNone" href="#/matches">
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/matches') >= 0)}">
-									<i class="size-18 icon-die-five"></i>
-								</div>
-								<div layout="column" flex="85" layout-align="center start">Matches</div>
-							</a>
-							<a layout="row"  class="pad10t decoNone clickable" ng-click="showPopup($event, user.uid, 'matches')">
-								<div layout="column" flex="15" layout-align="center center">
-									<i class="icon-plus-1"></i>
-								</div>
-								<div layout="column" flex="85" layout-align="center start">New Match</div>
-							</a>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<md-divider></md-divider>
-			<div layout="row" class="height100">
-				<div layout="column" flex="100"  class="pad10l pad10t">
-					<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>COMMUNITY</h5></div>
-					<div layout="row">
-						<div layout="column" flex="100" >
-							<a layout="row"  class="pad10t decoNone" href="#/">
-								<div layout="column" flex="15" layout-align="center center">
-									<i class="size-18 icon-list-bullet"></i>
+					<md-divider></md-divider>
+					<div layout="row" class="height100">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>COMMUNITY</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a layout="row"  class="pad10t decoNone" href="#/">
+										<div layout="column" flex="15" layout-align="center center">
+											<i class="size-18 icon-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Will come soon</div>
+									</a>
 								</div>
-								<div layout="column" flex="85" layout-align="center start">Will come soon</div>
-							</a>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<md-divider ></md-divider> <!--md-inset-->
-			<div layout="row"  class="height100">
-				<div layout="column" flex="100"  class="pad10l pad10t">
-					<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>HELP US!</h5></div>
-					<div layout="row">
-						<div layout="column" flex="100" >
-							<a 
-							layout="row"  
-							class="pad10t decoNone" 
-							href="#/templates"
-							>
-								<div layout="column" flex="15" layout-align="center center"
-								ng-class="{'active': (path.indexOf('/templates') >= 0)}">
-									<i class="size-18 icon-list-bullet"></i>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row"  class="height100">
+						<div layout="column" flex="100"  class="pad10l pad10t">
+							<div layout="row"  md-colors="{color: 'myTheme-primary'}"><h5>HELP US!</h5></div>
+							<div layout="row">
+								<div layout="column" flex="100" >
+									<a 
+									layout="row"  
+									class="pad10t decoNone" 
+									href="#/templates"
+									>
+										<div layout="column" flex="15" layout-align="center center"
+										ng-class="{'active': (path.indexOf('/templates') >= 0)}">
+											<i class="size-18 icon-list-bullet"></i>
+										</div>
+										<div layout="column" flex="85" layout-align="center start">Create a template</div>
+									</a>
 								</div>
-								<div layout="column" flex="85" layout-align="center start">Create a template</div>
-							</a>
+							</div>
 						</div>
 					</div>
-				</div>
-			</div>
-			<md-divider ></md-divider> <!--md-inset-->
-			<div layout="row">
-				<div layout="column" class="size-18" flex="50" layout-align="center center">
-					<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('profile/', 3)">
-						<i class="icon-cog"></i>
-						<md-tooltip md-direction="bottom" md-delay="200">Settings</md-tooltip>
-			 		</md-button>
-				</div>
-				<div layout="column" class="size-18" flex="50" layout-align="center center">
-					<md-button class="md-fab md-mini" aria-label="Logout" ng-click="logout()">
-						<i class="icon-log-out"></i>
-						<md-tooltip md-direction="bottom" md-delay="200">Logout</md-tooltip>
-			 		</md-button>
-				</div>
+					<md-divider ></md-divider> <!--md-inset-->
+					<div layout="row">
+						<div layout="column" class="size-18" flex="50" layout-align="center center">
+							<md-button class="md-fab md-mini" aria-label="Settings" ng-click="goTo('settings/')">
+								<i class="icon-cog"></i>
+								<md-tooltip md-direction="bottom" md-delay="200">Settings</md-tooltip>
+					 		</md-button>
+						</div>
+						<div layout="column" class="size-18" flex="50" layout-align="center center">
+							<md-button class="md-fab md-mini" aria-label="Logout" ng-click="logout()">
+								<i class="icon-log-out"></i>
+								<md-tooltip md-direction="bottom" md-delay="200">Logout</md-tooltip>
+					 		</md-button>
+						</div>
+					</div> 
+				</div> 
 			</div> 
 		</div> 
 	</md-sidenav>
@@ -221,7 +225,5 @@
 			</md-list-item>
 		</md-list>
       </md-content>
-
     </md-sidenav>
-
-</section>
+</div>

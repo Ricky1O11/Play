@@ -1,42 +1,99 @@
-<div class="container-fluid pad20l pad20t pad20r" layout="column" ng-cloak>
-	<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
-		<div layout="column" flex="none" layout-align="center center">
-			<div layout="row" class="relative" flex="none">
-				<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.image)">
-					<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.image}}">
-						<div class="circleBase"></div>
+<div class="container-fluid" layout="column" ng-cloak>
+	<div layout="row" layout-xs="column" flex="noshrink" md-colors="{background: 'myTheme-primary'}" class="height150 shadowed-box borderAccent">
+		<div layout="column" class="blue-grey" flex>	
+			<div layout="row" class="size-14 pad20" layout-align="start center">
+				<div 
+					layout="column" 
+					flex="10" 
+					class="shadowed-box whiteBg pad10l clickable height60">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="10" layout-align="center center" >
+							<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
+							</i>
+						</div>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>{{games[bCtrl.boardgame.bggId].matches|keylength}}</h2>
+						</div>
 					</div> 
 				</div>
-				<md-button 
-					aria-label="Edit match info" 
-					class="md-fab absolute">
-					<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
-					class="icon-heart"
-					ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
-						<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
-					</i>
+				<div 
+					layout="column" 
+					flex="10" 
+					class="shadowed-box whiteBg pad10l clickable height60 mrg10l">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="20" layout-align="center center" >
+							<i class="size-21 icon-trophy-2" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
+							</i>
+						</div>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>{{games[bCtrl.boardgame.bggId].matches|countObjectByProperty:'winner':user.uid}}</h2>
+						</div>
+						
+					</div>
+				</div>
+				<div 
+					layout="column" 
+					flex="10" 
+					class="shadowed-box whiteBg pad10l clickable height60 mrg10l">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="20" layout-align="center center" >
+							<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+							</i>
+						</div>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>-</h2>
+						</div>
+					</div>	
+				</div>
+				<div 
+					layout="column" 
+					flex="55" 
+					class="whiteTxt pad10l clickable">
+					<div layout="row" class="height100perc">
+						<div layout="column" class="size-30 right-align" flex="100" layout-align="center end" >
+							{{bCtrl.boardgame.name}}
+						</div>
+					</div> 
+				</div>
+				<div layout="column"  flex="15" layout-align="center center" class="">
+					<div layout="row" class="relative" flex="none">
+						<div class="circleBase imgBoardgameMedium hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.image)">
+							<div class="circleBase imgBoardgameMedium" layout-align="center center" back-img="{{bCtrl.boardgame.image}}">
+								<div class="circleBase"></div>
+							</div> 
+						</div>
+						<md-button 
+							aria-label="Edit match info" 
+							class="md-fab absolute">
+							<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
+							class="icon-heart"
+							ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
+								<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
+							</i>
 
-					<i 
-					ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
-					class="icon-heart-o "
-					ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
-						<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
-					</i>
-				</md-button>
+							<i 
+							ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
+							class="icon-heart-o "
+							ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
+								<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
+							</i>
+						</md-button>
+					</div>
+				</div>		
 			</div>
 		</div>
-		<div layout="column" class="blue-grey pad20l" flex>
-			<div layout="row" class="mrg10b" flex layout-wrap>
-				<div layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
-					<h1 class="center-align"> {{bCtrl.boardgame.name}}</h1>
-				</div>
-			</div>
-			<div layout="row">
-				<div layout="column" flex="100">
-					<md-tabs  md-selected="0"
-						md-stretch-tabs="always" class="height500xs">
-						<md-tab label="Basic info" >
-							<md-content class="pad5l">
+	</div>
+	<div layout="row" flex="noshrink" class="height250 ">
+		<div layout="column" flex="100">
+			<md-tabs  md-selected="0"
+				md-stretch-tabs="always" flex="100">
+				<md-tab label="Basic info">
+					<md-content class="pad10l pad10r pad10t">
+						<div layout="row">
+							<div layout="column" class="blue-grey pad20l" flex="100">
 								<div layout="row">
 									<div layout="column" flex="100">
 										<div layout="row" class="size-14" layout-wrap>
@@ -91,110 +148,115 @@
 												
 											</div>
 										</div>
-									</div>
-								</div>
-								<div layout="row" layout-wrap class="mrg10t">
-									<div layout="column" flex-xs flex-gt-xs ng-repeat="(key, category) in bCtrl.boardgame.categories">
-										<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+key)">
-											{{category.name}}
-										</md-button>
-									</div>
-								</div>
-							</md-content>
-						</md-tab>
-						<md-tab label="Description" class="hideScrollbar">
-							<md-content class="pad5l pad10t hideScrollbar">
-								<div layout="row">
-									<div layout="column" flex="100" ng-repeat="(key, designer) in bCtrl.boardgame.designers">
-										<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+key)">
-											{{designer.name}}
-										</md-button>
-									</div>
-								</div>
-								<div layout="row">
-									<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
-										<div layout="row" class="size-14 maxHeight130 maxHeight300xs  overflowScroll pad20t pad20b">
-											<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+										<div layout="row" layout-wrap class="mrg10t">
+											<div layout="column" flex-xs flex-gt-xs ng-repeat="(key, category) in bCtrl.boardgame.categories">
+												<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+key)">
+													{{category.name}}
+												</md-button>
+											</div>
 										</div>
-									</div>
-								</div>
-							</md-content>
-						</md-tab>
-						<md-tab label="Expansions"  ng-if="(bCtrl.boardgame.is_expanded_by | keylength) > 0">
-							<md-list">
-								<md-list-item
-									class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
-									ng-repeat="(key,boardgame) in bCtrl.boardgame.is_expanded_by"
-									ng-href="#/boardgames/{{key}}">
-									<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
-									<div layout="column">
 										<div layout="row">
-											<h4> {{boardgame.name}}</h4>
+											<div layout="column" flex="100" ng-repeat="(key, designer) in bCtrl.boardgame.designers">
+												<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+key)">
+													{{designer.name}}
+												</md-button>
+											</div>
 										</div>
 									</div>
-									<i 
-									aria-label="remove favourite"
-									ng-if="user.profile_details.favourites[boardgame.bggId]" 
-									class="icon-heart md-secondary" 
-									md-colors="{color: 'myTheme-accent'}"
-									ng-click="hCtrl.toggleFavourite(boardgame)">
-										<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
-									</i>
-									<i 
-									aria-label="add favourite"
-									ng-if="!user.profile_details.favourites[boardgame.bggId]" 
-									class="icon-heart-o md-secondary" 
-									md-colors="{color: 'myTheme-accent'}"
-									ng-click="hCtrl.toggleFavourite(boardgame)">
-										<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
-									</i>
-								</md-list-item>
-							</md-list>
-						</md-tab>
-						<md-tab label="Expands" ng-if="(bCtrl.boardgame.expands | keylength) > 0">
-							<md-list">
-								<md-list-item
-									class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
-									ng-repeat="(key,boardgame) in bCtrl.boardgame.expands"
-									ng-href="#/boardgames/{{key}}">
-									<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
-									<div layout="column">
-										<div layout="row">
-											<h4> {{boardgame.name}}</h4>
-										</div>
+								</div>
+							</div>
+						</div>
+					</md-content>
+				</md-tab>
+				<md-tab label="Description" class="hideScrollbar">
+					<md-content class="pad10l pad10r pad10t hideScrollbar">
+						<div layout="row">
+							<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
+								<div layout="row" class="size-14 maxHeight200 maxHeight300xs  overflowScroll pad20t pad20b">
+									<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+								</div>
+							</div>
+						</div>
+					</md-content>
+				</md-tab>
+				<md-tab label="Expansions" ng-if="(bCtrl.boardgame.is_expanded_by | keylength) > 0">
+					<md-content class="pad10l pad10r pad10t">
+						<md-list>
+							<md-list-item
+								class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
+								ng-repeat="(key,boardgame) in bCtrl.boardgame.is_expanded_by"
+								ng-href="#/boardgames/{{key}}">
+								<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+								<div layout="column">
+									<div layout="row">
+										<h4> {{boardgame.name}}</h4>
 									</div>
-									<i 
-									aria-label="remove favourite"
-									ng-if="user.profile_details.favourites[boardgame.bggId]" 
-									class="icon-heart md-secondary" 
-									md-colors="{color: 'myTheme-accent'}"
-									ng-click="hCtrl.toggleFavourite(boardgame)">
-										<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
-									</i>
-									<i 
-									aria-label="add favourite"
-									ng-if="!user.profile_details.favourites[boardgame.bggId]" 
-									class="icon-heart-o md-secondary" 
-									md-colors="{color: 'myTheme-accent'}"
-									ng-click="hCtrl.toggleFavourite(boardgame)">
-										<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
-									</i>
-								</md-list-item>
-							</md-list>
-						</md-tab>
-					</md-tabs>
-				</div>
-			</div>
+								</div>
+								<i 
+								aria-label="remove favourite"
+								ng-if="user.profile_details.favourites[boardgame.bggId]" 
+								class="icon-heart md-secondary" 
+								md-colors="{color: 'myTheme-accent'}"
+								ng-click="hCtrl.toggleFavourite(boardgame)">
+									<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+								</i>
+								<i 
+								aria-label="add favourite"
+								ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+								class="icon-heart-o md-secondary" 
+								md-colors="{color: 'myTheme-accent'}"
+								ng-click="hCtrl.toggleFavourite(boardgame)">
+									<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+								</i>
+							</md-list-item>
+						</md-list>
+					</md-content>
+				</md-tab>
+				<md-tab label="Expands" ng-if="(bCtrl.boardgame.expands | keylength) > 0">
+					<md-content class="pad10l pad10r pad10t">
+						<md-list>
+							<md-list-item
+								class=" md-1-line animate-repeat whiteBg mrg5b mrg5r shadowed-box"                   
+								ng-repeat="(key,boardgame) in bCtrl.boardgame.expands"
+								ng-href="#/boardgames/{{key}}">
+								<img ng-src="{{boardgame.image}}" class="md-avatar" alt="{{boardgame.name}}" />
+								<div layout="column">
+									<div layout="row">
+										<h4> {{boardgame.name}}</h4>
+									</div>
+								</div>
+								<i 
+								aria-label="remove favourite"
+								ng-if="user.profile_details.favourites[boardgame.bggId]" 
+								class="icon-heart md-secondary" 
+								md-colors="{color: 'myTheme-accent'}"
+								ng-click="hCtrl.toggleFavourite(boardgame)">
+									<md-tooltip md-direction="left" md-delay="200">Remove favourite</md-tooltip>
+								</i>
+								<i 
+								aria-label="add favourite"
+								ng-if="!user.profile_details.favourites[boardgame.bggId]" 
+								class="icon-heart-o md-secondary" 
+								md-colors="{color: 'myTheme-accent'}"
+								ng-click="hCtrl.toggleFavourite(boardgame)">
+									<md-tooltip md-direction="left" md-delay="200">Add favourite</md-tooltip>
+								</i>
+							</md-list-item>
+						</md-list>
+					</md-content>
+				</md-tab>
+			</md-tabs>
 		</div>
 	</div>
-	<div layout="row" flex="none">
+
+	<div layout="row" flex="auto" class="pad10l pad10r pad10t">
 		<div layout="column" flex="100">
 			<div layout="row" flex-sm="none" class="height60">
-				<h3 class="blue-grey">Match played ({{bCtrl.matches.length}})</h3>
+				<h3 class="blue-grey">Match played ({{games[bCtrl.boardgame.bggId].matches|keylength}})</h3>
 			</div>	
 			<div layout="row">
 				<md-list flex ng-if="bCtrl.matches.length > 0">
-					<md-list-item
+				 	<md-list-item
 					class=" md-2-line animate-repeat whiteBg mrg5b mrg5r shadowed-box" 
 					ng-href="#/matches/{{match.$id}}"
 					ng-repeat="match in bCtrl.matches | filter:{location:query}" ng-click="null">

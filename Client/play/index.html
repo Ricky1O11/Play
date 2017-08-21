@@ -60,6 +60,7 @@
 		<script src="js/controllers/matches-dialog-controller.js"></script>
 		<script src="js/controllers/profile-controller.js"></script>
 		<script src="js/controllers/register-controller.js"></script>
+		<script src="js/controllers/settings-controller.js"></script>
 		<script src="js/controllers/sidebar-controller.js"></script>
 		<script src="js/controllers/templates-controller.js"></script>
 		<script src="js/controllers/user-controller.js"></script>
@@ -68,9 +69,9 @@
 	<!--md-colors="{background: 'myTheme-primary'}"-->
 	<body ng-app="play" layout="row" flex>
 		<div layout="column" flex>
-			<section ng-include="(user && user.emailVerified)? 'templates/loggedinindex.html': 'templates/loggedoutindex.html'"></section>
+			<div ng-include="(user && user.emailVerified)? 'templates/loggedinindex.html': 'templates/loggedoutindex.html'"></div>
 			
-			<section layout="column" ng-show="user && !user.emailVerified"  class="height100perc" layout-align="center center" md-colors="{background: 'myTheme-accent'}">
+			<div layout="column" ng-show="user && !user.emailVerified"  class="height100perc" layout-align="center center" md-colors="{background: 'myTheme-accent'}">
 					<div>
 						<img ng-src="img/play.png" id="logo" flex="none"/>
 					</div>
@@ -90,7 +91,7 @@
 							Logout
 						</md-button>
 					</div>
-			</section>
+			</div>
 		</div>
 		<!--
 		<div ng-hide="true" layout="column" flex>

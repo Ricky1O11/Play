@@ -1,152 +1,60 @@
- <div class="container-fluid  pad20t " layout="column" ng-cloak>
-	<div layout="row" layout-xs="column" flex="noshrink" flex-xs="noshrink" class="height500xs pad20l pad20r mrg10b mrg10r">
-		<div layout="column" flex="none" layout-align="center center">
-			<div layout="row" class="relative" flex="none">
-				<div class="circleBase imgUser hideScrollbar shadowed-box" >
-					<div class="circleBase imgUser" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="profile image" ng-if="user.profile_details.image == ''">
-						<div layout="column" layout-align="center center" class="height100perc white80perc size-128">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
-					</div>
-					<div class="circleBase imgUser" layout-align="center center" alt="profile image" back-img="{{user.profile_details.image}}" ng-if="user.profile_details.image != ''">
+ <div class="container-fluid" layout="column" ng-cloak>
+	<div layout="row" layout-xs="column" flex="noshrink" flex-xs="noshrink" md-colors="{background: 'myTheme-primary'}" class="height100 shadowed-box">
+		<div layout="column" class="blue-grey" flex>	
+			<div layout="row" class="size-14 pad20">
+				<div 
+					layout="column" 
+					flex="33" 
+					class="shadowed-box whiteBg pad10l clickable">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="10" layout-align="center center" >
+							<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
+							</i>
+						</div>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>{{profile_stats.match_played}}</h2>
+						</div>
+					</div> 
+				</div>
+				<div 
+					layout="column" 
+					flex="33" 
+					class="shadowed-box whiteBg pad10l clickable mrg10l">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="20" layout-align="center center" >
+							<i class="size-21 icon-trophy-2" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
+							</i>
+						</div>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>{{profile_stats.match_won}}</h2>
+						</div>
+						
 					</div>
 				</div>
-				<label for="fileInput"
-					aria-label="Edit match info" 
-					class="md-button md-fab md-mini absolute"
-					md-colors="{background: 'myTheme-accent'}"
-					layout-align="center center">
-					<i class="icon-pencil absolute8">
-					</i> 
-					<input id="fileInput" name="file" type="file" class="ng-hide" accept="image/*">
-					<md-tooltip md-direction="bottom" md-delay="200">Edit profile picture</md-tooltip>
-				</label>
-			</div>
-			<div layout="row" class="mrg10t blue-grey">
-				<h1> {{user.profile_details.username}} {{selectedFile}}</h1>
-			</div>
-		</div>
-		<div layout="column" class="blue-grey pad20l" flex>
-			<div layout="row" flex-xs="grow">
-				<div layout="column" flex="100">
-					<div layout="row" class="height30" flex="noshrink">
-						<div layout="column" flex="70" layout-align="center start">
-							<h3 class="blue-grey">Your stats</h3>
+				<div 
+					layout="column" 
+					flex="33" 
+					class="shadowed-box whiteBg pad10l clickable mrg10l">
+					<div layout="row" class="height100perc">
+						<div layout="column" flex="20" layout-align="center center" >
+							<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
+								<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+							</i>
 						</div>
-						<div layout="column" flex="30" layout-align="center end">
-							<h5 
-								class="clickable" 
-								md-colors="{color: 'myTheme-accent'}">
-								VIEW ALL
-							</h5>
+						<div layout="column" flex="80" layout-align="center center" >
+							<h2>{{bCtrl.boardgame.playingtime}}250</h2>
 						</div>
-					</div>
-					<div layout="row" class="size-14 height60" flex="noshrink">
-						<div 
-							layout="column" 
-							flex="33" 
-							class="shadowed-box whiteBg pad10l clickable">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="10" layout-align="center center" >
-									<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{profile_stats.match_played}}</h2>
-								</div>
-							</div> 
-						</div>
-						<div 
-							layout="column" 
-							flex="33" 
-							class="shadowed-box whiteBg pad10l clickable mrg10l">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-21 icon-trophy-2" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{profile_stats.match_won}}</h2>
-								</div>
-								
-							</div>
-						</div>
-						<div 
-							layout="column" 
-							flex="33" 
-							class="shadowed-box whiteBg pad10l clickable mrg10l">
-							<div layout="row" class="height100perc">
-								<div layout="column" flex="20" layout-align="center center" >
-									<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="80" layout-align="center center" >
-									<h2>{{bCtrl.boardgame.playingtime}}250</h2>
-								</div>
-							</div>	
-						</div>
-					</div>
-					<div layout="row" class="height30 mrg20t" flex-xs="noshrink">
-						<div layout="column" layout-align="center center">
-							<h3 class="blue-grey">Your companions</h3>
-						</div>
-						<div layout="column" class="pad10l pad3t" layout-align="center center">
-
-							<h5 ng-click="showPopup($event, user.uid, 'friends')" class="clickable" 
-								md-colors="{color: 'myTheme-accent'}">
-								ADD FRIEND
-							</h5>
-						</div>
-					</div>
-					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) > 0" flex-xs="noshrink">
-						<div layout="column"  class="relative  mrg20r pad10 clickable" ng-repeat="(key, friend) in user.friends.outbound" ng-if="friend.accepted">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
-								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
-									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
-								 </div>
-								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
-							</div>
-							<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''" ng-click="goTo('users/'+key)">
-							</div>
-
-							<md-button 
-								aria-label="Edit match info" 
-								class="md-fab md-mini absolute1">
-									{{profile_stats.most_frequent_companion[key].won}} / {{profile_stats.most_frequent_companion[key].amount}}
-								<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
-							</md-button>
-						</div>
-						<div layout="column"  class="relative clickable mrg20r pad10" ng-repeat="(key, friend) in user.friends.inbound" ng-if="friend.accepted">
-							<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
-								<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
-									<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
-								 </div>
-								<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
-							</div>
-							<div ng-click="goTo('users/'+key)" class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
-							</div>
-
-							<md-button 
-								aria-label="Edit match info" 
-								class="md-fab md-mini absolute1">
-									{{user.profile_details.most_frequent_companion[key].won}} / {{user.profile_details.most_frequent_companion[key].amount}}
-								<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
-							</md-button>
-						</div>
-					</div>
-					<div layout="row" ng-if="((user.friends.outbound | keylength) + (user.friends.inbound | keylength)) == 0" class="height60 pad20t size-21"  flex-xs="noshrink">
-						<strong class="pad10r">): </strong> You seem so lonely! Add a friend!
-					</div>
-				</div>
+					</div>	
+				</div>			
 			</div>
 		</div>
 	</div>
-	{{pCtrl.currentTab}}
 	<div layout="row" flex="grow">
 		<div layout="column" flex="100">
 			<md-tabs  md-selected="pCtrl.currT"
-			md-stretch-tabs="always" flex>
+			md-stretch-tabs="always" flex id="youAndTabs">
 			<md-tab label="Favourites" >
 				<md-content class="pad5l pad10t">
 					<div layout="row" layout-wrap>
@@ -170,7 +78,7 @@
 			<md-tab label="Stats">
 				<md-content>
 					<div layout="row">
-						<div layout="column" flex="50" class="pad20">
+						<div layout="column" flex="50" class="pad100">
 							<div layout="row" class="pad10" layout-align="center center">
 								<h2>PLAYED MATCHES</h2>
 							</div>
@@ -180,7 +88,28 @@
 							</div>
 						</div>
 						
-						<div layout="column" flex="50" class="pad20">
+						<div layout="column" flex="50" class="pad100">
+							<div layout="row" class="pad10" layout-align="center center">
+								<h2>MINUTES SPENT</h2>
+							</div>
+							<div layout="row">
+								<canvas  id="pie" class="chart chart-pie height100perc" chart-data="chart.companions.values.played" chart-labels="chart.companions.labels"></canvas>
+							</div>
+							
+						</div>
+					</div>
+					<div layout="row">
+						<div layout="column" flex="50" class="pad100">
+							<div layout="row" class="pad10" layout-align="center center">
+								<h2>PLAYED MATCHES</h2>
+							</div>
+							<div layout="row">
+								<canvas class="chart chart-bar height100perc" chart-data="chart.games.values" chart-labels="chart.games.labels" 
+								chart-series="series" chart-click="onClick"></canvas>
+							</div>
+						</div>
+						
+						<div layout="column" flex="50" class="pad100">
 							<div layout="row" class="pad10" layout-align="center center">
 								<h2>MINUTES SPENT</h2>
 							</div>
@@ -192,113 +121,78 @@
 					</div>
 				</md-content>
 			</md-tab>
-			<md-tab label="Settings" >
-				<md-content class="pad20l pad20r">
-					<div layout="row" class="pad10t" layout-wrap>
-						<div 
-							layout="column" 
-							flex-gt-xs="50" 
-							flex-xs="100" 
-							class="shadowed-box whiteBg mrg10t">
-							<div layout="row" class=" mrg16">
-								<div layout="column" flex="10" layout-align="center start" >
-									<i class="size-24 icon-user" md-colors="{color: 'myTheme-accent'}" >
-										<md-tooltip md-direction="top" md-delay="200">User informations</md-tooltip>
-									</i>
-								</div>
-								<div layout="column" flex="70" layout-align="center start" >
-									<h2 class="mrg10">
-										Personal data
-									</h2>
+			<md-tab label="Friends">
+				<md-content>
+					<div layout="row" layout-fill layout-padding>
+						<div layout="column" flex="100">
+							<h3 class="blue-grey pad20t pad5b">Friends</h3>
+							<div layout="row" flex="none" class="height100 whiteBg shadowed-box pad10">
+								<div layout="column"  class="relative mrg20r clickable" ng-repeat="friend in user.friends |orderObjectBy:username:true:true | filter:{accepted:true}">
+									<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+friend.key)" ng-if="friend.image == ''">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[friend.key] || getRandomColor(friend.key)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
+										 </div>
+										<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
+									</div>
+									<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''" ng-click="goTo('users/'+friend.key)">
+									</div>
+									<md-button 
+										aria-label="Edit match info" 
+										class="md-fab md-mini absolute1">
+											{{profile_stats.most_frequent_companion[friend.key].won}} / {{profile_stats.most_frequent_companion[friend.key].amount}}
+										<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
+									</md-button>
 								</div>
 							</div>
-							<div layout="row">
-								<div layout="column" flex="100" class="pad10l">
-									<div layout="row" class="height80">
-										<div layout="column" flex="90">
-											<md-input-container>
-												<label>Name</label>
-												<input ng-model="user.displayName">
-											</md-input-container>
-										</div>
+							<h3 class="blue-grey pad20t pad5b" ng-if="(user.friends.outbound | countObjectByProperty:'accepted':false) > 0">Outgoing requests  ({{(user.friends.outbound | countObjectByProperty:'accepted':false)}})</h3>
+							<div layout="row" flex="none" class="heignt100 whiteBg shadowed-box pad10" ng-if="(user.friends.outbound | countObjectByProperty:'accepted':false) > 0">
+								<div layout="column"  class="relative  mrg20r clickable" ng-repeat="(key, friend) in user.friends.outbound" ng-if="!friend.accepted">
+									<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
+										 </div>
+										<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
 									</div>
-									<div layout="row">
-										<div layout="column" flex="90">
-											<md-input-container>
-												<label>Username</label>
-												<input ng-model="user.profile_details.username">
-											</md-input-container>
-										</div>
+									<div class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''" ng-click="goTo('users/'+key)">
+									</div>
+									<md-button 
+										aria-label="Edit match info" 
+										class="md-fab md-mini absolute1">
+											{{profile_stats.most_frequent_companion[key].won}} / {{profile_stats.most_frequent_companion[key].amount}}
+										<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
+									</md-button>
+								</div>
+							</div>
+							<h3 class="blue-grey pad20t pad5b" ng-if="(user.friends.inbound | countObjectByProperty:'accepted':false) > 0">Incoming requests   ({{(user.friends.inbound | countObjectByProperty:'accepted':false)}})</h3>
+							<div layout="row" flex="none" class="heignt100 whiteBg shadowed-box pad10" ng-if="(user.friends.inbound | countObjectByProperty:'accepted':false) > 0">
+								<div layout="column"  class="relative clickable mrg20r" ng-repeat="(key, friend) in user.friends.inbound"  ng-if="!friend.accepted">
+									<div id="" class="imgProfile circleBase borderWhite clickable" layout-align="center center" ng-click="goTo('users/'+key)" ng-if="friend.image == ''">
+										<div class="circleBase imgProfile" layout-align="center center" " ng-style="randomColors[key] || getRandomColor(key)" alt="profile image">
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-36">{{friend.username.substring(0,1).toUpperCase()}}</div>
+										 </div>
+										<md-tooltip md-direction="bottom" md-delay="200">{{friend.username}}</md-tooltip>
+									</div>
+									<div ng-click="goTo('users/'+key)" class="circleBase imgProfile" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''">
 									</div>
 
-									<div layout="row">
-										<div layout="column" flex="90">
-											<md-input-container>
-												<label>Email</label>
-												<input ng-model="user.email">
-											</md-input-container>
-										</div>
-									</div>
+									<md-button 
+										aria-label="Edit match info" 
+										class="md-fab md-mini absolute1">
+											{{profile_stats.most_frequent_companion[key].won}} / {{profile_stats.most_frequent_companion[key].amount}}
+										<md-tooltip md-direction="bottom" md-delay="200">Won/Played</md-tooltip>
+									</md-button>
 								</div>
 							</div>
+							<md-button 
+				          		aria-label="Boardgames list" 
+				          		class="md-fab absolute9 md-raised md-accent" 
+								 ng-click="showPopup($event, user.uid, 'friends')">
+				            	<i class="icon-plus-1 size-16"></i>
+				        	</md-button>
 						</div>
-						<div 
-							layout="column" 
-							flex-gt-xs="50" 
-							flex-xs="100" 
-							class="pad10l pad0lxs mrg10t">
-							<div class="shadowed-box whiteBg">
-								<div layout="row" class=" mrg16">
-									<div layout="column" flex="10" layout-align="center start" >
-										<i class="size-24 icon-cog" md-colors="{color: 'myTheme-accent'}" >
-											<md-tooltip md-direction="top" md-delay="200">User settings</md-tooltip>
-										</i>
-									</div>
-									<div layout="column" flex="70" layout-align="center start" >
-										<h2 class="mrg10">
-											Settings
-										</h2>
-									</div>
-								</div>
-								<div layout="row"  class="pad20l">
-									<div layout="column" class="mrg10l">
-										<div layout="row" flex>
-											<div>
-												<div layout="row" class="mrg20b">
-													<div>Select who can view your profile</div>
-												</div>
-												<div layout="row"  class="mrg20b">
-													<div layout = "column" flex="100">
-															<md-radio-group ng-model="user.profile_details.visibility_group">
-																<md-radio-button value="0">All</md-radio-button>
-																<md-radio-button value="1">Friends</md-radio-button>
-																<md-radio-button value="2">None</md-radio-button>
-														    </md-radio-group>
-													</div>
-												</div>
-												
-											</div>
-										</div>
-										<div layout="row">
-											<div>
-												<md-checkbox ng-model="user.profile_details.fav_setting" aria-label="Toggle favourite visibility to viewers">
-													Let viewers see your favourites
-												</md-checkbox>
-											</div>
-										</div>
-										<div layout="row">
-											<div>
-												<md-checkbox ng-model="user.profile_details.rec_setting" aria-label="Toggle recents visibility to viewers">
-													Let viewers see your recent matches
-												</md-checkbox>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+					</div>
 				</md-content>
-			</md-tab>			
+			</md-tab>
 		</div>
 	</div>
 </div>
