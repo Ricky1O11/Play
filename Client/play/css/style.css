@@ -471,6 +471,7 @@ md-card{
 
 .circleBase {
     border-radius: 50%;
+    z-index:1;
 }
 .borderWhite{
 	border:0px solid #FFFFFF;
@@ -738,6 +739,11 @@ figcaption{
 	bottom:-25;
 	left:0;
 }
+.absolute6-1{
+	position:absolute;
+	bottom:-35;
+	left:0;
+}
 .absolute7{
 	position:absolute;
 	top:-25;
@@ -755,8 +761,7 @@ figcaption{
 }
 .absolute10{
 	position:absolute;
-	top:20;
-	right:20;
+	top:1;
 }
 
 #dialog md-tabs-wrapper{
@@ -813,4 +818,13 @@ figcaption{
 #youAndTabs .md-tab{
     background: rgb(57, 73, 171);
     color: #ffffff;
+}
+
+#boardgameTabs .md-tab {
+  
+}
+
+#boardgameTabs md-pagination-wrapper {
+  left: initial;
+  right: 0;
 }
