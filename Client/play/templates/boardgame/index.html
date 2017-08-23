@@ -1,100 +1,118 @@
 <div class="container-fluid" layout="column" ng-cloak>
-	<div layout="row" layout-xs="column" flex="noshrink" md-colors="{background: 'myTheme-primary'}" class="height150 relative shadowed-box borderAccent">
-		<div layout="row"
-			class="pad10l absolute6-1 clickable">
-			<div layout="row" class="blue-grey height100perc">
-				<div layout="column" class="size-21" flex="100" layout-align="center end" >
-					{{bCtrl.boardgame.name}}
-				</div>
-			</div> 
-		</div>
-		<div layout="column" class="blue-grey" flex>	
-			<div layout="row" class="size-14 pad20" layout-align="start center">
-				<div 
-					layout="column" 
-					flex="15" 
-					class="shadowed-box whiteBg pad10l clickable height60">
-					<div layout="row" class="height100perc">
-						<div layout="column" flex="10" layout-align="center center" >
-							<i class="size-24 icon-puzzle" md-colors="{color: 'myTheme-accent'}" >
-								<md-tooltip md-direction="top" md-delay="200">Match played</md-tooltip>
-							</i>
-						</div>
-						<div layout="column" flex="80" layout-align="center center" >
-							<h2>{{games[bCtrl.boardgame.bggId].matches|keylength}}</h2>
-						</div>
-					</div> 
-				</div>
-				<div 
-					layout="column" 
-					flex="15" 
-					class="shadowed-box whiteBg pad10l clickable height60 mrg10l">
-					<div layout="row" class="height100perc">
-						<div layout="column" flex="20" layout-align="center center" >
-							<i class="size-21 icon-trophy-2" md-colors="{color: 'myTheme-accent'}" >
-								<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
-							</i>
-						</div>
-						<div layout="column" flex="80" layout-align="center center" >
-							<h2>{{games[bCtrl.boardgame.bggId].matches|countObjectByProperty:'winner':user.uid}}</h2>
-						</div>
-						
+	<!-- back-img="{{bCtrl.boardgame.image}}" -->
+	<div id="boardgameImg" layout="row" layout-xs="column" flex="noshrink" back-img-boardgame="{{bCtrl.boardgame.image}}"" class="height150 relative shadowed-box borderAccent">
+		<div id="shade" layout="column" flex>
+			<div class="pad10l absolute9-1">
+				<div layout="row" class="height100perc">
+					<div layout="column" class="size-30 whiteTxt" flex="100" layout-align="center end" >
+						{{bCtrl.boardgame.name}}
 					</div>
-				</div>
-				<div layout="column"  flex="40" class="relative height60" layout-align="center center">
-					<div layout="row" class="absolute10" flex="none">
-						<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.image)">
-							<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.image}}">
-								<div class="circleBase"></div>
-							</div> 
-						</div>
-						<md-button 
-							aria-label="Edit match info" 
-							class="md-fab absolute">
-							<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
-							class="icon-heart"
-							ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
-								<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
-							</i>
+				</div> 
+			</div>
+			<div layout="column" class="blue-grey" flex>	
+				<div layout="row">	
+					<div layout="column" class="whiteTxt" flex="60">	
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-24 icon-puzzle">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div layout="column" flex="10" layout-align="center start">
+												<h3>{{games[bCtrl.boardgame.bggId].matches|keylength}}</h3>
+											</div>
+											<div layout="column"  flex="90" layout-align="center start">
+												<h3>Match played</h3>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 
-							<i 
-							ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
-							class="icon-heart-o "
-							ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
-								<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
-							</i>
-						</md-button>
+						</div>
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-21 icon-trophy-2">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div layout="column" flex="10" layout-align="center start">
+												<h3>{{games[bCtrl.boardgame.bggId].matches|countObjectByProperty:'winner':user.uid}} </h3>
+											</div>
+											<div layout="column"  flex="90" layout-align="center start">
+												<h3>Match won</h3>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-18 icon-hourglass">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div layout="column" flex="10" layout-align="center start">
+												<h3>-</h3>
+											</div>
+											<div layout="column"  flex="90" layout-align="center start">
+												<h3>Minute played</h3>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
 					</div>
-				</div>		
-				<div 
-					layout="column" 
-					flex="15" 
-					class="shadowed-box whiteBg pad10l clickable height60 mrg10l">
-					<div layout="row" class="height100perc">
-						<div layout="column" flex="20" layout-align="center center" >
-							<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
-								<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
-							</i>
+					
+					<div layout="column"  flex="40" class="relative" layout-align="center end">
+						<div layout="row" class="absolute10" flex="none">
+							<div class="circleBase imgBoardgame hideScrollbar shadowed-box clickable" ng-click="showImage($event, bCtrl.boardgame.image)">
+								<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{bCtrl.boardgame.image}}">
+									<div class="circleBase"></div>
+								</div> 
+							</div>
+							<md-button 
+								aria-label="Edit match info" 
+								class="md-fab absolute">
+								<i ng-if="user.profile_details.favourites[bCtrl.boardgame.bggId]" 
+								class="icon-heart"
+								ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
+									<md-tooltip md-direction="top" md-delay="200">Remove favourite</md-tooltip>
+								</i>
+
+								<i 
+								ng-if="!user.profile_details.favourites[bCtrl.boardgame.bggId]" 
+								class="icon-heart-o "
+								ng-click="bCtrl.toggleFavourite(bCtrl.boardgame)">
+									<md-tooltip md-direction="top" md-delay="200">Add favourite</md-tooltip>
+								</i>
+							</md-button>
 						</div>
-						<div layout="column" flex="80" layout-align="center center" >
-							<h2>-</h2>
-						</div>
-					</div>	
-				</div>
-				<div 
-					layout="column" 
-					flex="15" 
-					class="shadowed-box whiteBg pad10l clickable height60 mrg10l">
-					<div layout="row" class="height100perc">
-						<div layout="column" flex="20" layout-align="center center" >
-							<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" >
-								<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
-							</i>
-						</div>
-						<div layout="column" flex="80" layout-align="center center" >
-							<h2>-</h2>
-						</div>
-					</div>	
+					</div>
+					
 				</div>
 			</div>
 		</div>
@@ -105,7 +123,7 @@
 				<md-tab label="Basic info">
 					<md-content>
 						<div layout="row">
-							<div layout="column" class="blue-grey pad20l" flex="100">
+							<div layout="column" class="blue-grey pad20l pad20r" flex="100">
 								<div layout="row">
 									<div layout="column" flex="100">
 										<div layout="row" class="size-14" layout-wrap>
@@ -160,32 +178,41 @@
 												
 											</div>
 										</div>
-										<div layout="row" layout-wrap class="mrg10t">
-											<div layout="column" flex-xs flex-gt-xs ng-repeat="(key, category) in bCtrl.boardgame.categories">
-												<md-button flex class="md-raised md-primary" ng-click="goTo('categories/'+key)">
-													{{category.name}}
-												</md-button>
+										<div layout="row" class="mrg10t mrg10b">
+
+											<div layout="column" flex="50">
+												<div layout="row">
+													<div layout="column" class="md-body-2" layout-align="center start">
+														<strong>CATEGORIES</strong>
+													</div>
+													<md-button layout="column" layout-align="center start" class="md-primary" ng-repeat="(key, category) in bCtrl.boardgame.categories" ng-click="goTo('categories/'+key)">
+														{{category.name}}
+													</md-button>
+												</div>
 											</div>
-										</div>
-										<div layout="row">
-											<div layout="column" flex="100" ng-repeat="(key, designer) in bCtrl.boardgame.designers">
-												<md-button flex class="md-raised md-accent" ng-click="goTo('designers/'+key)">
-													{{designer.name}}
-												</md-button>
+											<div layout="column" flex="50">
+												<div layout="row">
+													<div layout="column" class="md-body-2" layout-align="center start">
+														<strong>DESIGNERS</strong>
+													</div>
+													<md-button layout="column" layout-align="center start" class="md-accent" ng-repeat="(key, designer) in bCtrl.boardgame.designers" ng-click="goTo('designers/'+key)">
+														{{designer.name}}
+													</md-button>
+												</div>
 											</div>
+
 										</div>
 									</div>
 								</div>
-							</div>
-						</div>
-					</md-content>
-				</md-tab>
-				<md-tab label="Description" class="hideScrollbar">
-					<md-content class="pad10l pad10r pad10t hideScrollbar">
-						<div layout="row">
-							<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l">
-								<div layout="row" class="size-14 overflowScroll pad20t pad20b">
-									<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+								<div layout="row" class="md-body-2">
+									<strong>DESCRIPTION</strong>
+								</div>
+								<div layout="row">
+									<div layout="column" flex="100" class=" shadowed-box whiteBg pad20l pad20r">
+										<div layout="row" class="size-14 pad20t pad20b">
+											<div layout="column" flex="100" ng-bind-html="bCtrl.boardgame.description"></div>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
@@ -263,7 +290,7 @@
 
 
 				<md-tab label="Match played">
-					<md-content>
+					<md-content  class="pad10l pad10r pad10t">
 							<div layout="row">
 								<md-list flex ng-if="bCtrl.matches.length > 0">
 								 	<md-list-item
@@ -273,7 +300,7 @@
 										<img ng-src="{{bCtrl.boardgame.thumbnail}}?100" class="md-avatar" alt="{{bCtrl.boardgame.name}}" />
 										<div layout="column">
 											<div layout="row">
-												<h3 ng-if="match.name.length == 0">Match {{match.pk}}</h3>
+												<h3 ng-if="match.name.length == 0">Match {{match.$id}}</h3>
 												<h3 ng-if="match.name.length > 0">{{match.name}}</h3>
 											</div>
 											<div layout="row" class="size-14">

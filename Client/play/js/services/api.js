@@ -130,39 +130,41 @@
 					return syncArray;
 				},	
 		
-		matchpost:	function(values, simpleObject, match_played){
-					var ref = firebase.database().ref().child("matches").push(values);
-					var syncObject = $firebaseObject(ref);
+		matchpost:	function(values, simpleObject){
+					var ref = firebase.database().ref();
 
-					var ref = firebase.database().ref()
-					.child("boardgame_has_matches")
-					.child(""+values.boardgame.bggId)
-					.child(""+syncObject.$id)
-					.set(simpleObject);
+					matches_ref = ref.child("matches").push(values);
+					var syncObject = $firebaseObject(matches_ref);
+					
+					console.log(values);
 
-					for(p in values.players){
-						player = values.players[p];
+					//var boardgame_has_matches_ref = ref.child("boardgame_has_matches")
+					//.child(""+values.boardgame.bggId)
+					//.child(""+syncObject.$id)
+					//.set(simpleObject);
 
-						var ref = firebase.database().ref();
-						var user_played_matches_ref = ref.child("user_played_matches")
-														.child(""+player.uid)
-														.child(""+values.boardgame.bggId)
-						update = {
-								"name":values.boardgame.name,
-								"thumbnail":values.boardgame.thumbnail,
-								"image":values.boardgame.image,
-								"bggId":values.boardgame.bggId,
-								"last_inserted_at":values.inserted_at,
-								};
-
-						user_played_matches_ref.update(update)
-						
-						user_played_matches_ref
-						.child("matches")
-						.child(""+syncObject.$id)
-						.set(simpleObject);
-
-					}
+					//for(p in values.players){
+					//	player = values.players[p];
+//
+					//	var user_played_matches_ref = ref.child("user_played_matches")
+					//									.child(""+player.uid)
+					//									.child(""+values.boardgame.bggId)
+					//	update = {
+					//			"name":values.boardgame.name,
+					//			"thumbnail":values.boardgame.thumbnail,
+					//			"image":values.boardgame.image,
+					//			"bggId":values.boardgame.bggId,
+					//			"last_inserted_at":values.inserted_at,
+					//			};
+//
+					//	user_played_matches_ref.update(update)
+					//	
+					//	user_played_matches_ref
+					//	.child("matches")
+					//	.child(""+syncObject.$id)
+					//	.set(simpleObject);
+//
+					//}
 
 					return syncObject;
 					},
@@ -189,6 +191,7 @@
 					},
 
 		matchput: function(completed, bggId, players, match_id, winner){
+			console.log("called0");
 					update = {
 						"completed": completed,
 						"winner": (completed)? winner : ""
@@ -209,12 +212,14 @@
 				},
 					
 		playpost:	function(match, plays){
+			console.log("called1");
 					var ref = firebase.database().ref().child("matches").child(""+match).child("plays").push(plays);
 					var syncObject = $firebaseObject(ref);
 					return syncObject;
 				},
 
 		playerpost:	function(match, simpleObject, player){
+			console.log("called2");
 					delete simpleObject["$id"]
 					delete simpleObject["$priority"]
 
@@ -251,6 +256,7 @@
 				},
 
 		playerdelete:	function(match, player){
+			console.log("called4");
 					var ref = firebase.database().ref()
 					
 					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).remove()

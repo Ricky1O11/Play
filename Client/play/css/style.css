@@ -623,17 +623,11 @@ text-align:center;
     overflow:hidden;
 }
 
-#loginArea md-content{
-	
+#loginArea md-content{	
 	background: -webkit-linear-gradient(left,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
 	background: -o-linear-gradient(right,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
 	background: -moz-linear-gradient(right,rgba(0,0,0,0.6) 30%,rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
 	background: linear-gradient(to right, rgba(0,0,0,0.6) 30%, rgba(22,32,63,1) 80%), url(https://firebasestorage.googleapis.com/v0/b/play-4fd54.appspot.com/o/images%2Fwallpapers%2Fpandemic_wallpaper.jpg?alt=media&token=1764d9e8-edb0-4874-a2b4-af60ea54a7c4);
-
-
-
-
-
 	background-repeat: no-repeat;
 	background-size: cover;
 }
@@ -759,9 +753,15 @@ figcaption{
 	bottom:13;
 	right:13;
 }
+.absolute9-1{
+	position:absolute;
+	bottom:5;
+	right:205;
+}
 .absolute10{
 	position:absolute;
-	top:1;
+	top:10;
+	right:10;
 }
 
 #dialog md-tabs-wrapper{
@@ -820,11 +820,15 @@ figcaption{
     color: #ffffff;
 }
 
-#boardgameTabs .md-tab {
-  
+#boardgameImg {	
+	background-repeat : no-repeat !important;
+    background-size : 70%  !important;
+	background-position : center  !important;
 }
 
-#boardgameTabs md-pagination-wrapper {
-  left: initial;
-  right: 0;
+#shade {	
+	background: -webkit-linear-gradient(left,rgba(57, 73, 171,1) 20%,	rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.2) 55%,	rgba(57, 73, 171,1) 80%);
+    background: -o-linear-gradient(right,rgba(57, 73, 171,1) 20%,		rgba(22,32,63,0.2) 45%, 	rgba(22,32,63,0.2) 55%, 		rgba(57, 73, 171,1) 80%);
+    background: -moz-linear-gradient(right,rgba(57, 73, 171,1) 20%,		rgba(22,32,63,0.2) 45%, 	rgba(22,32,63,0.2) 55%, 		rgba(57, 73, 171,1) 80%);
+    background: linear-gradient(to right, rgba(57, 73, 171,1) 20%, 		rgba(255,255,255,0.2) 45%, rgba(255,255,255,0.2) 55%,		rgba(57, 73, 171,1) 80%);
 }

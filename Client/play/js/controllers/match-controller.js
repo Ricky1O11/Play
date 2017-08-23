@@ -85,24 +85,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
 	}
 
-
-	//this.updateDuration = function(){
-	//	$timeout.cancel(controller.timer);
-	//    if(controller.match.old_duration != controller.match.duration){
-	//		row={
-	//			boardgame:controller.match.boardgame,
-	//			duration:controller.match.duration,
-	//			status:controller.match.status
-	//			}
-//
-	//		Api.matchput(row, controller.match.pk).then(function(data){	
-	//			}, 
-	//			function errorCallback(response) {
-	//				console.log(response);
-	//			});
-	//	}
-	//}
-
 	//create ordered list of numbers
 	this.range = Utils.range
 
