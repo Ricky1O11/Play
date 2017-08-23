@@ -1,5 +1,7 @@
 //controller for the list of boardgames
 angular.module("play").controller('matchesController', function(Api, Utils, $rootScope, $scope,currentAuth) {
+	
+	console.log($rootScope.match);
 	this.matches=[]; //container of the list of boardgames
 	this.orderingField="-name"; //ordering field, selectable by the user
 	this.loaded=true;
@@ -21,7 +23,6 @@ angular.module("play").controller('matchesController', function(Api, Utils, $roo
 
 	this.setVisible = function(id){
 		for(game in $rootScope.games){
-			console.log($rootScope.games[game].bggId)
 			if($rootScope.games[game].bggId == id){
 				$rootScope.games[game].visible = !$rootScope.games[game].visible;
 			}

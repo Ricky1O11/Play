@@ -133,7 +133,6 @@ angular.module("play")
 						}
 					}
 				}
-				console.log(controller.common_matches);
 			}
 
 
@@ -156,11 +155,9 @@ angular.module("play")
 				$rootScope.chart.companions["values"] = {}
 				$rootScope.chart.companions["values"]["won"] = []
 				$rootScope.chart.companions["values"]["played"] = []
-                
                 if($rootScope.games){
 
                     for(i in $rootScope.games){
-
 						game = $rootScope.games[i];
 						game.visible = false;
 						game.lastMatchTime = 0;
@@ -226,9 +223,6 @@ angular.module("play")
 				$rootScope.profile_stats.most_played_game = most_played_game;
 				$rootScope.profile_stats.most_played_game_amount = most_played_game_amount;
 				$rootScope.profile_stats.most_frequent_companion = companions;
-
-				
-
 			};
 
 

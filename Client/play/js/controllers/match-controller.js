@@ -7,30 +7,29 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 
 	//read the requested match'id
 	this.params=$routeParams;
-
-	this.match={}; //to eliminate
+	controller=this;
 
 	this.timer;
 
 	this.plays = {};
-	controller=this;
+	this.dbMatch = Api.match(controller.params.id);
 
-	dbMatch = Api.match(controller.params.id);
+	this.dbMatch.$bindTo($rootScope, "match");
 
+	this.dbMatch.$ref().on('value',displayPlay);
 	
-	dbMatch.$bindTo($rootScope, "match");
+var foo = {n: 1};
 
-	dbMatch.$ref().on('value',displayPlay);
-	
+
 	function displayPlay(response){
-			match = response.val();
+			var m = response.val();
 			controller.loaded = true;
-			if($rootScope.user.uid in match.players){
+			if($rootScope.user.uid in m.players){
 				controller.allowed = true;
 			}
-			controller.time = new Date(match.time);
-			controller.plays = match.plays;
-			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(match.players);
+			controller.time = new Date(m.time);
+			controller.plays = m.plays;
+			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.players);
 	}
 
 	this.updateScore = function(play_id, detailed_point_id, val){
@@ -78,16 +77,16 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 				});
 	    });
 	}
-
+//
 	this.setCompletionStatus = function(completed){
 		if($rootScope.match.completed != completed)
 			winner = Utils.getMax($rootScope.match.players, "points");
 			Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
 	}
-
+//
 	//create ordered list of numbers
 	this.range = Utils.range
-
+//
 	this.postPlay = function(){
 		for(player in $rootScope.match.players){
 			play = {}
@@ -95,7 +94,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			play["round"] = this.total_rounds+1;
 			play["detailed_points"] = {};
 			play["points"] = 0;
-
+//
 			for(j in $rootScope.match.template.scoring_fields){
 				scoring_field = $rootScope.match.template.scoring_fields[j];
 				play["detailed_points"][j] = scoring_field;
@@ -105,32 +104,34 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			play_post.$loaded().then(function(response){
 				controller.plays = $rootScope.match.plays;
 			})
-
-
+//
+//
 		}
 		controller.total_rounds += 1;
 	}
-
+//
 	this.managePlayers = function(){
 		dialog = $rootScope.showPopup("", $rootScope.user.uid, 'manageplayers', {'match': $rootScope.match, 'rounds': controller.total_rounds});
 	}
-
+//
 	function startTime() {
 		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){
 		    controller.match.duration ++;
 		    controller.timer = $timeout(startTime, 1000);
 		}
 	}
-
+//
 	function checkTime(i) {
 	    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
 	    return i;
 	}
-
-
+//
+//
 	//$window.onbeforeunload =  controller.updateDuration;
-
-	$rootScope.$on('$destroy', function(){
-	    //controller.updateDuration();
+//
+	$rootScope.$on('$locationChangeStart', function(){
+	   console.log("son fora");
+		controller.dbMatch.$destroy();
+	   //controller.updateDuration();
 	});
 });

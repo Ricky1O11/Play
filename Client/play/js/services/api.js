@@ -132,39 +132,36 @@
 		
 		matchpost:	function(values, simpleObject){
 					var ref = firebase.database().ref();
-
 					matches_ref = ref.child("matches").push(values);
 					var syncObject = $firebaseObject(matches_ref);
-					
-					console.log(values);
 
-					//var boardgame_has_matches_ref = ref.child("boardgame_has_matches")
-					//.child(""+values.boardgame.bggId)
-					//.child(""+syncObject.$id)
-					//.set(simpleObject);
+					var boardgame_has_matches_ref = ref.child("boardgame_has_matches")
+					.child(""+values.boardgame.bggId)
+					.child(""+syncObject.$id)
+					.set(simpleObject);
 
-					//for(p in values.players){
-					//	player = values.players[p];
-//
-					//	var user_played_matches_ref = ref.child("user_played_matches")
-					//									.child(""+player.uid)
-					//									.child(""+values.boardgame.bggId)
-					//	update = {
-					//			"name":values.boardgame.name,
-					//			"thumbnail":values.boardgame.thumbnail,
-					//			"image":values.boardgame.image,
-					//			"bggId":values.boardgame.bggId,
-					//			"last_inserted_at":values.inserted_at,
-					//			};
-//
-					//	user_played_matches_ref.update(update)
-					//	
-					//	user_played_matches_ref
-					//	.child("matches")
-					//	.child(""+syncObject.$id)
-					//	.set(simpleObject);
-//
-					//}
+					for(p in values.players){
+						player = values.players[p];
+
+						var user_played_matches_ref = ref.child("user_played_matches")
+														.child(""+player.uid)
+														.child(""+values.boardgame.bggId)
+						update = {
+								"name":values.boardgame.name,
+								"thumbnail":values.boardgame.thumbnail,
+								"image":values.boardgame.image,
+								"bggId":values.boardgame.bggId,
+								"last_inserted_at":values.inserted_at,
+								};
+
+						user_played_matches_ref.update(update)
+						
+						user_played_matches_ref
+						.child("matches")
+						.child(""+syncObject.$id)
+						.set(simpleObject);
+
+					}
 
 					return syncObject;
 					},
@@ -176,6 +173,7 @@
 						.child(""+bggId)
 						.child(""+match_id)
 						.remove();
+console.log(players)
 
 						for(k in players){
 							ref.child("user_played_matches")
@@ -212,7 +210,7 @@
 				},
 					
 		playpost:	function(match, plays){
-			console.log("called1");
+			console.log(match);
 					var ref = firebase.database().ref().child("matches").child(""+match).child("plays").push(plays);
 					var syncObject = $firebaseObject(ref);
 					return syncObject;

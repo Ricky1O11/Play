@@ -156,9 +156,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			self.selectedValues.completed = false;
 			simpleObject = {};
 			angular.copy(self.selectedValues, simpleObject);
-			delete simpleObject["boardgame"]
-			delete simpleObject["plays"]
-			
+			delete simpleObject["boardgame"];
+
+			delete simpleObject["plays"];
 			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
 				function(response){
 					for(player in self.selectedValues.players){
@@ -173,7 +173,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 							play["detailed_points"][j] = scoring_field;
 							play["detailed_points"][j]["points"] = 0;
 						}
-						//play_post = Api.playpost(response.$id, play)
+						play_post = Api.playpost(response.$id, play)
 					}
 					$rootScope.showToast("Match succesfully registered!");
 					$mdDialog.hide();
