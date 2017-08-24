@@ -1,5 +1,6 @@
 //controller for the list of boardgames
-angular.module("play").controller('boardgamesController', function(Api, $scope,$location, $routeParams, Utils) {
+angular.module("play").controller('boardgamesController', function(Api, $scope,Utils, $location, $routeParams, Utils) {
+	this.range = Utils.range;
 	this.location=$location.path();
 	this.toggleFavourite = Utils.toggleFavourite
 	//this.boardgames=[]; //container of the list of boardgames
@@ -17,94 +18,78 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 
 
 	var DynamicItems = function() {
-		  /**
-		   * @type {!Object<?Array>} Data pages, keyed by page number (0-index).
-		   */
-		  this.loadedPages = {};
+	  /**
+	   * @type {!Object<?Array>} Data pages, keyed by page number (0-index).
+	   */
+	  this.loadedPages = {};
 
-		  /** @type {number} Total number of items. */
-		  this.numItems = 0;
+	  /** @type {number} Total number of items. */
+	  this.numItems = 0;
 
-		  /** @const {number} Number of items to fetch per request. */
-		  this.PAGE_SIZE = 20;
+	  /** @const {number} Number of items to fetch per request. */
+	  this.PAGE_SIZE = 20;
 
-		  this.loaded = 0;
-		};
+	  this.loaded = 0;
+	};
 
-		// Required.
-		DynamicItems.prototype.getItemAtIndex = function(index) {
-		  var pageNumber = Math.floor(index / this.PAGE_SIZE);
-		  var page = this.loadedPages[pageNumber];
+	// Required.
+	DynamicItems.prototype.getItemAtIndex = function(index) {
+	  var pageNumber = Math.floor(index / this.PAGE_SIZE);
+	  var page = this.loadedPages[pageNumber];
 
-		  if (page) {
-			return page[index % this.PAGE_SIZE];
-		  } else if (page !== null) {
-			this.fetchPage_(pageNumber);
-		  }
-		};
+	  if (page) {
+		return page[index % this.PAGE_SIZE];
+	  } else if (page !== null) {
+		this.fetchPage_(pageNumber);
+	  }
+	};
 
-		// Required.
-		DynamicItems.prototype.getLength = function() {
-			if(Object.keys(this.loadedPages).length > 0){
-				l = this.loadedPages[0].length;
-				if(l < 20)
-					return l;
-			}
-			return this.loaded+1;
-		};
+	// Required.
+	DynamicItems.prototype.getLength = function() {
+		if(Object.keys(this.loadedPages).length > 0){
+			l = this.loadedPages[0].length;
+			if(l < 20)
+				return l;
+		}
+		return this.loaded+1;
+	};
 
-		DynamicItems.prototype.fetchPage_ = function(pageNumber) {
-			// Set the page to null so we know it is already being fetched.
-			this.loadedPages[pageNumber] = null;
-			this.loadedPages[pageNumber] = {};
-			this.loaded += this.PAGE_SIZE;
-			lp = this.loadedPages; 
-			ps = this.PAGE_SIZE;
-			//api call to the list of boardgames
-			if (controller.searchKey != ""){
-				controller.endAt = controller.searchKey.substring(0, controller.searchKey.length-1) + 
-									Utils.changeLetter(controller.searchKey.substring(controller.searchKey.length-1, controller.searchKey.length-0))
-			}
-			Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
-			.then(function(response){
-				if(controller.actualOrderingField != "search_name"){
-					if(controller.searchKey != ""){
-						response.sort(function(a,b) {return (a.average < b.average) ? 1 : ((b.average < a.average) ? -1 : 0);} );
-					}
-					else{
-						response.reverse()
-					}
+	DynamicItems.prototype.fetchPage_ = function(pageNumber) {
+		// Set the page to null so we know it is already being fetched.
+		this.loadedPages[pageNumber] = null;
+		this.loadedPages[pageNumber] = {};
+		this.loaded += this.PAGE_SIZE;
+		lp = this.loadedPages; 
+		ps = this.PAGE_SIZE;
+		//api call to the list of boardgames
+		if (controller.searchKey != ""){
+			controller.endAt = controller.searchKey.substring(0, controller.searchKey.length-1) + 
+								Utils.changeLetter(controller.searchKey.substring(controller.searchKey.length-1, controller.searchKey.length-0))
+		}
+		Api.boadgames(controller.searchKey, 20, controller.actualOrderingField, controller.endAt, controller.endAtKey).$loaded()
+		.then(function(response){
+			if(controller.actualOrderingField != "search_name"){
+				if(controller.searchKey != ""){
+					response.sort(function(a,b) {return (a.average < b.average) ? 1 : ((b.average < a.average) ? -1 : 0);} );
 				}
-				lp[pageNumber]=response;
-				
-				console.log(lp[pageNumber])
-				controller.searchKey = lp[pageNumber][19].search_name;
-				controller.endAt = lp[pageNumber][19].average;
-				controller.endAtKey = ""+lp[pageNumber][19].bggId;
-		
-			}).catch(function(error) {
-			    console.error("Error:", error);
-			});
+				else{
+					response.reverse()
+				}
+			}
+			lp[pageNumber]=response;
+			
+			console.log(lp[pageNumber])
+			controller.searchKey = lp[pageNumber][19].search_name;
+			controller.endAt = lp[pageNumber][19].average;
+			controller.endAtKey = ""+lp[pageNumber][19].bggId;
+	
+		}).catch(function(error) {
+		    console.error("Error:", error);
+		});
 
-		};
+	};
 
 	this.boardgames = new DynamicItems();
-	//create ordered list of numbers
-	this.range = function(a, b, step) {
-		step = step || 1;
-		var input = [];
-		if(a>b){
-		  for (var i = a; i >= b; i -= step) {
-			input.push(i);
-		  }
-		}
-		else{
-		  for (var i = a; i <= b; i += step) {
-			input.push(i);
-		  }
-		}
-		return input;
-	};
 	
 	//set the ordering field selected by the user
 	this.setOrderingField = function(field) {
@@ -123,8 +108,7 @@ angular.module("play").controller('boardgamesController', function(Api, $scope,$
 	}
 
 	this.search = function(){
-		controller.searchKey = controller.displayedSearchKey.toLowerCase();
-		
+		controller.searchKey = controller.displayedSearchKey.toLowerCase();	
 		controller.boardgames = new DynamicItems();
 	}
 });

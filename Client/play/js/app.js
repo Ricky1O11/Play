@@ -55,7 +55,7 @@
 	}])
 
 	.run(function(Utils, Auth, $route, $rootScope, $timeout, Api) {
-			
+			$rootScope.lang = "it"
 			// any time auth state changes, add the user data to scope
 		    Auth.$onAuthStateChanged(function(firebaseUser) {
 		      	$rootScope.user = firebaseUser;

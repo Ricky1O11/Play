@@ -1,5 +1,6 @@
 <div class="container-fluid" layout="column"> 
-	<md-tabs  md-selected="tCtrl.currentTab"
+<!--md-selected="tCtrl.currentTab"-->
+	<md-tabs  md-selected="2"
 		md-stretch-tabs="always" class="height100perc">
 		<md-tab label="Start">
 			<md-content class="md-padding pad50">
@@ -97,24 +98,78 @@
 		<md-tab label="Build your template" ng-disabled="tCtrl.currentTab < 2">
 			<md-content class="md-padding">
 				<div class="md-dialog-content">
-					<div layout="row" class="size-16 blue-grey pad50">
-						<md-input-container layour="column" flex=100>
-							<label class="size-18">Template name</label>
-							<input  ng-model="tCtrl.name">
-						</md-input-container>
-					</div>
-					<div layout="row" class="size-16 blue-grey center-align" layout-align="center center">
-						Here you can tell us all the possible ways to score points. 
-						Next to each row you can tell how many points it is worth.<br>
-						For example: each city in "Catan" scores 2 points.
+					<div ng-if="!tCtrl.cooperative" layout="row" class="size-16 blue-grey center-align" layout-align="center center">
+						<h2>We are going to require you a little effort...but after that you can freely play whenever you want!!<br>Please fulfill all the following fields</h2>
 					</div>
 
-					<div layout="row" ng-repeat="i in tCtrl.range(0,tCtrl.countInsertedWords())" class="pad50">
+					<div layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						SELECT THE TYPE OF GAME
+					</div>
+					<div layout="row" class="mrg10t">
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.type = 0" layout-align="center center">
+							COOPERATIVE
+						</div>
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.type = 1" layout-align="center center">
+							ALMOST COOPERATIVE
+						</div>
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.type = 2" layout-align="center center">
+							COMPETITIVE
+						</div>
+					</div>
+
+					<div ng-if="tCtrl.type==1" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						WHAT DO YOU MEAN?
+					</div>
+					<div layout="row" class="mrg10t" ng-if="tCtrl.type==1">
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.almost = 0" layout-align="center center">
+							TEAM BASED
+						</div>
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.almost = 1" layout-align="center center">
+							HIDDEN ROLES
+						</div>
+						<div layout="column" flex="33" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.almost = 1" layout-align="center center">
+							TEAM BASED WITH HIDDEN ROLES
+						</div>
+					</div>
+
+					<div ng-if="tCtrl.type!=undefined" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						HOW DO YOU KEEP TRACK OF MATCHES?
+					</div>
+					<div layout="row" class="mrg10t" ng-if="tCtrl.type!=undefined">
+						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.pointsbased = 0" layout-align="center center">
+							WIN/LOSE GAME
+						</div>
+						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.pointsbased = 1" layout-align="center center">
+							POINTS BASED
+						</div>
+					</div>
+
+					<div ng-if="tCtrl.pointsbased == 1" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						WHO WINS?
+					</div>
+					<div layout="row" class="mrg10t" ng-if="tCtrl.pointsbased == 1">
+						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.mostpointswin = true" layout-align="center center">
+							MOST POINTS WINS
+						</div>
+						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.mostpointswin = false" layout-align="center center">
+							LESS POINTS WINS
+						</div>
+					</div>
+
+
+					<div ng-if="tCtrl.pointsbased == 1 && tCtrl.mostpointswin != undefined" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						WRITE HEAR THE SPECIFIC WAYS IN WHICH YOU CAN SCORE POINTS!
+					</div>
+					<div ng-if="tCtrl.pointsbased == 1 && tCtrl.mostpointswin != undefined" layout="row"  class="pad20 whiteBg shadowed-box">
 						<div layout="column" flex="100">
-							<div layout="row">
+							<div layout="row" class="md-body-1 mrg20b">
+								3 POINTS FOR EACH MONEY? 10 POINTS FOR THE LONGEST TRAIN? -3 FOR EACH MASK? THIS IS WHAT WE WANT TO KNOW HERE!
+							</div>
+
+							<div layout="row" ng-repeat="i in tCtrl.range(0,tCtrl.countInsertedWords())">
 								<div layout="column" flex="50">
 									<md-input-container class="templateEntryContainer md-block" >
-										<label class="size-18">How do you score points?</label>
+										<label class="size-14 md-body-1">Scoring way number {{i+1}}</label>
 										<input  ng-model="tCtrl.dictionary[i]">
 									</md-input-container>
 								</div>
@@ -129,6 +184,17 @@
 							</div>
 
 						</div>
+					</div>
+
+
+					<div ng-if="true" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
+						GIVE YOUR TEMPLATE A MEMORABLE NAME!
+					</div>
+					<div layout="row" class="size-16 blue-grey pad20 mrg10t whiteBg shadowed-box">
+						<md-input-container layour="column" flex=100>
+							<label class="size-18">Template name</label>
+							<input  ng-model="tCtrl.name">
+						</md-input-container>
 					</div>
 				</div>
 

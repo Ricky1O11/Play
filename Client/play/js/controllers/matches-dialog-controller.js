@@ -2,19 +2,24 @@
 angular.module("play").controller('matchesDialogController', function($scope, Utils, Api, $filter, $rootScope, $mdDialog, $location, user_pk, boardgame) {
 	// list of `state` value/display objects
 	self=this;
+	self.range = Utils.range;
+
 	self.user_pk = user_pk;
 	self.currentTab=0 //holds the current tab id
 	self.title= "Add Match"; //sets the tab title according to its id
 	
-	self.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
-	self.selectedValues.players={}; //list that holds the list of player playing the inserted match
-	self.selectedValues.name="";
-	self.selectedValues.location="No Location";
-	self.selectedValues.time= new Date();
-	self.selectedValues.duration=0;
-	self.selectedValues.winner="";
-	self.templates=[]; //list that holds the list of templates available in the db
-	self.selectedValues.expansions = []; //will contain the id of the selected expansions
+	self.selectedValues={
+		"players": {}, //list that holds the list of player playing the inserted match
+		"name": "",
+		"location": "No Location",
+		"time": new Date(),
+		"duration": 0,
+		"winner": "",
+		"completed": false,
+		"inserted_at": "",
+		"expansions": [],
+	}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
+
 
 	if(boardgame != -1){
 		self.selectedValues.boardgame = boardgame;
@@ -22,27 +27,12 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	self.expansions = [];
-	
 	self.users={};  //list of users to display in the dropdown menu
+	self.templates=[]; //list that holds the list of templates available in the db
+	
 
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-	self.playerSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-	self.dictionarySearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-	self.points=[]; //holds the values for the corresponding scoring field
 
-	self.adding = false;
-	self.selecting = false;
-	self.saving = false;
-
-	self.range = function(min, max, step) {
-		step = step || 1;
-		var input = [];
-		for (var i = min; i <= max; i += step) {
-			input.push(i);
-		}
-		return input;
-	};
-	
 	//api call to the list of users
 	self.getUsers = function(){
 		if(angular.equals(self.users, {}) && angular.equals(self.selectedValues.players, {})){
@@ -68,11 +58,12 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
-		query = query.toLowerCase();
+		var query = query.toLowerCase();
 		if (query != ""){
 			self.endAt = query.substring(0, query.length-1) + 
-								Utils.changeLetter(query.substring(query.length-1, query.length-0))
+						Utils.changeLetter(query.substring(query.length-1, query.length-0))
 		}
+
 		return Api.boadgames(query, 20, "search_name", self.endAt, "").$loaded().then(function(response){
 			self.boardgames = [];
 			for (i=0; i<response.length; i++){
@@ -88,16 +79,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			}
 			return self.boardgames;
 		});
-	}
-
-	/**
-	 * Create filter function for a query string
-	 */
-	function createFilterFor(query) {
-	  var lowercaseQuery = angular.lowercase(query);
-	  return function filterFn(state) {
-		return (state.value.indexOf(lowercaseQuery) === 0);
-	  };
 	}
 
 	this.goTo = function(tab){
@@ -152,27 +133,16 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			self.selectedValues.time = self.selectedValues.time.getTime();
 			date = new Date();
 			time = date.getTime();
-			self.selectedValues.inserted_at = time;
-			self.selectedValues.completed = false;
+			self.selectedValues.inserted_at = self.selectedValues.time;
+
 			simpleObject = {};
 			angular.copy(self.selectedValues, simpleObject);
 			delete simpleObject["boardgame"];
-
 			delete simpleObject["plays"];
-			Api.matchpost(self.selectedValues, simpleObject).$loaded().then(
-				function(response){
+			Api.matchpost(self.selectedValues, simpleObject).$loaded()
+			.then(function(response){
 					for(player in self.selectedValues.players){
-						play = {}
-						play["user"] = player;
-						play["round"] = 1;
-						play["detailed_points"] = {};
-						play["points"] = 0;
-
-						for(j = 0; j< self.selectedValues.template.scoring_fields.length; j++){
-							scoring_field = self.selectedValues.template.scoring_fields[j];
-							play["detailed_points"][j] = scoring_field;
-							play["detailed_points"][j]["points"] = 0;
-						}
+						play = self.preparePlay(player)
 						play_post = Api.playpost(response.$id, play)
 					}
 					$rootScope.showToast("Match succesfully registered!");
@@ -189,23 +159,26 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		}
 	}
 
+	this.preparePlay = function(player){
+		play = {}
+		play["user"] = player;
+		play["round"] = 1;
+		play["detailed_points"] = {};
+		play["points"] = 0;
+
+		for(j = 0; j< self.selectedValues.template.scoring_fields.length; j++){
+			scoring_field = self.selectedValues.template.scoring_fields[j];
+			play["detailed_points"][j] = scoring_field;
+			play["detailed_points"][j]["points"] = 0;
+		}
+	}
+
 	this.setVisible = function(pk){
 		console.log(templates[pk]);
 		self.templates[pk].visible = !self.templates[pk].visible;
 	}
 
-	this.containsObject = function(obj, list) {
-		var i;
-		for (i = 0; i < list.length; i++) {
-			if (list[i] === obj) {
-				return true;
-			}
-		}
-		return false;
-	}
-
 	this.togglePlayer = function(act, user){
-
 		if(act == "select"){
 			self.selectedValues.players[""+user.uid] = user;
 			delete self.users[""+user.uid];

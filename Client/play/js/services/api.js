@@ -1,27 +1,6 @@
  angular.module('play')
 .factory('Api', function ApiFactory($firebaseObject, $firebaseArray){
-	//var BASE_URL = "http://127.0.0.1:8000/server"
-	//var BASE_URL = "http://playapi.pythonanywhere.com/server"
 	return{
-		register:	function(uid, username){
-					var ref = firebase.database().ref();
-					var obj = $firebaseObject(ref.child('profiles').child(uid));
-					obj.username = username;
-					obj.first_name = "";
-					obj.second_name = "";
-					obj.image = '';
-					obj.visibility_group = 0;
-					obj.fav_setting = true;
-					obj.rec_setting = false;
-					obj.match_won = 0;
-					obj.match_played = 0;
-					obj.match_finished = 0;
-					obj.most_played_game = "None";
-
-					obj.$save();
-					return "success"
-				},
-
 		user:	function(user_id){
 					var ref = firebase.database().ref().child("profiles").child(user_id);
 					var syncObject = $firebaseObject(ref);
@@ -173,7 +152,6 @@
 						.child(""+bggId)
 						.child(""+match_id)
 						.remove();
-console.log(players)
 
 						for(k in players){
 							ref.child("user_played_matches")
@@ -189,12 +167,12 @@ console.log(players)
 					},
 
 		matchput: function(completed, bggId, players, match_id, winner){
-			console.log("called0");
+					var ref = firebase.database().ref();
+
 					update = {
 						"completed": completed,
 						"winner": (completed)? winner : ""
 					}
-					var ref = firebase.database().ref();
 
 					obj = ref.child("matches").child(""+match_id).update(update);
 
@@ -210,14 +188,12 @@ console.log(players)
 				},
 					
 		playpost:	function(match, plays){
-			console.log(match);
 					var ref = firebase.database().ref().child("matches").child(""+match).child("plays").push(plays);
 					var syncObject = $firebaseObject(ref);
 					return syncObject;
 				},
 
 		playerpost:	function(match, simpleObject, player){
-			console.log("called2");
 					delete simpleObject["$id"]
 					delete simpleObject["$priority"]
 
@@ -254,7 +230,6 @@ console.log(players)
 				},
 
 		playerdelete:	function(match, player){
-			console.log("called4");
 					var ref = firebase.database().ref()
 					
 					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).remove()
