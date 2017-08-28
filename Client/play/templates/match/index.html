@@ -1,7 +1,7 @@
 <div ng-if="mCtrl.loaded" class="container-fluid" layout="column" ng-cloak >
 	<div id="boardgameImg" layout="row" layout-xs="column" flex="noshrink" back-img-boardgame="{{match.boardgame.image}}"" class="height150 relative shadowed-box borderAccent">
 		<div id="shade" layout="column" flex>
-			<div class="pad10l absolute9">
+			<div class="absolute9">
 				<div layout="row" class="height100perc">
 					<div ng-if="!mCtrl.editMode" layout="column" flex="100" layout-align="center end" layout-align-xs="center center" class="size-30 whiteTxt">
 						<h5 ng-if="match.name.length == 0"> Match {{match.$id}}</h5>
@@ -98,12 +98,45 @@
 			</div>
 			<div layout="column" class="absolute7-1" layout-align="center end">
 				<div layout="row" class="whiteTxt" flex="none">
-					<i ng-if="!mCtrl.editMode" ng-click="mCtrl.startEditMode($event)" class="clickable size-18 icon-pencil">
-					</i>
-					<i ng-if="mCtrl.editMode" ng-click="mCtrl.endEditMode(true)" class="clickable size-18 icon-check-2">
-					</i>
-					<i class="clickable size-18 icon-trash pad20l" ng-click="mCtrl.deleteMatchPopup($event)" md-colors="{color: 'myTheme-accent'}" >
-					</i>
+					<div layout="column">
+						<div layout="row">
+							<!--
+							<md-button 
+							ng-if="!match.completed" 
+							ng-class="mCtrl.statusColor">
+								programmed
+							</md-button>
+							-->
+							<md-button 
+							ng-class="{
+								'buttonDisabled' : match.completed,
+								'md-accent' : !match.completed}"
+							ng-click="mCtrl.setCompletionStatus(false)"
+							>
+								in progress
+							</md-button>
+							<md-button 
+							ng-class="{
+								'buttonDisabled' : !match.completed,
+								'whiteTxt' : match.completed}"
+							ng-click="mCtrl.setCompletionStatus(true)"
+							>
+								completed
+							</md-button>
+						</div>
+					</div>
+					<div layout="column">
+						<i ng-if="!mCtrl.editMode" ng-click="mCtrl.startEditMode($event)" class="clickable size-18 icon-pencil">
+						</i>
+					</div>
+					<div layout="column">
+						<i ng-if="mCtrl.editMode" ng-click="mCtrl.endEditMode(true)" class="clickable size-18 icon-check-2">
+						</i>
+					</div>
+					<div layout="column">
+						<i class="clickable size-18 icon-trash pad20l" ng-click="mCtrl.deleteMatchPopup($event)" md-colors="{color: 'myTheme-accent'}" >
+						</i>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -124,7 +157,7 @@
 
 
 	<div ng-if="mCtrl.allowed" class="container-fluid" layout="row" flex="grow" ng-cloak >
-		<div layout="column" flex="40" class="pad20r">
+		<div layout="column" flex="30" class="pad20r">
 			<md-tabs
 			md-stretch-tabs="always" flex-gt-xs flex-xs>
 				<md-tab label="Leaderboard" flex>
@@ -160,63 +193,69 @@
 				</md-tab>
 			</md-tabs>
 		</div>
-		<div layout="column" flex="60" class="pad20l">
-			<md-tabs  md-selected="mCtrl.currentTab" flex-gt-xs flex-xs>
-				<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
+		<div layout="column" flex="70" class="pad20l">
+			<md-tabs flex-gt-xs flex-xs md-stretch-tabs="always">
+				<md-tab label="Details">
 					<md-content class="pad5l pad10t">
-						<div layout="row">
-							<md-list flex>
-								<!-- | filter:{round:round} | orderBy:'-points' -->
-								<md-list-item
-								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
-								ng-click="mCtrl.setVisible(play.key)">
-									<div layout="column" ng-if="match.players[play.user].image == ''">
-										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
-											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
-										</md-button>
-									</div>
-									<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
-									<div layout="column" flex="95">
-										<div layout="row">
-											<h3>{{match.players[play.user].username}}</h3>
-										</div>
-									</div>
-									<div layout="column" flex="5" layout-align="center end">
-										<strong>{{play.points}}</strong>
-									</div>
-									
-								</md-list-item>
-								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
-								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-										<div layout="column"  flex="100">
-											<div layout="row">
-												<div layout="column" flex="100" layout-align="center center">
-													{{value.name[lang]}}
-													<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
+						<md-tabs  md-selected="mCtrl.currentTab" md-stretch-tabs="always" flex>
+							<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
+								<md-content class="pad5l pad10t">
+									<div layout="row">
+										<md-list flex>
+											<!-- | filter:{round:round} | orderBy:'-points' -->
+											<md-list-item
+											class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+											ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
+											ng-click="mCtrl.setVisible(play.key)">
+												<div layout="column" ng-if="match.players[play.user].image == ''">
+													<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
+														<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
+													</md-button>
 												</div>
-											</div>
-											<div layout="row">
-												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
+												<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
+												<div layout="column" flex="95">
+													<div layout="row">
+														<h3>{{match.players[play.user].username}}</h3>
+													</div>
 												</div>
-												<div layout="column" flex="10">
-													<md-input-container class="detailedPointsContainer md-block" >
-															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
-													</md-input-container>
+												<div layout="column" flex="5" layout-align="center end">
+													<strong>{{play.points}}</strong>
 												</div>
-											</div>
-										</div>
-								</md-list-item>
-							</md-list>
-						</div>
-					</md-content>
-				</md-tab>
-				<md-tab ng-click="mCtrl.postPlay()">
-					<ng-template md-tab-label>
-						<i class="icon-plus-1"></i>
-    				</ng-template>
-					<md-content class="pad5l pad10t">
+												
+											</md-list-item>
+											<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
+											class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+													<div layout="column"  flex="100">
+														<div layout="row">
+															<div layout="column" flex="100" layout-align="center center">
+																{{value.name[lang]}}
+																<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
+															</div>
+														</div>
+														<div layout="row">
+															<div layout="column" flex="90">
+																<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
+															</div>
+															<div layout="column" flex="10">
+																<md-input-container class="detailedPointsContainer md-block" >
+																		<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
+																</md-input-container>
+															</div>
+														</div>
+													</div>
+											</md-list-item>
+										</md-list>
+									</div>
+								</md-content>
+							</md-tab>
+							<md-tab ng-click="mCtrl.postPlay()">
+								<ng-template md-tab-label>
+									<i class="icon-plus-1"></i>
+			    				</ng-template>
+								<md-content class="pad5l pad10t">
+								</md-content>
+							</md-tab>
+						</md-tabs>
 					</md-content>
 				</md-tab>
 			</md-tabs>

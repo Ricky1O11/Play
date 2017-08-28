@@ -21,19 +21,29 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	};
 
 	this.setGameType = function(val){
-		templateController.postValues.gameType = val;
+		templateController.postValues.gameType = val;	
+		templateController.setPlayersOrganization("");
+		templateController.setRoundOrganization("");
+		templateController.setHowToScore("");
+		templateController.setHowToWin("");
 		if(val == "cooperative"){
 			templateController.setPlayersOrganization("team based");
 		}
 	}
 	this.setPlayersOrganization = function(val){
 		templateController.postValues.playersOrganization = val;
+		templateController.setRoundOrganization("");
+		templateController.setHowToScore("");
+		templateController.setHowToWin("");
 	}
 	this.setRoundOrganization = function(val){
 		templateController.postValues.roundOrganization = val;
+		templateController.setHowToScore("");
+		templateController.setHowToWin("");
 	}
 	this.setHowToScore = function(val){
 		templateController.postValues.howToScore = val;
+		templateController.setHowToWin("");
 	}
 	this.setHowToWin = function(val){
 		templateController.postValues.howToWin = val;
