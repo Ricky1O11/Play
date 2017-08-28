@@ -3,32 +3,57 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	// list of `state` value/display objects
 	templateController=this;
 	
-	templateController.selectedValues={}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
-	templateController.selectedValues.templates=[];
+	this.templates=[];
 
-	templateController.postValues={}; //dictionary that holds the values inserted by the user, in a format suitable to be posted to the server
-	templateController.postValues.templates=[];
-	templateController.postValues.scoringFields=[];
+	let date = new Date();
+
+	this.postValues={
+		"gameType" : "", //cooperative/competitive
+		"playersOrganization" : "", //team based/all vs all
+		"roundOrganization" : "", //single/multi rorund
+		"howToScore" : "", //points based/ WIN/LOSE based
+		"howToWin" : "", //most points win/less points win/most rounds win
+		"scoring_fields" : [],
+		"name" : "", //template name
+		"has_expansions": false,
+		"inserted_at": date.getTime(),
+		"inserted_by": $rootScope.user.uid,
+	};
+
+	this.setGameType = function(val){
+		templateController.postValues.gameType = val;
+		if(val == "cooperative"){
+			templateController.setPlayersOrganization("team based");
+		}
+	}
+	this.setPlayersOrganization = function(val){
+		templateController.postValues.playersOrganization = val;
+	}
+	this.setRoundOrganization = function(val){
+		templateController.postValues.roundOrganization = val;
+	}
+	this.setHowToScore = function(val){
+		templateController.postValues.howToScore = val;
+	}
+	this.setHowToWin = function(val){
+		templateController.postValues.howToWin = val;
+	}
 	
-	templateController.name = "";
+
+	/*READING FUNCTIONS*/
+	this.name = "";
 	 
-	templateController.boardgames=[]; //list of boardgames to display in the dropdown menu
+	this.boardgames=[]; //list of boardgames to display in the dropdown menu
 
-	templateController.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
+	this.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 
-	templateController.dictionary=[]; //list that holds the list of templates available in the db
-	templateController.points=[0,0,0,,0,0,0,0,0,0,0,0,0,0,0]; //holds the values for the corresponding scoring field
+	this.dictionary=[]; //list that holds the list of templates available in the db
+	this.points=[0,0,0,,0,0,0,0,0,0,0,0,0,0,0]; //holds the values for the corresponding scoring field
 
-	templateController.adding = false;
-	templateController.selecting = false;
-	templateController.saving = false;
-
-	templateController.range = Utils.range;
-
-	templateController.cooperative = false;
+	this.range = Utils.range;
 
 	//Search for boardagames
-	templateController.querySearchBoardgames = function (query) {
+	this.querySearchBoardgames = function (query) {
 		query = query.toLowerCase();
 		if (query != ""){
 			templateController.endAt = query.substring(0, query.length-1) + 
@@ -45,28 +70,18 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 		});
 	}
 
-	/**
-	 * Create filter function for a query string
-	 */
-	function createFilterFor(query) {
-	  var lowercaseQuery = angular.lowercase(query);
-	  return function filterFn(state) {
-		return (state.value.indexOf(lowercaseQuery) === 0);
-	  };
-	}
-
 	this.getCurrentTemplates = function(boardgame){
 		if(boardgame){
 			Api.templates(boardgame.bggId).$loaded().then(
 				function(response){
 					console.log(response);
 					if(response.length > 0){
-						templateController.selectedValues.templates = response;
-						for(i=0;i<templateController.selectedValues.templates.length;i++)
-							templateController.selectedValues.templates[i].visible = false;
+						templateController.templates = response;
+						for(i=0;i<templateController.templates.length;i++)
+							templateController.templates[i].visible = false;
 					}
 					else{
-						templateController.selectedValues.templates = [];
+						templateController.templates = [];
 					}
 				},
 				function errorCallback(response) {
@@ -74,10 +89,15 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 			);
 		}
 		else{
-			templateController.selectedValues.templates = [];
+			templateController.templates = [];
 		}
 	}
 
+
+
+
+
+	/*WRITING FUNCTIONS*/
 	this.postTemplate = function(){
 		lang = $rootScope["lang"];
 		for (i=0; i<templateController.dictionary.length; i++){
@@ -90,19 +110,11 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 
 		//prepare the "template" row to be inserted in the templates table
 		if(templateController.name == "")
-			templateController.name = "Template " + templateController.selectedValues.templates.length
+			templateController.name = "Template " + templateController.templates.length
 		date = new Date();
-		templateController.postValues.template={	
-				"name": templateController.name,
-				//hasExpansions: (templateController.selectedValues.expansions.length > 0)
-				"has_expansions": false,
-				"inserted_at": date.getTime(),
-				"inserted_by": $rootScope.user.uid,
-				"scoring_fields": templateController.postValues.scoringFields
-			};
 		
 		//post template
-		Api.templatespost(templateController.selectedValues.boardgame, $rootScope.user.uid, templateController.postValues.template).$loaded().then(
+		Api.templatespost(templateController.boardgame, $rootScope.user.uid, templateController.postValues).$loaded().then(
 			function(response){
 				templateController.currentTab++;
 			},
@@ -118,7 +130,7 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	}
 
 	this.setVisible = function(pk){
-		templateController.selectedValues.templates[pk].visible = !templateController.selectedValues.templates[pk].visible;
+		templateController.templates[pk].visible = !templateController.templates[pk].visible;
 	}
 
 });

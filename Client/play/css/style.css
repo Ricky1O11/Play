@@ -197,11 +197,15 @@ md-card{
 
 /*COLORS MANAGEMENT*/
 .whiteBg{
-	background-color:#ffffff !important;
+	background-color:#ffffff;
 }
 
 .greyBg{
 	background-color:rgb(220,220,220);
+}
+.primaryBg{
+	background-color:rgb(57, 73, 171);
+	color:#ffffff;
 }
 
 .whiteTxt{

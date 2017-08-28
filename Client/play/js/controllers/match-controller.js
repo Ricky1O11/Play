@@ -88,18 +88,10 @@ var foo = {n: 1};
 	this.range = Utils.range
 
 	this.postPlay = function(){
+		console.log($rootScope.match.players);
+		round = controller.total_rounds+1;
 		for(player in $rootScope.match.players){
-			play = {}
-			play["user"] = player;
-			play["round"] = this.total_rounds+1;
-			play["detailed_points"] = {};
-			play["points"] = 0;
-
-			for(j in $rootScope.match.template.scoring_fields){
-				scoring_field = $rootScope.match.template.scoring_fields[j];
-				play["detailed_points"][j] = scoring_field;
-				play["detailed_points"][j]["points"] = 0;
-			}
+			play = controller.preparePlay(player, round);
 			play_post = Api.playpost($rootScope.match.$id, play);
 			play_post.$loaded().then(function(response){
 				controller.plays = $rootScope.match.plays;
@@ -107,6 +99,22 @@ var foo = {n: 1};
 
 		}
 		controller.total_rounds += 1;
+	}
+
+	this.preparePlay = function(player, round){
+
+		play = {}
+		play["user"] = player;
+		play["round"] = round;
+		play["detailed_points"] = {};
+		play["points"] = 0;
+
+		for(j in $rootScope.match.template.scoring_fields){
+			scoring_field = $rootScope.match.template.scoring_fields[j];
+			play["detailed_points"][j] = scoring_field;
+			play["detailed_points"][j]["points"] = 0;
+		}
+		return play;
 	}
 
 	this.managePlayers = function(){
@@ -129,7 +137,6 @@ var foo = {n: 1};
 	//$window.onbeforeunload =  controller.updateDuration;
 
 	$rootScope.$on('$locationChangeStart', function(){
-	   console.log("son fora");
 		controller.dbMatch.$destroy();
 	   //controller.updateDuration();
 	});
