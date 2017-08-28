@@ -194,7 +194,7 @@
 				},
 
 		playerpost:	function(match, simpleObject, player){
-					delete simpleObject["$id"]
+				 	delete simpleObject["$id"]
 					delete simpleObject["$priority"]
 
 					var ref = firebase.database().ref()

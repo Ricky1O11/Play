@@ -803,10 +803,20 @@ figcaption{
 	top:-25;
 	right:0;
 }
+.absolute7-1{
+	position:absolute;
+	top:20;
+	right:20;
+}
 .absolute8{
 	position:absolute;
 	top:13;
 	left:13;
+}
+.absolute8-1{
+	position:absolute;
+	top:-13;
+	left:-13;
 }
 .absolute9{
 	position:absolute;

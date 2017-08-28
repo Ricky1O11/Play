@@ -1,280 +1,225 @@
-<div ng-if="mCtrl.loaded" class="container-fluid pad20l pad20t pad20r" layout="row" flex="auto" ng-cloak >
-	<div ng-if="mCtrl.allowed" class="container-fluid pad20l pad20t pad20r" layout="column" flex="auto" ng-cloak >
-		<div layout-gt-xs="row" flex-gt-xs="noshrink" flex-xs="grow" class="mrg10b mrg10r">
-			<div layout="column" flex="none" layout-align="center center">
-				<div layout="row" flex="none" class="relative" >
-					<div class="clickable circleBase imgBoardgame hideScrollbar shadowed-box"  ng-click="showImage($event, match.boardgame.image)">
-						<div class="circleBase imgBoardgame" layout-align="center center" back-img="{{match.boardgame.image}}">
-							<div class="circleBase" style="font-size:50px;"></div>
-						</div>
-					</div>  
-					<md-fab-speed-dial	
-							md-open = "mCtrl.fabOpen"
-							md-direction="left"
-							class="absolute md-scale"
-							ng-class="{'md-scale':!mCtrl.editMode}">
-				        <md-fab-trigger>
-				          <md-button ng-if="!mCtrl.editMode"
-				          	ng-click="mCtrl.startEditMode($event)"
-				          	aria-label="Edit match info" 
-				          	class="md-fab">
-				            <i class="icon-pencil"> 
-				            </i>
-				            <md-tooltip md-direction="bottom" md-delay="200">Edit match stats and user points</md-tooltip>
-				          </md-button>
-				          <md-button 
-				        	  ng-if="mCtrl.editMode"
-				          		aria-label="Confirm changes" 
-				          		class="md-fab md-raised md-primary" 
-								ng-click="mCtrl.endEditMode(true)">
-				            <i class="icon-check-2"></i>
-				          </md-button>
-				        </md-fab-trigger>
-
-				        <md-fab-actions>
-				          <md-button 
-				          		aria-label="Delete match"
-				          		class="md-fab md-raised md-mini md-accent"
-								ng-click="mCtrl.deleteMatchPopup($event)">
-				            	<i class="icon-trash"></i>
-				          </md-button>
-						</md-fab-actions>
-					</md-fab-speed-dial>
-				</div>
-			</div>
-			<div layout="column" class="blue-grey pad20l pad0lxs" flex="100">
-				<div layout="row" class="mrg10b" flex layout-wrap>
-					<div ng-if="!mCtrl.editMode" layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
-						<h2 ng-if="match.name.length == 0"> Match {{match.$id}}</h2>
-						<h2 ng-if="match.name.length > 0">{{match.name}}</h2>
+<div ng-if="mCtrl.loaded" class="container-fluid" layout="column" ng-cloak >
+	<div id="boardgameImg" layout="row" layout-xs="column" flex="noshrink" back-img-boardgame="{{match.boardgame.image}}"" class="height150 relative shadowed-box borderAccent">
+		<div id="shade" layout="column" flex>
+			<div class="pad10l absolute9">
+				<div layout="row" class="height100perc">
+					<div ng-if="!mCtrl.editMode" layout="column" flex="100" layout-align="center end" layout-align-xs="center center" class="size-30 whiteTxt">
+						<h5 ng-if="match.name.length == 0"> Match {{match.$id}}</h5>
+						<h5 ng-if="match.name.length > 0">{{match.name}}</h5>
 					</div>
-					<div ng-if="mCtrl.editMode" layout="column" flex-gt-xs="70" flex-xs="100" layout-align="center start" layout-align-xs="center center">
+					<div ng-if="mCtrl.editMode" layout="column" flex="100" layout-align="center end" layout-align-xs="center center" class="size-30 whiteTxt">
 						<md-input-container>
 								<label class="size-18">Match name</label>
 								<input ng-model="match.name">
 						</md-input-container>
 					</div>
-					<div layout="column" flex-gt-xs="30" flex-xs="100" layout-align-xs="center center"  layout-align="center end">
-						<div layout="row">
-							<!--
-							<md-button 
-							ng-if="!match.completed" 
-							ng-class="mCtrl.statusColor">
-								programmed
-							</md-button>
-							-->
-							<md-button 
-							ng-class="{
-								'buttonDisabled' : match.completed,
-								'md-accent' : !match.completed}"
-							ng-click="mCtrl.setCompletionStatus(false)"
-							>
-								in progress
-							</md-button>
-							<md-button 
-							ng-class="{
-								'buttonDisabled' : !match.completed,
-								'md-primary' : match.completed}"
-							ng-click="mCtrl.setCompletionStatus(true)"
-							>
-								completed
-							</md-button>
+				</div> 
+			</div>
+			<div layout="column" class="blue-grey" flex>	
+				<div layout="row">	
+					<div layout="column" class="whiteTxt" flex="60">	
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-24 icon-pin">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center start" >
+												<h3>{{match.location}}</h3>
+											</div>
+											<div ng-if="mCtrl.editMode" layout="column" flex="80" >
+												<md-input-container>
+													<label class="size-16">Where?</label>
+													<input ng-model="match.location">
+												</md-input-container>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-21 icon-trophy-2">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center start" >
+												<h3>{{mCtrl.time | date: "short"}}</h3>
+											</div>
+											<div ng-if="mCtrl.editMode" layout="column" flex="80">
+												<md-input-container>
+													<label class="size-16">When?</label>
+													<md-datepicker flex ng-model="mCtrl.time "></md-datepicker>
+												</md-input-container>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div layout="row" class="size-14 pad20" layout-align="start center">
+							<div 
+								layout="column" 
+								flex="50" 
+								class="pad10l clickable height30">
+								<div layout="row" class="height100perc">
+									<div layout="column" flex="20" layout-align="center center" >
+										<i class="size-18 icon-hourglass">
+											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+										</i>
+									</div>
+									<div layout="column" flex="80">
+										<div layout="row" flex>
+											<div layout="column" layout-align="center start">
+												<h3>{{match.duration | secondsToTime | date:'HH:mm'}}</h3>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</div>
-				<div layout="row" id="info_container">
-					<div layout="column" flex="100">
-						<div layout="row" class="size-14" layout-wrap>
-							<div 
-								layout="column" 
-								flex-gt-xs 
-								flex-xs="100" 
-								class="shadowed-box whiteBg pad10l height60 clickable  mrg10b" 
-								ng-click="goTo('boardgames/'+match.boardgame.bggId)">
-								<div layout="row" class="height100perc">
-									
-									<div layout="column" flex="80" layout-align="center center" >
-										<h3>{{match.boardgame.name}}</h3>
-									</div>
-									<div layout="column" flex="20" layout-align="center center" >
-										<i class="size-18 icon-puzzle-piece" md-colors="{color: 'myTheme-accent'}" ></i>
-									</div>
-								</div>
-							</div>
-
-							<div layout="column" 
-								flex-gt-xs
-								flex-xs="100" 
-								class="shadowed-box whiteBg pad10l height60 clickable mrg10l mrg0lxs  mrg10b">
-								<div layout="row" class="height100perc">
-									<div layout="column" flex="20" layout-align="center center" >
-										<i class="size-18 icon-hourglass" md-colors="{color: 'myTheme-accent'}" ></i>
-									</div>
-									<div layout="column" flex="80" layout-align="center center" >
-										<h3>{{match.duration | secondsToTime | date:'HH:mm:ss'}} min</h3>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div layout="row" class="size-14" layout-wrap>
-							<div layout="column" 
-								flex-gt-xs
-								flex-xs="100"  
-								class="shadowed-box whiteBg pad10l height60 clickable mrg10b">
-								<div layout="row" class="height100perc">
-									<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-										<h3>{{mCtrl.time | date: "short"}}</h3>
-									</div>
-									<div ng-if="mCtrl.editMode" layout="column" flex="80">
-										<md-input-container>
-											<label class="size-16">When?</label>
-											<md-datepicker flex ng-model="mCtrl.time "></md-datepicker>
-										</md-input-container>
-									</div>
-									<div layout="column" flex="20" layout-align="center center" >
-										<i class="size-18 icon-calendar" md-colors="{color: 'myTheme-accent'}" ></i>
-									</div>
-								</div>
-							</div>
-							<div layout="column" 
-								flex-gt-xs
-								flex-xs="100" 
-								class="shadowed-box whiteBg pad10l height60 clickable mrg10l mrg0lxs mrg10b">
-								<div layout="row" class="height100perc">
-									<div layout="column" flex="20" layout-align="center center" >
-										<i class="size-18 icon-pin" md-colors="{color: 'myTheme-accent'}" ></i>
-									</div>
-									<div ng-if="!mCtrl.editMode" layout="column" flex="80" layout-align="center center" >
-										<h3>{{match.location}}</h3>
-									</div>
-									<div ng-if="mCtrl.editMode" layout="column" flex="80" >
-										<md-input-container>
-											<label class="size-16">Where?</label>
-											<input ng-model="match.location">
-										</md-input-container>
-									</div>
-								</div>
-							</div>
-						</div>
-						<div layout="row" layout-wrap>
-							<div layout="column" flex flex-xs="100" layout-align="center center" class="relative height60 clickable mrg0lxs mrg10t shadowed-box whiteBg" ng-if="match.is_expanded_by.length > 0">
-								<div class="absolute2 pad5 size-12 dark54perc">PLAYED EXPANSIONS</div>
-								<div layout="row">
-									<div layout="column" class="clickable pad10l" flex="none" ng-repeat="exp in mCtrl.match.is_expanded_by"
-									ng-click="goTo('boardgames/'+exp.boardgame_details.pk)">
-										<div class="circleBase imgExpansion hideScrollbar shadowed-box">
-											<div class="circleBase imgExpansion" layout-align="center center" back-img="{{exp.boardgame_details.img}}">
-												<div class="circleBase" style="font-size:50px;"></div>
-											</div>
-										</div>
-										<md-tooltip md-direction="bottom" md-delay="200">{{exp.boardgame_details.title}}</md-tooltip>
-									</div>
-								</div>
-							</div>
-						</div>
-					</div>
+			</div>
+			<div layout="column" class="absolute7-1" layout-align="center end">
+				<div layout="row" class="whiteTxt" flex="none">
+					<i ng-if="!mCtrl.editMode" ng-click="mCtrl.startEditMode($event)" class="clickable size-18 icon-pencil">
+					</i>
+					<i ng-if="mCtrl.editMode" ng-click="mCtrl.endEditMode(true)" class="clickable size-18 icon-check-2">
+					</i>
+					<i class="clickable size-18 icon-trash pad20l" ng-click="mCtrl.deleteMatchPopup($event)" md-colors="{color: 'myTheme-accent'}" >
+					</i>
 				</div>
 			</div>
 		</div>
-		<div layout="row" flex="grow">
-			<div layout="column" flex="40" class="pad20r">
-				<md-tabs
-				md-stretch-tabs="always" flex-gt-xs flex-xs>
-					<md-tab label="Leaderboard" flex>
-						<md-content class="pad5l pad10t" flex>
-							<div layout="row" flex>			
-								<md-list flex>
-									<md-list-item
-									class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-									ng-repeat="player in match.players | orderObjectBy:'points':true "
-									ng-click="mCtrl.setLeaderboardVisible(details.pk)">
-										<div layout="column" ng-if="player.image == ''">
-											<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
-												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
-											</md-button>
+	</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+	<div ng-if="mCtrl.allowed" class="container-fluid" layout="row" flex="grow" ng-cloak >
+		<div layout="column" flex="40" class="pad20r">
+			<md-tabs
+			md-stretch-tabs="always" flex-gt-xs flex-xs>
+				<md-tab label="Leaderboard" flex>
+					<md-content class="pad10l pad10t" flex>
+						<div layout="row" flex>			
+							<md-list flex>
+								<md-list-item
+								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+								ng-repeat="player in match.players | orderObjectBy:'points':true "
+								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
+									<div layout="column" ng-if="player.image == ''">
+										<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
+										</md-button>
+									</div>
+									<img ng-click="goTo('users/'+player.key)" ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
+									<div layout="column" flex="95">
+										<div layout="row">
+											<h3>{{player.username}}</h3>
 										</div>
-										<img ng-click="goTo('users/'+player.key)" ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar shadowed-box" alt="{{player.username}}"/>
-										<div layout="column" flex="95">
+									</div>
+									<div layout="column" flex="5" layout-align="center end">
+										<strong>{{player.points}}</strong>
+									</div>
+									
+								</md-list-item>
+							</md-list>
+						</div>
+						<div layout="row" flex>	
+							<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
+						</div>
+					</md-content>
+				</md-tab>
+			</md-tabs>
+		</div>
+		<div layout="column" flex="60" class="pad20l">
+			<md-tabs  md-selected="mCtrl.currentTab" flex-gt-xs flex-xs>
+				<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
+					<md-content class="pad5l pad10t">
+						<div layout="row">
+							<md-list flex>
+								<!-- | filter:{round:round} | orderBy:'-points' -->
+								<md-list-item
+								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
+								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
+								ng-click="mCtrl.setVisible(play.key)">
+									<div layout="column" ng-if="match.players[play.user].image == ''">
+										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
+											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
+										</md-button>
+									</div>
+									<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
+									<div layout="column" flex="95">
+										<div layout="row">
+											<h3>{{match.players[play.user].username}}</h3>
+										</div>
+									</div>
+									<div layout="column" flex="5" layout-align="center end">
+										<strong>{{play.points}}</strong>
+									</div>
+									
+								</md-list-item>
+								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
+								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
+										<div layout="column"  flex="100">
 											<div layout="row">
-												<h3>{{player.username}}</h3>
+												<div layout="column" flex="100" layout-align="center center">
+													{{value.name[lang]}}
+													<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
+												</div>
 											</div>
-										</div>
-										<div layout="column" flex="5" layout-align="center end">
-											<strong>{{player.points}}</strong>
-										</div>
-										
-									</md-list-item>
-								</md-list>
-							</div>
-							<div layout="row" flex>	
-								<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
-							</div>
-						</md-content>
-					</md-tab>
-				</md-tabs>
-			</div>
-			<div layout="column" flex="60" class="pad20l">
-				<md-tabs  md-selected="mCtrl.currentTab" 
-				md-stretch-tabs="always" flex-gt-xs flex-xs>
-					<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
-						<md-content class="pad5l pad10t">
-							<div layout="row">
-								<md-list flex>
-									<!-- | filter:{round:round} | orderBy:'-points' -->
-									<md-list-item
-									class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-									ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
-									ng-click="mCtrl.setVisible(play.key)">
-										<div layout="column" ng-if="match.players[play.user].image == ''">
-											<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
-												<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
-											</md-button>
-										</div>
-										<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
-										<div layout="column" flex="95">
 											<div layout="row">
-												<h3>{{match.players[play.user].username}}</h3>
-											</div>
-										</div>
-										<div layout="column" flex="5" layout-align="center end">
-											<strong>{{play.points}}</strong>
-										</div>
-										
-									</md-list-item>
-									<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
-									class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
-											<div layout="column"  flex="100">
-												<div layout="row">
-													<div layout="column" flex="100" layout-align="center center">
-														{{value.name[lang]}}
-														<md-tooltip md-direction="bottom" md-delay="200"> value: {{value.bonus}} points </md-tooltip>
-													</div>
+												<div layout="column" flex="90">
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
 												</div>
-												<div layout="row">
-													<div layout="column" flex="90">
-														<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
-													</div>
-													<div layout="column" flex="10">
-														<md-input-container class="detailedPointsContainer md-block" >
-																<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
-														</md-input-container>
-													</div>
+												<div layout="column" flex="10">
+													<md-input-container class="detailedPointsContainer md-block" >
+															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
+													</md-input-container>
 												</div>
 											</div>
-									</md-list-item>
-								</md-list>
-							</div>
-						</md-content>
-					</md-tab>
-					<md-tab ng-click="mCtrl.postPlay()">
-						<ng-template md-tab-label>
-							<i class="icon-plus-1"></i>
-	    				</ng-template>
-						<md-content class="pad5l pad10t">
-						</md-content>
-					</md-tab>
-				</md-tabs>
-			</div>
+										</div>
+								</md-list-item>
+							</md-list>
+						</div>
+					</md-content>
+				</md-tab>
+				<md-tab ng-click="mCtrl.postPlay()">
+					<ng-template md-tab-label>
+						<i class="icon-plus-1"></i>
+    				</ng-template>
+					<md-content class="pad5l pad10t">
+					</md-content>
+				</md-tab>
+			</md-tabs>
 		</div>
 	</div>
 	<div ng-if="!mCtrl.allowed" class="container-fluid pad20l pad20t pad20r" layout="column" flex="auto" ng-cloak >
