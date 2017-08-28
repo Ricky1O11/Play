@@ -142,8 +142,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			Api.matchpost(self.selectedValues, simpleObject).$loaded()
 			.then(function(response){
 					for(player in self.selectedValues.players){
-						play = self.preparePlay(player)
-						play_post = Api.playpost(response.$id, play)
+						play = self.preparePlay(player);
+						play_post = Api.playpost(response.$id, play);
 					}
 					$rootScope.showToast("Match succesfully registered!");
 					$mdDialog.hide();
@@ -171,6 +171,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			play["detailed_points"][j] = scoring_field;
 			play["detailed_points"][j]["points"] = 0;
 		}
+		return play;
 	}
 
 	this.setVisible = function(pk){

@@ -159,53 +159,57 @@ angular.module("play")
 
                     for(i in $rootScope.games){
 						game = $rootScope.games[i];
-						game.visible = false;
-						game.lastMatchTime = 0;
-						played_matches = Object.keys(game.matches);
+						if(game){
+							game.visible = false;
+							game.lastMatchTime = 0;
+							if(game.matches){
+								played_matches = Object.keys(game.matches);
 
-                		$rootScope.chart.games["labels"].push(game.name);
-                		$rootScope.chart.games["values"].push(played_matches.length);
-						
-						//get most played game
-						if(played_matches.length > most_played_game_amount){
-							most_played_game_amount = played_matches.length;
-							most_played_game = game.name;
-						}
+		                		$rootScope.chart.games["labels"].push(game.name);
+		                		$rootScope.chart.games["values"].push(played_matches.length);
+								
+								//get most played game
+								if(played_matches.length > most_played_game_amount){
+									most_played_game_amount = played_matches.length;
+									most_played_game = game.name;
+								}
 
-						for(m in game.matches){
-							match = game.matches[m];
-							game.lastMatchTime = Math.max(game.lastMatchTime, match.time);
-							
-							//get finished, won and played matches
-							if(match.completed){
-								match_finished++; 
-								if(match.winner == $rootScope.user.uid)
-								  match_won++;
-						}
-						match_played++;
-
-						for(p in match.players){
-								player = match.players[p];
-								if(p != $rootScope.user.uid){
-									if(p in companions){
-										companions[p]["amount"] += 1
+								for(m in game.matches){
+									match = game.matches[m];
+									game.lastMatchTime = Math.max(game.lastMatchTime, match.time);
+									
+									//get finished, won and played matches
+									if(match.completed){
+										match_finished++; 
 										if(match.winner == $rootScope.user.uid)
-											if("won" in companions[p])
-												companions[p]["won"] += 1
-											else
-												companions[p]["won"] = 1
-									}
-									else{
-										companions[p] = {}
-										companions[p]["amount"] = 1
-										if(match.winner == $rootScope.user.uid)
-											companions[p]["won"] = 1
-										else{
-											companions[p]["won"] = 0
+										  match_won++;
+								}
+								match_played++;
+
+								for(p in match.players){
+										player = match.players[p];
+										if(p != $rootScope.user.uid){
+											if(p in companions){
+												companions[p]["amount"] += 1
+												if(match.winner == $rootScope.user.uid)
+													if("won" in companions[p])
+														companions[p]["won"] += 1
+													else
+														companions[p]["won"] = 1
+											}
+											else{
+												companions[p] = {}
+												companions[p]["amount"] = 1
+												if(match.winner == $rootScope.user.uid)
+													companions[p]["won"] = 1
+												else{
+													companions[p]["won"] = 0
+												}
+												companions[p]["username"] = player.username;
+												companions[p]["image"] = player.image;
+										 	}
 										}
-										companions[p]["username"] = player.username;
-										companions[p]["image"] = player.image;
-								 	}
+									}
 								}
 							}
 						}

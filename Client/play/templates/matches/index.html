@@ -1,13 +1,13 @@
-<div class="container-fluid ng-cloak" layout-padding layout="column" ng-cloak>
+<div class="container-fluid ng-cloak" layout="column" ng-cloak>
 	<div layout="row">
 		<div layout="column" flex="100">
-			<div layout="row" class="height600">
+			<div layout="row">
 				<div layout="column" flex="100">
 					<md-tabs  md-selected="currentTab"
 					md-stretch-tabs="always" class="height100perc" ng-if="(games |keylength)>0">
 						<md-tab label="all matches">
 							<md-content>
-								<div layout="row" class="overflowScroll">
+								<div layout="row" class="overflowScroll pad10l pad10r">
 									<div layout="column" flex="100">
 										<md-list flex ng-show="msCtrl.loaded" ng-init=$scope>
 											<md-list-item
