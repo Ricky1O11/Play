@@ -392,6 +392,9 @@ md-card{
 .mrg30b{
 	margin-bottom: 30px;
 }
+.mrg50{
+	margin: 50px !important;
+}
 .mrg50t{
 	margin-top: 50px !important;
 }

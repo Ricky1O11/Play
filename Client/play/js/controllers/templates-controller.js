@@ -14,10 +14,13 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 		"howToScore" : "", //points based/ WIN/LOSE based
 		"howToWin" : "", //most points win/less points win/most rounds win
 		"scoring_fields" : [],
+		"teams" : [],
 		"name" : "", //template name
 		"has_expansions": false,
 		"inserted_at": date.getTime(),
 		"inserted_by": $rootScope.user.uid,
+		"nteams" : 0,
+
 	};
 
 	this.setGameType = function(val){
@@ -35,6 +38,12 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 		templateController.setRoundOrganization("");
 		templateController.setHowToScore("");
 		templateController.setHowToWin("");
+		if(val == "team based"){
+			templateController.postValues.nteams = 2;
+		}
+		else{
+			templateController.postValues.nteams = 0;
+		}
 	}
 	this.setRoundOrganization = function(val){
 		templateController.postValues.roundOrganization = val;
@@ -44,6 +53,9 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	this.setHowToScore = function(val){
 		templateController.postValues.howToScore = val;
 		templateController.setHowToWin("");
+		if(val == "win/lose"){
+			templateController.setHowToWin("-");
+		}
 	}
 	this.setHowToWin = function(val){
 		templateController.postValues.howToWin = val;
@@ -58,6 +70,8 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	this.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
 
 	this.dictionary=[]; //list that holds the list of templates available in the db
+	this.nteams=2; //list that holds the list of templates available in the db
+	this.teams=[]; //list that holds the list of templates available in the db
 	this.points=[0,0,0,,0,0,0,0,0,0,0,0,0,0,0]; //holds the values for the corresponding scoring field
 
 	this.range = Utils.range;
@@ -110,18 +124,27 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	/*WRITING FUNCTIONS*/
 	this.postTemplate = function(){
 		lang = $rootScope["lang"];
+		templateController.postValues.scoring_fields = [];
+		templateController.postValues.teams = [];
 		for (i=0; i<templateController.dictionary.length; i++){
 			row = {};
 			row["name"] = {};
 			row["bonus"] = templateController.points[i];
 			row["name"][$rootScope.lang] = templateController.dictionary[i]
-			templateController.postValues.scoringFields.push(row);
+			templateController.postValues.scoring_fields.push(row);
+		}
+
+		for (i=0; i<templateController.postValues.nteams; i++){
+			row = {};
+			row["name"] = {};
+			row["image"] = "";
+			row["name"][$rootScope.lang] = templateController.teams[i]
+			templateController.postValues.teams.push(row);
 		}
 
 		//prepare the "template" row to be inserted in the templates table
-		if(templateController.name == "")
-			templateController.name = "Template " + templateController.templates.length
-		date = new Date();
+		if(templateController.postValues.name == "")
+			templateController.postValues.name = "Template " + templateController.templates.length
 		
 		//post template
 		Api.templatespost(templateController.boardgame, $rootScope.user.uid, templateController.postValues).$loaded().then(

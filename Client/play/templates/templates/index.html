@@ -98,8 +98,8 @@
 		<md-tab label="Build your template" ng-disabled="tCtrl.currentTab < 2">
 			<md-content class="md-padding">
 				<div class="md-dialog-content">
-					<div layout="row" class="md-body-2 mrg10t">
-						<div layout="column" class="md-body-2 pad10 clickable" flex layout-align="center start">
+					<div layout="row" class="md-body-2 mrg50b mrg50t">
+						<div layout="column" class="md-body-2 pad10 clickable" layout-align="center start">
 							Summary:
 						</div>
 						<div layout="column" class="md-body-2 whiteBg shadowed-box pad10 clickable" flex layout-align="center center" ng-click="tCtrl.setGameType('')">
@@ -117,6 +117,17 @@
 						<div layout="column" class="md-body-2 whiteBg shadowed-box pad10 clickable" flex layout-align="center center" ng-click="tCtrl.setHowToWin('')">
 							{{tCtrl.postValues.howToWin}}
 						</div>
+						<div layout="column">
+							<div layout="row" layout-align="end center" ng-if="tCtrl.postValues.howToWin != ''">
+								<md-button ng-disabled aria-label="post match" class="md-fab size-24" ng-click="tCtrl.postTemplate()">
+									<div layout="column" class="pad3l pad2b" flex layout-align="center center">
+										<div layout="row" class="icon-check-2" aria-hidden="true" >
+										</div>
+									</div>
+								</md-button>
+								
+							</div>
+						</div>
 					</div>
 
 
@@ -124,20 +135,21 @@
 
 					<div 
 						layout="row"
-						class="md-body-2 mrg10t" 
+						class="md-body-2 mrg20b" 
 						md-colors="{color: 'myTheme-accent'}" 
-						ng-if="tCtrl.postValues.gameType == ''">
-						SELECT THE TYPE OF GAME
+						ng-if="tCtrl.postValues.gameType == ''"
+						layout-align="center center">
+						<h3>SELECT THE TYPE OF GAME</h3>
 					</div>
 					<div layout="row" ng-if="tCtrl.postValues.gameType == ''">
 						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.setGameType('cooperative')" layout-align="center center" ng-class="{primaryBg: tCtrl.postValues.gameType == 'cooperative'}">
-							<div layout="row">COOPERATIVE</div>
-							<div layout="row" class="center-align">All the players play together to achieve a common goal!</div>
+							<h3 layout="row">COOPERATIVE</h3>
+							<div layout="row" class="center-align">All the players play together to achieve a common goal! By definition it is considered a team based game in which all players team together</div>
 							<div layout="row" class="center-align">IMG</div>
 							<div layout="row" class="center-align"><i>Examples: Pandemic, Zombicide, The Game</i></div>
 						</div>
 						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.setGameType('competitive')" layout-align="center center" ng-class="{primaryBg: tCtrl.postValues.gameType == 'competitive'}">
-							<div layout="row">COMPETITIVE</div>
+							<h3 layout="row">COMPETITIVE</h3>
 							<div layout="row" ng-if="tCtrl.postValues.gameType == ''" class="center-align">The players are require to play alone or in teams!</div>
 							<div layout="row" ng-if="tCtrl.postValues.gameType == ''" class="center-align">IMG</div>
 							<div layout="row" ng-if="tCtrl.postValues.gameType == ''"><i>Ticket to ride, codenames, 7 wonders</i></div>
@@ -152,10 +164,11 @@
 
 
 
-					<div ng-if="tCtrl.postValues.gameType != '' && tCtrl.postValues.playersOrganization == ''" layout="row" class="md-body-2 mrg10t " md-colors="{color: 'myTheme-accent'}">
-						WHAT DO YOU MEAN?
+					<div ng-if="tCtrl.postValues.gameType != '' && tCtrl.postValues.playersOrganization == ''" layout="row" class="md-body-2  mrg20b " md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>WHAT DO YOU MEAN?</h3>	
 					</div>
-					<div layout="row" ng-if="tCtrl.postValues.gameType != '' && tCtrl.postValues.playersOrganization == ''" class="">
+					<div layout="row" ng-if="tCtrl.postValues.gameType != '' && tCtrl.postValues.playersOrganization == ''">
 						<div layout="column" flex class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.setPlayersOrganization('team based')" layout-align="center center" ng-class="{primaryBg: tCtrl.postValues.playersOrganization == 'team based'}">
 							<div layout="row">TEAM BASED</div>
 							<div layout="row" class="center-align">Select this, if the game requires users to be split in teams, both defined or hidden. A cooperative game is team based by definition: all of you, against the game</div>
@@ -180,10 +193,12 @@
 
 
 
-					<div ng-if="tCtrl.postValues.playersOrganization != '' && tCtrl.postValues.roundOrganization == ''" layout="row" class="md-body-2 mrg10t " md-colors="{color: 'myTheme-accent'}" >
-						HOW MANY ROUNDS ARE THERE?
+					<div ng-if="tCtrl.postValues.playersOrganization != '' && tCtrl.postValues.roundOrganization == ''" layout="row" class="md-body-2  mrg20b " md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>HOW MANY ROUNDS ARE THERE?</h3>
+						
 					</div>
-					<div layout="row" ng-if="tCtrl.postValues.playersOrganization != '' && tCtrl.postValues.roundOrganization == ''" class="">
+					<div layout="row" ng-if="tCtrl.postValues.playersOrganization != '' && tCtrl.postValues.roundOrganization == ''">
 						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable" ng-click="tCtrl.setRoundOrganization('round based')" layout-align="center center" ng-class="{primaryBg: tCtrl.postValues.roundOrganization == 'round based'}">
 							<div layout="row">MORE THAN 1</div>
 							<div layout="row" class="center-align">A game has more round (eras, turns, stages etc.) if its rules assess it. If you decide to play five matches to a given game, they must be considered different matches, not single rounds.</div>
@@ -210,10 +225,12 @@
 
 
 
-					<div ng-if="tCtrl.postValues.roundOrganization != '' && tCtrl.postValues.howToScore == ''" layout="row" class="md-body-2 mrg10t " md-colors="{color: 'myTheme-accent'}">
-						HOW DO YOU KEEP TRACK OF ROUND WINNERS?
+					<div ng-if="tCtrl.postValues.roundOrganization != '' && tCtrl.postValues.howToScore == ''" layout="row" class="md-body-2  mrg20b " md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>HOW DO YOU KEEP TRACK OF ROUND WINNERS?</h3>
+						
 					</div>
-					<div layout="row" class="mrg10t" ng-if="tCtrl.postValues.roundOrganization != '' && tCtrl.postValues.howToScore == ''" class="">
+					<div layout="row" ng-if="tCtrl.postValues.roundOrganization != '' && tCtrl.postValues.howToScore == ''" class="">
 						<div layout="column" flex="50" class="md-body-2 whiteBg shadowed-box pad20 clickable"  ng-click="tCtrl.setHowToScore('win/lose')" layout-align="center center" ng-class="{primaryBg: tCtrl.postValues.howToScore == 'win/lose'}">
 							<div layout="row">WIN/LOSE GAME</div>
 							<div layout="row" class="center-align">In this kind of game there are no points. You simply win a match or lose it. Select this voice if you don't know how to score points in your game</div>
@@ -239,10 +256,12 @@
 
 
 
-					<div ng-if="tCtrl.postValues.howToScore != '' && tCtrl.postValues.howToWin == ''" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
-						WHO WINS AT THE END?
+					<div ng-if="tCtrl.postValues.howToScore != '' && tCtrl.postValues.howToWin == ''" layout="row" class="md-body-2  mrg20b" md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>WHO WINS AT THE END?</h3>
+						
 					</div>
-					<div layout="row" class="mrg10t" ng-if="tCtrl.postValues.howToScore != '' && tCtrl.postValues.howToWin == ''">
+					<div layout="row" ng-if="tCtrl.postValues.howToScore != '' && tCtrl.postValues.howToWin == ''">
 						<div 
 						layout="column" 
 						flex 
@@ -288,10 +307,12 @@
 
 
 
-					<div ng-if="tCtrl.postValues.howToScore == 'points based'" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
-						WRITE HEAR THE SPECIFIC WAYS IN WHICH YOU CAN SCORE POINTS!
+					<div ng-if="tCtrl.postValues.howToScore == 'points based' && tCtrl.postValues.howToWin != ''" layout="row" class="md-body-2 mrg20t mrg20b" md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>WRITE HEAR THE SPECIFIC WAYS IN WHICH YOU CAN SCORE POINTS!</h3>
+						
 					</div>
-					<div ng-if="tCtrl.postValues.howToScore == 'points based'" layout="row"  class="pad20 whiteBg shadowed-box">
+					<div ng-if="tCtrl.postValues.howToScore == 'points based' && tCtrl.postValues.howToWin != ''" layout="row"  class="pad20 whiteBg shadowed-box">
 						<div layout="column" flex="100">
 							<div layout="row" class="md-body-1 mrg20b">
 								3 POINTS FOR EACH MONEY? 10 POINTS FOR THE LONGEST TRAIN? -3 FOR EACH MASK? THIS IS WHAT WE WANT TO KNOW HERE!
@@ -317,27 +338,48 @@
 						</div>
 					</div>
 
-
-					<div ng-if="false" layout="row" class="md-body-2 mrg10t" md-colors="{color: 'myTheme-accent'}">
-						GIVE YOUR TEMPLATE A MEMORABLE NAME!
+					<div ng-if="tCtrl.postValues.playersOrganization == 'team based' && tCtrl.postValues.howToWin != ''" layout="row" class="md-body-2 mrg20t mrg20b" md-colors="{color: 'myTheme-accent'}" layout-align="center center">
+						<h3>TEAMS HAVE SPECIFIC NAMES? TELL US!</h3>
 					</div>
-					<div ng-if="false" layout="row" class="size-16 blue-grey pad20 mrg10t whiteBg shadowed-box">
+					<div ng-if="tCtrl.postValues.playersOrganization == 'team based' && tCtrl.postValues.howToWin != ''" layout="row" class="pad20 whiteBg">
+						<div layout="column" flex="95" layout-align="center end" class="md-body-2">HOW MANY TEAMS ARE THERE?</div>
+						<div layout="column" flex="5" layout-align="center end">
+							<md-input-container class="detailedPointsContainer md-block" >
+								<input type="number" ng-model="tCtrl.postValues.nteams" aria-label="red" aria-controls="red-slider">
+							</md-input-container>
+						</div>
+					</div>
+					<div ng-if="tCtrl.postValues.playersOrganization == 'team based' && tCtrl.postValues.howToWin != ''" layout="row" class="pad20 whiteBg">
+						<div layout="column" flex layout-align="center start" class="md-body-2">GIVE THEM A NAME</div>
+					</div>
+					<div ng-if="tCtrl.postValues.playersOrganization == 'team based' && tCtrl.postValues.howToWin != ''" layout="row">
+						<div layout="column" class="pad20 whiteBg shadowed-box" flex ng-repeat="i in tCtrl.range(0,tCtrl.postValues.nteams-1)">
+							<md-input-container class="templateEntryContainer md-block" >
+								<label class="size-14 md-body-1">Team {{i+1}}</label>
+								<input  ng-model="tCtrl.teams[i]">
+							</md-input-container>
+						</div>
+						<div layout="column" class="pad20 whiteBg shadowed-box" flex layout-align="center center" ng-if="tCtrl.postValues.gameType == 'cooperative'">
+							The game
+						</div>
+					</div>
+
+
+
+
+
+
+
+					<div ng-if="false" layout="row" class="md-body-2  mrg20b" md-colors="{color: 'myTheme-accent'}"
+						layout-align="center center">
+						<h3>GIVE YOUR TEMPLATE A MEMORABLE NAME!</h3>
+						
+					</div>
+					<div ng-if="false" layout="row" class="size-16 blue-grey pad20 whiteBg shadowed-box">
 						<md-input-container layour="column" flex=100>
 							<label class="size-18">Template name</label>
 							<input  ng-model="tCtrl.name">
 						</md-input-container>
-					</div>
-				</div>
-
-				<div layout="column" flex>
-					<div layout="row" layout-align="end center">
-						<md-button ng-disabled="mdCdtl.saving" aria-label="post match" class="md-fab size-24" ng-click="tCtrl.postTemplate()">
-							<div layout="column" class="pad3l pad2b" flex layout-align="center center">
-								<div layout="row" class="icon-check-2" aria-hidden="true" >
-								</div>
-							</div>
-						</md-button>
-						
 					</div>
 				</div>
 			</md-content>
