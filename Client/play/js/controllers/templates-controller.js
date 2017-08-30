@@ -20,7 +20,6 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 		"inserted_at": date.getTime(),
 		"inserted_by": $rootScope.user.uid,
 		"nteams" : 0,
-
 	};
 
 	this.setGameType = function(val){
@@ -139,6 +138,14 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 			row["name"] = {};
 			row["image"] = "";
 			row["name"][$rootScope.lang] = templateController.teams[i]
+			templateController.postValues.teams.push(row);
+		}
+
+		if(templateController.postValues.gameType == "cooperative" && templateController.postValues.playersOrganization == "team based"){
+			row = {};
+			row["name"] = {};
+			row["image"] = "";
+			row["name"][$rootScope.lang] = "The game"
 			templateController.postValues.teams.push(row);
 		}
 

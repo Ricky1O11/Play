@@ -32,7 +32,7 @@ var foo = {n: 1};
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.players);
 	}
 
-	this.updateScore = function(play_id, detailed_point_id, val){
+	this.updateScore = function(play_id, detailed_point_id, val, bonus){
 		prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 		update = val-prev;
 		

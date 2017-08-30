@@ -194,9 +194,6 @@
 			</md-tabs>
 		</div>
 		<div layout="column" flex="70" class="pad20l">
-			<md-tabs flex-gt-xs flex-xs md-stretch-tabs="always">
-				<md-tab label="Details">
-					<md-content class="pad5l pad10t">
 						<md-tabs  md-selected="mCtrl.currentTab" md-stretch-tabs="always" flex>
 							<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
 								<md-content class="pad5l pad10t">
@@ -234,7 +231,7 @@
 														</div>
 														<div layout="row">
 															<div layout="column" flex="90">
-																<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points)"></md-slider>
+																<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points, value.bonus)"></md-slider>
 															</div>
 															<div layout="column" flex="10">
 																<md-input-container class="detailedPointsContainer md-block" >
@@ -256,9 +253,6 @@
 								</md-content>
 							</md-tab>
 						</md-tabs>
-					</md-content>
-				</md-tab>
-			</md-tabs>
 		</div>
 	</div>
 	<div ng-if="!mCtrl.allowed" class="container-fluid pad20l pad20t pad20r" layout="column" flex="auto" ng-cloak >
