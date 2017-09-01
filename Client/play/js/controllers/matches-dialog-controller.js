@@ -94,6 +94,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 				function(response){
 					if(response.length > 0){
 						self.templates = response;
+						console.log(self.templates);
 						for(i=0;i<self.templates.length;i++)
 							self.templates[i].visible = false;
 					}
@@ -115,14 +116,14 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	}
 
 	this.selectTemplate = function(template){
-		for(j = 0; j< template.scoring_fields.length; j++){
-			delete  template.scoring_fields[j]["$$hashKey"]
-		}
-		self.selectedValues.template = {
-			id:template.$id,
-			scoring_fields:template.scoring_fields,
-		};
-		self.goTo(3);
+		delete  template["$id"]
+		delete  template["$priority"]
+
+		self.selectedValues.template = angular.fromJson(angular.toJson(template));
+		if(self.selectedValues.template.playersOrganization == "team based")
+			self.goTo(3);
+		else
+			self.goTo(4);
 	}
 
 	//Post function
@@ -245,5 +246,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	this.addTemplate = function(){
 		$mdDialog.hide();
 		$rootScope.goTo('templates/')
+	}
+
+	this.drop = function(ev){
+		alert("dop");
 	}
 });
