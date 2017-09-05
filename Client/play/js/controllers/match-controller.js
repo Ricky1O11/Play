@@ -22,16 +22,20 @@ var foo = {n: 1};
 
 
 	function displayPlay(response){
-			var m = response.val();
-			controller.loaded = true;
-			if($rootScope.user.uid in m.players){
-				controller.allowed = true;
-			}
-			controller.time = new Date(m.time);
-			controller.plays = m.plays;
-			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.players);
-	}
+		var m = response.val();
+		controller.loaded = true;
+		if($rootScope.user.uid in m.players){
+			controller.allowed = true;
+		}
+		controller.time = new Date(m.time);
+		controller.plays = m.plays;
 
+		if(m.template.playersOrganization == "all vs all")
+			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.players);
+		else
+			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.teams);
+	}
+ 
 	this.updateScore = function(play_id, detailed_point_id, val, bonus){
 		prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 		update = val-prev;
@@ -89,14 +93,25 @@ var foo = {n: 1};
 
 	this.postPlay = function(){
 		console.log($rootScope.match.players);
-		round = controller.total_rounds+1;
-		for(player in $rootScope.match.players){
-			play = controller.preparePlay(player, round);
-			play_post = Api.playpost($rootScope.match.$id, play);
-			play_post.$loaded().then(function(response){
-				controller.plays = $rootScope.match.plays;
-			})
 
+		round = controller.total_rounds+1;
+		if($rootScope.match.template.playersOrganization == "all vs all"){
+			for(player in $rootScope.match.players){
+				play = controller.preparePlay(player, round);
+				play_post = Api.playpost($rootScope.match.$id, play);
+				play_post.$loaded().then(function(response){
+					controller.plays = $rootScope.match.plays;
+				})
+			}
+		}
+		else{
+			for(team in $rootScope.match.teams){
+				play = controller.preparePlay(team, round);
+				play_post = Api.playpost($rootScope.match.$id, play);
+				play_post.$loaded().then(function(response){
+					controller.plays = $rootScope.match.plays;
+				})
+			}
 		}
 		controller.total_rounds += 1;
 	}
@@ -106,13 +121,19 @@ var foo = {n: 1};
 		play = {}
 		play["user"] = player;
 		play["round"] = round;
-		play["detailed_points"] = {};
-		play["points"] = 0;
 
-		for(j in $rootScope.match.template.scoring_fields){
-			scoring_field = $rootScope.match.template.scoring_fields[j];
-			play["detailed_points"][j] = scoring_field;
-			play["detailed_points"][j]["points"] = 0;
+		if($rootScope.match.template.howToScore == "win/lose"){
+			play["round_winner"] = false;
+		}
+		else{
+			play["detailed_points"] = {};
+			play["points"] = 0;
+
+			for(j in $rootScope.match.template.scoring_fields){
+				scoring_field = $rootScope.match.template.scoring_fields[j];
+				play["detailed_points"][j] = scoring_field;
+				play["detailed_points"][j]["points"] = 0;
+			}
 		}
 		return play;
 	}

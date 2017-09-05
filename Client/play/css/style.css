@@ -180,6 +180,9 @@ md-card{
 .maxHeight130{
 	max-height: 130px;
 }
+.minHeight50{
+	min-height: 50px;
+}
 .maxHeight150{
 	max-height: 150px;
 }
@@ -232,6 +235,11 @@ md-card{
 }
 .borderAccent{
 	border-bottom:3px solid #FF3D00;
+}
+
+.borderGreyFull{
+	border:2px solid rgb(220,220,220);
+	border-radius: 20%;
 }
 
 .borderGrey{

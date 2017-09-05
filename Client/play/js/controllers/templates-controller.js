@@ -117,9 +117,6 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 	}
 
 
-
-
-
 	/*WRITING FUNCTIONS*/
 	this.postTemplate = function(){
 		lang = $rootScope["lang"];

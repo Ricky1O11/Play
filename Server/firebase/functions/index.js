@@ -60,6 +60,7 @@ exports.addUserInDb = functions.auth.user().onCreate(event => {
   	var db_ref = db.ref()
 	obj = {}
 	obj.username = username;
+	obj.search_username = username.toLowerCase();
 	obj.image = '';
 	obj.visibility_group = 0;
 	obj.fav_setting = true;

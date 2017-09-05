@@ -10,7 +10,7 @@
 	};
 	firebase.initializeApp(config);
 
-	angular.module('play',["firebase", "ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
+	angular.module('play',["firebase", "dndLists", "ngMaterial", "ngRoute", "ngSanitize", "ngMessages", "ngCookies", "angular-jwt", 'angular.filter', "chart.js"])
 	.config(function($mdThemingProvider) {
 	$mdThemingProvider.setDefaultTheme('myTheme');
 		$mdThemingProvider.theme('myTheme')

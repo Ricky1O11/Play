@@ -3,10 +3,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	// list of `state` value/display objects
 	self=this;
 	self.range = Utils.range;
-
 	self.user_pk = user_pk;
 	self.currentTab=0 //holds the current tab id
 	self.title= "Add Match"; //sets the tab title according to its id
+	
+
 	
 	self.selectedValues={
 		"players": {}, //list that holds the list of player playing the inserted match
@@ -18,6 +19,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		"completed": false,
 		"inserted_at": "",
 		"expansions": [],
+		"teams" : {}
 	}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
 
 
@@ -28,33 +30,11 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
 	self.expansions = [];
 	self.users={};  //list of users to display in the dropdown menu
+	self.players= [];
+	self.teams= {};
 	self.templates=[]; //list that holds the list of templates available in the db
 	
-
 	self.boardgameSearchText=[]; //holds the currently searched string used to filter the lists of the dropdown menus.
-
-	//api call to the list of users
-	self.getUsers = function(){
-		if(angular.equals(self.users, {}) && angular.equals(self.selectedValues.players, {})){
-			Api.users().$loaded().then(function(data){
-				for (i=0; i<data.length; i++){
-					simpleUser = {}
-					simpleUser["username"] = data[i]["username"];
-					simpleUser["image"] = data[i]["image"];
-					simpleUser["points"] = 0;
-					simpleUser.uid = data[i].$id;
-
-
-					if(simpleUser.uid != $rootScope.user.uid){
-						self.users[simpleUser.uid] = simpleUser;
-					}
-					else{
-						 self.selectedValues.players[""+simpleUser.uid] = simpleUser;
-					}
-				}
-			});
-		}
-	}
 
 	//Search for boardagames
 	self.querySearchBoardgames = function (query) {
@@ -81,8 +61,37 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		});
 	}
 
+	// Search for players
+	self.querySearchPlayers = function (query) {
+		var query = query.toLowerCase();
+		if (query != ""){
+			self.endAt = query.substring(0, query.length-1) + 
+						Utils.changeLetter(query.substring(query.length-1, query.length-0))
+		}
+
+		return Api.users(query, 20, "search_username", self.endAt, "").$loaded().then(function(response){
+			self.users = [];
+			console.log(response);
+			for (i=0; i<response.length; i++){
+				if(response[i].search_username.indexOf(query.toLowerCase()) !== -1){
+					self.users[i] = 
+						{
+							uid: response[i].$id,
+							username: response[i].username,
+							image: response[i].image,
+							points: 0,
+						};
+				}
+			}
+			return self.users;
+		});
+	}
+
 	this.goTo = function(tab){
 		self.currentTab=tab;
+		if(tab == 3){
+			self.cleanMatch(self.teams);
+		}
 	}
 
 	this.selectBoardgame= function() {
@@ -103,7 +112,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 					}
 
 					self.goTo(1);
-					self.getUsers();
+					//self.getUsers();
 				},
 				function errorCallback(response) {
 					console.log(response);
@@ -120,16 +129,20 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		delete  template["$priority"]
 
 		self.selectedValues.template = angular.fromJson(angular.toJson(template));
-		if(self.selectedValues.template.playersOrganization == "team based")
-			self.goTo(3);
-		else
-			self.goTo(4);
+		for(team in self.selectedValues.template.teams){
+			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]] = {};
+			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]]["image"] = self.selectedValues.template.teams[team]["image"];
+			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]]["players"] = {};
+			self.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]] = [];
+			console.log(self.selectedValues.teams);
+		}
+		self.goTo(2);
 	}
 
 	//Post function
 	this.postMatch=function(){
 		//if some player are selected
-		if(self.selectedValues.players!=[]){
+		if(self.selectedValues.players!={}){
 			//post match
 			self.selectedValues.time = self.selectedValues.time.getTime();
 			date = new Date();
@@ -142,9 +155,19 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			delete simpleObject["plays"];
 			Api.matchpost(self.selectedValues, simpleObject).$loaded()
 			.then(function(response){
-					for(player in self.selectedValues.players){
-						play = self.preparePlay(player);
-						play_post = Api.playpost(response.$id, play);
+					if(self.selectedValues.template.playersOrganization == "team based"){
+						for(team in self.selectedValues.teams){
+							if(self.teams[team].length > 0){
+								play = self.preparePlay(team);
+								play_post = Api.playpost(response.$id, play);
+							}
+						}
+					}
+					else{
+						for(player in self.selectedValues.players){
+							play = self.preparePlay(player);
+							play_post = Api.playpost(response.$id, play);
+						}
 					}
 					$rootScope.showToast("Match succesfully registered!");
 					$mdDialog.hide();
@@ -164,30 +187,47 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		play = {}
 		play["user"] = player;
 		play["round"] = 1;
-		play["detailed_points"] = {};
-		play["points"] = 0;
+		if(self.selectedValues.template.howToScore == "win/lose"){
+			play["round_winner"] = false;
+		}
+		else{
+			play["detailed_points"] = {};
+			play["points"] = 0;
 
-		for(j = 0; j< self.selectedValues.template.scoring_fields.length; j++){
-			scoring_field = self.selectedValues.template.scoring_fields[j];
-			play["detailed_points"][j] = scoring_field;
-			play["detailed_points"][j]["points"] = 0;
+			for(j = 0; j< self.selectedValues.template.scoring_fields.length; j++){
+				scoring_field = self.selectedValues.template.scoring_fields[j];
+				play["detailed_points"][j] = scoring_field;
+				play["detailed_points"][j]["points"] = 0;
+			}
 		}
 		return play;
 	}
 
 	this.setVisible = function(pk){
-		console.log(templates[pk]);
 		self.templates[pk].visible = !self.templates[pk].visible;
 	}
 
-	this.togglePlayer = function(act, user){
-		if(act == "select"){
-			self.selectedValues.players[""+user.uid] = user;
-			delete self.users[""+user.uid];
-		}
-		else{
-			delete self.selectedValues.players[""+user.uid];
-			self.users[""+user.uid] = user;;
+	this.togglePlayer = function(act, user, team, index){
+		if(user != undefined){
+			if(act == "select"){
+				self.selectedValues.players[""+user.uid] = user;
+				self.players.push(user);
+				self.selectedPlayer = "";
+			}
+			else if(act == "move"){
+				self.teams[team].splice(index, 1);
+			}
+			else if(act == "assign"){
+				self.players.splice(index, 1);
+			}
+			else if(act == "delete_from_team"){
+				self.teams[team].splice(index, 1);
+				delete self.selectedValues.players[""+user.uid];
+			}
+			else{
+				delete self.selectedValues.players[""+user.uid];
+				self.players.splice(index, 1);
+			}
 		}
 	}
 
@@ -251,4 +291,20 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	this.drop = function(ev){
 		alert("dop");
 	}
+
+	this.cleanMatch = function(teams_object){
+		delete self.selectedValues.template.teams;
+		for(pl in self.selectedValues.players)
+			delete self.selectedValues.players[pl].$$hashKey;
+
+		for(te in teams_object){
+			for(player of teams_object[te]){
+				self.selectedValues.teams[te]["players"][player.uid] = player;
+				delete self.selectedValues.teams[te]["players"][player.uid].$$hashKey;
+				console.log(self.selectedValues.teams[te]["players"]);
+			}
+		}
+		console.log(self.selectedValues);
+	}
+
 });

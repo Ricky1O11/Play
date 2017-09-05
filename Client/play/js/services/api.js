@@ -7,8 +7,13 @@
 					return syncObject;
 				},
 				
-		users:	function(){
-					var ref = firebase.database().ref().child("profiles");
+		users:	function(query, limit, orderingField, endAt, endAtKey){
+					if(query!=""){
+						var ref = firebase.database().ref().child("profiles").orderByChild(orderingField).startAt(query).endAt(endAt).limitToFirst(limit);
+					}
+					else{
+						var ref = firebase.database().ref().child("profiles").orderByChild(orderingField);
+					}
 					var syncArray = $firebaseArray(ref);
 					return syncArray;
 				},
@@ -17,8 +22,6 @@
 					user_ref = firebase.database().ref().child("profiles").child(user_id)
 					update = {};
 					update[field] = value;
-					console.log(user_id)
-					console.log(update)
 					return user_ref.update(update);
 				},
 		
