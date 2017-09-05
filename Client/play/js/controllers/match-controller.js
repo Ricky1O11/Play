@@ -17,8 +17,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	this.dbMatch.$bindTo($rootScope, "match");
 
 	this.dbMatch.$ref().on('value',displayPlay);
-	
-var foo = {n: 1};
 
 
 	function displayPlay(response){
@@ -36,15 +34,31 @@ var foo = {n: 1};
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.teams);
 	}
  
-	this.updateScore = function(play_id, detailed_point_id, val, bonus){
-		prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
-		update = val-prev;
-		
-		$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
-		controller.plays[play_id]["points"] += update;
-		$rootScope.match.plays[play_id]["points"] += update;
-		$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += update;
+	this.updateScore = function(howToScore, play_id, detailed_point_id, val, bonus){
+		if(howToScore == "win/lose"){
+			$rootScope.match.plays[play_id]["round_winner"] = val;
+			if(val)
+				$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += 1;
+			else
+				$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] -= 1;
+		}
+		else{
+			let prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
+			update = val-prev;
+			
+			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
+			controller.plays[play_id]["points"] += update;
+			$rootScope.match.plays[play_id]["points"] += update;
+			$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += update;
+		}
 	}
+
+
+
+
+
+
+
 
 	this.setVisible = function(i){
 		if(controller.plays[i].visible)
@@ -53,15 +67,7 @@ var foo = {n: 1};
 			controller.plays[i].visible = true;
 	}
 
-	this.startEditMode = function($event){
-		controller.editMode = true;
-		controller.fabOpen = true;
-	}
 
-	this.endEditMode = function(wantToSave){
-		$rootScope.match.time = controller.time.getTime();
-		controller.editMode = !controller.editMode;
-	}
 	
 	this.deleteMatchPopup = function(ev){
 		var confirm = $mdDialog.confirm()
@@ -138,9 +144,35 @@ var foo = {n: 1};
 		return play;
 	}
 
+
+
+
+
+
+
+
+
 	this.managePlayers = function(){
 		dialog = $rootScope.showPopup("", $rootScope.user.uid, 'manageplayers', {'match': $rootScope.match, 'rounds': controller.total_rounds});
 	}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 	function startTime() {
 		if(controller.match.statusMessage != "programmed" && controller.match.statusMessage != "completed"){
@@ -154,8 +186,15 @@ var foo = {n: 1};
 	    return i;
 	}
 
+	this.startEditMode = function($event){
+		controller.editMode = true;
+		controller.fabOpen = true;
+	}
 
-	//$window.onbeforeunload =  controller.updateDuration;
+	this.endEditMode = function(wantToSave){
+		$rootScope.match.time = controller.time.getTime();
+		controller.editMode = !controller.editMode;
+	}
 
 	$rootScope.$on('$locationChangeStart', function(){
 		controller.dbMatch.$destroy();

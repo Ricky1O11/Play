@@ -53,7 +53,10 @@ angular.module("play").controller('templatesController', function($scope, Utils,
 		templateController.postValues.howToScore = val;
 		templateController.setHowToWin("");
 		if(val == "win/lose"){
-			templateController.setHowToWin("-");
+			if(templateController.postValues.roundOrganization == "round based")
+				templateController.setHowToWin("most rounds");
+			else
+				templateController.setHowToWin("-");
 		}
 	}
 	this.setHowToWin = function(val){

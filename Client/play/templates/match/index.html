@@ -152,7 +152,7 @@
 
 
 	<div ng-if="mCtrl.allowed" class="container-fluid" layout="row" flex="grow" ng-cloak >
-		<div layout="column" flex="30" class="pad20r" ng-if="match.template.howToScore != 'win/lose' && match.template.roundOrganization != 'single round'">
+		<div layout="column" flex="30" class="pad20r" ng-if="match.template.roundOrganization != 'single round'">
 			<md-tabs
 			md-stretch-tabs="always" flex-gt-xs flex-xs>
 				<md-tab label="Leaderboard" flex>
@@ -161,7 +161,7 @@
 							<md-list flex ng-if="match.template.playersOrganization=='all vs all'">
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat="player in match.players | orderObjectBy:'points':true "
+								ng-repeat="player in match.players | orderObjectBy:'points':true"
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column" ng-if="player.image == ''">
 										<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
@@ -199,7 +199,6 @@
 									<div layout="column" flex="5" layout-align="center end">
 										<strong>{{team.points}}</strong>
 									</div>
-									
 								</md-list-item>
 							</md-list>
 						</div>
@@ -232,8 +231,13 @@
 											<h3>{{match.players[play.user].username}}</h3>
 										</div>
 									</div>
-									<div layout="column" flex="5" layout-align="center end">
+									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'points based'">
 										<strong>{{play.points}}</strong>
+									</div>
+									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'win/lose'">
+										<md-checkbox ng-model="play.round_winner" aria-label="round winner" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, play.round_winner, '')">
+											Winner
+										</md-checkbox>
 									</div>
 									
 								</md-list-item>
@@ -248,7 +252,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points, value.bonus)"></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus)"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
@@ -292,7 +296,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(play.key, key, value.points, value.bonus)"></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus)"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
