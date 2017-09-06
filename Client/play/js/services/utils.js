@@ -181,7 +181,7 @@ angular.module("play")
 									//get finished, won and played matches
 									if(match.completed){
 										match_finished++; 
-										if(match.winner == $rootScope.user.uid)
+										if($rootScope.user.uid in match.winner)
 										  match_won++;
 								}
 								match_played++;

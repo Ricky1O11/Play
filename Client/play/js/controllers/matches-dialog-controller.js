@@ -132,9 +132,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 		for(team in self.selectedValues.template.teams){
 			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]] = {};
 			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]]["image"] = self.selectedValues.template.teams[team]["image"];
+			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]]["points"] = 0;
 			self.selectedValues.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]]["players"] = {};
 			self.teams[self.selectedValues.template.teams[team].name[$rootScope.lang]] = [];
-			console.log(self.selectedValues.teams);
 		}
 		self.goTo(2);
 	}
@@ -157,7 +157,7 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			.then(function(response){
 					if(self.selectedValues.template.playersOrganization == "team based"){
 						for(team in self.selectedValues.teams){
-							if(self.teams[team].length > 0){
+							if(self.teams[team].length > 0 || team == "The game"){
 								play = self.preparePlay(team);
 								play_post = Api.playpost(response.$id, play);
 							}

@@ -147,10 +147,6 @@
 
 
 
-
-
-
-
 	<div ng-if="mCtrl.allowed" class="container-fluid" layout="row" flex="grow" ng-cloak >
 		<div layout="column" flex="30" class="pad20r" ng-if="match.template.roundOrganization != 'single round'">
 			<md-tabs
@@ -195,6 +191,9 @@
 										<div layout="row">
 											<h3>{{team.key}}</h3>
 										</div>
+										<div layout="row">
+											<div layout="column" class="md-body-2 mrg10r dark54perc" ng-repeat="player in team.players">{{player.username}}</div>
+										</div>
 									</div>
 									<div layout="column" flex="5" layout-align="center end">
 										<strong>{{team.points}}</strong>
@@ -235,7 +234,7 @@
 										<strong>{{play.points}}</strong>
 									</div>
 									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'win/lose'">
-										<md-checkbox ng-model="play.round_winner" aria-label="round winner" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, play.round_winner, '')">
+										<md-checkbox ng-model="play.round_winner" aria-label="round winner" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, play.round_winner, '', 'players')">
 											Winner
 										</md-checkbox>
 									</div>
@@ -252,7 +251,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus)"></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
@@ -279,9 +278,17 @@
 										<div layout="row">
 											<h3>{{play.user}}</h3>
 										</div>
+										<div layout="row">
+											<div layout="column" class="md-body-2 mrg10r dark54perc" ng-repeat="player in match.teams[play.user].players">{{player.username}}</div>
+										</div>
 									</div>
-									<div layout="column" flex="5" layout-align="center end">
+									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'points based'">
 										<strong>{{play.points}}</strong>
+									</div>
+									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'win/lose'">
+										<md-checkbox ng-model="play.round_winner" aria-label="round winner" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, play.round_winner, '', 'teams')">
+											Winner
+										</md-checkbox>
 									</div>
 									
 								</md-list-item>
@@ -296,7 +303,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus)"></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'teams')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >

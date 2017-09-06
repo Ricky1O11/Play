@@ -34,13 +34,13 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.teams);
 	}
  
-	this.updateScore = function(howToScore, play_id, detailed_point_id, val, bonus){
+	this.updateScore = function(howToScore, play_id, detailed_point_id, val, bonus, field){
 		if(howToScore == "win/lose"){
 			$rootScope.match.plays[play_id]["round_winner"] = val;
 			if(val)
-				$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += 1;
+				$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] += 1;
 			else
-				$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] -= 1;
+				$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] -= 1;
 		}
 		else{
 			let prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
@@ -49,7 +49,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 			controller.plays[play_id]["points"] += update;
 			$rootScope.match.plays[play_id]["points"] += update;
-			$rootScope.match.players[$rootScope.match.plays[play_id]["user"]]["points"] += update;
+			$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] += update;
 		}
 	}
 
@@ -89,9 +89,23 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	}
 
 	this.setCompletionStatus = function(completed){
-		if($rootScope.match.completed != completed)
-			winner = Utils.getMax($rootScope.match.players, "points");
-			Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
+		if($rootScope.match.completed != completed){
+			winner = {};
+
+			if($rootScope.match.template.playersOrganization == "team based"){
+				winnerTeam = Utils.getMax($rootScope.match.teams, "points");
+				if($rootScope.match.teams[winnerTeam]["players"]){
+					for(pl in $rootScope.match.teams[winnerTeam]["players"]){
+						winner[pl] = true;
+						Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
+					}
+				}
+			}
+			else{
+				winner[Utils.getMax($rootScope.match.players, "points")] = true;
+				Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id, winner);
+			}
+		}
 	}
 
 	//create ordered list of numbers
