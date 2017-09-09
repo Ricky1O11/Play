@@ -26,7 +26,7 @@
 								<div layout="row" class="height100perc">
 									<div layout="column" flex="20" layout-align="center center" >
 										<i class="size-24 icon-pin">
-											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+											<md-tooltip md-direction="top" md-delay="200">Location</md-tooltip>
 										</i>
 									</div>
 									<div layout="column" flex="80">
@@ -53,7 +53,7 @@
 								<div layout="row" class="height100perc">
 									<div layout="column" flex="20" layout-align="center center" >
 										<i class="size-21 icon-trophy-2">
-											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+											<md-tooltip md-direction="top" md-delay="200">Date</md-tooltip>
 										</i>
 									</div>
 									<div layout="column" flex="80">
@@ -80,7 +80,7 @@
 								<div layout="row" class="height100perc">
 									<div layout="column" flex="20" layout-align="center center" >
 										<i class="size-18 icon-hourglass">
-											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+											<md-tooltip md-direction="top" md-delay="200">Duration</md-tooltip>
 										</i>
 									</div>
 									<div layout="column" flex="80">
@@ -96,7 +96,7 @@
 					</div>
 				</div>
 			</div>
-			<div layout="column" class="absolute7-1" layout-align="center end">
+			<div layout="column" class="absolute7-1" layout-align="start end">
 				<div layout="row" class="whiteTxt" flex="none">
 					<div layout="column">
 						<div layout="row">
@@ -126,15 +126,18 @@
 						</div>
 					</div>
 					<div layout="column">
-						<i ng-if="!mCtrl.editMode" ng-click="mCtrl.startEditMode($event)" class="clickable size-18 icon-pencil">
+						<md-button class="md-icon-button" ng-if="!mCtrl.editMode" ng-click="mCtrl.startEditMode($event)">
+						<i class="clickable size-18 icon-pencil"></i>
+						</md-button>
+					</div>
+					<div layout="column">
+						<md-button class="md-icon-button" ng-if="mCtrl.editMode" ng-click="mCtrl.endEditMode(true)">
+						<i  class="clickable size-18 icon-check-2">
 						</i>
 					</div>
 					<div layout="column">
-						<i ng-if="mCtrl.editMode" ng-click="mCtrl.endEditMode(true)" class="clickable size-18 icon-check-2">
-						</i>
-					</div>
-					<div layout="column">
-						<i class="clickable size-18 icon-trash pad20l" ng-click="mCtrl.deleteMatchPopup($event)" md-colors="{color: 'myTheme-accent'}" >
+						<md-button class="md-icon-button" ng-click="mCtrl.deleteMatchPopup($event)">
+						<i class="clickable size-18 icon-trash"  md-colors="{color: 'myTheme-accent'}" >
 						</i>
 					</div>
 				</div>
@@ -210,7 +213,7 @@
 		</div>
 		<div layout="column" flex class="pad20l pad20r">
 			<md-tabs  md-selected="mCtrl.currentTab" md-stretch-tabs="always" flex>
-				<md-tab label="Round {{round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
+				<md-tab label="{{(match.template.roundOrganization == 'single round')? 'Leaderboard':'Round ' + round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
 					<md-content class="pad5l pad10t">
 						<div layout="row">
 							<md-list flex ng-if="match.template.playersOrganization == 'all vs all'">

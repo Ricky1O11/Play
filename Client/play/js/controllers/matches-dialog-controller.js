@@ -1,5 +1,5 @@
 //controller for the popup dialog used to insert a new match
-angular.module("play").controller('matchesDialogController', function($scope, Utils, Api, $filter, $rootScope, $mdDialog, $location, user_pk, boardgame) {
+angular.module("play").controller('matchesDialogController', function($scope, Utils, Api, $filter, $rootScope, $mdDialog, $location, user_pk, additional_field) {
 	// list of `state` value/display objects
 	self=this;
 	self.range = Utils.range;
@@ -23,8 +23,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	}; //dictionary that holds the values inserted by the user (time, location, game title, etc)
 
 
-	if(boardgame != -1){
-		self.selectedValues.boardgame = boardgame;
+	if(additional_field != -1){
+		self.selectedValues.boardgame = additional_field;
 	}
 	
 	self.boardgames=[]; //list of boardgames to display in the dropdown menu
@@ -71,7 +71,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 
 		return Api.users(query, 20, "search_username", self.endAt, "").$loaded().then(function(response){
 			self.users = [];
-			console.log(response);
 			for (i=0; i<response.length; i++){
 				if(response[i].search_username.indexOf(query.toLowerCase()) !== -1){
 					self.users[i] = 
@@ -103,7 +102,6 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 				function(response){
 					if(response.length > 0){
 						self.templates = response;
-						console.log(self.templates);
 						for(i=0;i<self.templates.length;i++)
 							self.templates[i].visible = false;
 					}
@@ -293,7 +291,9 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 	}
 
 	this.cleanMatch = function(teams_object){
-		delete self.selectedValues.template.teams;
+		for(te in self.selectedValues.template.teams)
+			delete self.selectedValues.template.teams[te].$$hashKey;
+		//delete self.selectedValues.template.teams;
 		for(pl in self.selectedValues.players)
 			delete self.selectedValues.players[pl].$$hashKey;
 
@@ -301,10 +301,8 @@ angular.module("play").controller('matchesDialogController', function($scope, Ut
 			for(player of teams_object[te]){
 				self.selectedValues.teams[te]["players"][player.uid] = player;
 				delete self.selectedValues.teams[te]["players"][player.uid].$$hashKey;
-				console.log(self.selectedValues.teams[te]["players"]);
 			}
 		}
-		console.log(self.selectedValues);
 	}
 
 });

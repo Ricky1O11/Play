@@ -1,56 +1,81 @@
 <md-dialog aria-label="Add Match" flex="50" id="dialog">
   <form ng-cloak>
 	<md-dialog-content>
+		<div layout="row">
+			<div layout="column" flex>
+				<md-autocomplete
+					md-selected-item="mdCtrl.selectedPlayer"
+					md-selected-item-change="mdCtrl.togglePlayer('select', player)"
+					md-search-text="mdCtrl.playerSearchText"
+					md-items="player in mdCtrl.querySearchPlayers(mdCtrl.playerSearchText)"
+					md-item-text="player.username"
+					md-min-length="2"
+					placeholder="Find player"
+					class="mrg20t">
+						<md-item-template>
+							<md-list-item class="item-title">
+								<img ng-src="{{player.image}}" class="md-avatar" alt="{{player.username}}" />
+								<span  md-highlight-text="mdCtrl.playerSearchText" md-highlight-flags="^i">{{player.username}}</span>
+							</md-list-item>
+						</md-item-template>
+						<md-not-found>
+							No player matching "{{mdCtrl.playerSearchText}}" were found.
+						</md-not-found>
+				</md-autocomplete>
+			</div>
+		</div>
 		<md-list class="fixedRows pad0">
-		  <md-subheader class="md-no-sticky">Players</md-subheader>
-		  <div class="maxHeight150 overflowScroll">
-				<md-list-item class="md-1-line contact-item" ng-repeat="player in mdCtrl.selectedValues.players" ng-if="$first"
-				>
-				<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
-					<div class="circleBase" layout-align="center center" " ng-style="randomColors[user.uid] || getRandomColor(user.uid)" alt="{{user.profile_details.username}}">
-						<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{user.profile_details.username.substring(0,1).toUpperCase()}}</div>
-					</div>
-				</div>
-				<div class="md-list-item-text compact">
-				  <h4>{{user.profile_details.username}}</h4>
-				</div>
-			  </md-list-item>
-			  <md-list-item class="md-1-line contact-item" ng-repeat="(key, player) in mdCtrl.selectedValues.players" ng-if="!$first"
-			   >
-			   <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
-					<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}" >
-						<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
-					</div>
-				</div>
-				<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
-				<div class="md-list-item-text compact">
-				  <h4>{{player.username}}</h4>
-				</div>
-				<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player)">
-				  <i class="icon-close-round" ></i>
-				</div>
-			  </md-list-item>
-			 </div>
-		</md-list>
-
-		<md-list class="fixedRows clear pad0">
-			  <md-subheader class="md-no-sticky">Select companions</md-subheader>
-			  <div class="maxHeight200 overflowScroll">
-				  <md-list-item class="md-1-line contact-item" ng-repeat="(key, profile) in mdCtrl.users"
-				  ng-click="mdCtrl.togglePlayer('select', profile)" 
-				  >
-				 	 <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
-						<div class="circleBase" layout-align="center center" " ng-style="randomColors[profile.uid] || getRandomColor(profile.uid)" alt="{{profile.username}}">
-							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{profile.username.substring(0,1).toUpperCase()}}</div>
+			<md-subheader class="md-no-sticky">Players</md-subheader>
+			<div class="minHeight50 overflowScroll" dnd-list="mdCtrl.players">
+				<md-list-item
+				ng-repeat="player in mdCtrl.players"
+				dnd-draggable="player"
+				dnd-moved="mdCtrl.togglePlayer('assign', player, '', $index)"
+				dnd-effect-allowed="move"
+				class="md-1-line contact-item">
+					<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+						<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}" >
+							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 						</div>
 					</div>
-					<!--<img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}" />-->
+					<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
 					<div class="md-list-item-text compact">
-					  <h4>{{profile.username}}</h4>
+						<h4>{{player.username}}</h4>
 					</div>
-				  </md-list-item>
-			  </div>
+					<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player)">
+					  <i class="icon-close-round" ></i>
+					</div>
+				</md-list-item>
+			</div>
 		</md-list>
+		<div layout="row">
+			<div layout="column" flex ng-repeat="team in mdCtrl.selValues.template.teams" class="md-body-2" >
+				<div layout="row" layout-align="center center">
+					{{team.name[lang].toUpperCase()}}
+				</div>
+				<div layout="row" class="mrg10 minHeight50" dnd-list="mdCtrl.teams[team.name[lang]]">
+					<md-list>
+						<md-list-item flex
+						dnd-draggable="player"
+						dnd-moved="mdCtrl.togglePlayer('move', player, team.name[lang], $index)"
+						dnd-effect-allowed="move"
+						class="md-1-line" ng-repeat="player in mdCtrl.teams[team.name[lang]]">
+							<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+								<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}">
+									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
+								</div>
+							</div>
+							<div class="md-list-item-text compact">
+							  <h4>{{player.username}}</h4>
+							</div>
+							<div class="md-secondary" ng-click="mdCtrl.togglePlayer('delete_from_team', player, team.name[lang], $index)">
+								<i class="icon-close-round" ></i>
+							</div>
+						</md-list-item>
+					</md-list>
+				</div>
+			</div>
+		</div>
 		<div layout="column" flex class="clear">
 			<div layout="row" layout-align="end center">
 				<md-button aria-label="next" class="md-fab size-24" ng-click="mdCtrl.postPlayers()">

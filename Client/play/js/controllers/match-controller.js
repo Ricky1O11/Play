@@ -100,6 +100,9 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 						Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,winner);
 					}
 				}
+				else{
+						Api.matchput(completed, $rootScope.match.boardgame.bggId, $rootScope.match.players, $rootScope.match.$id,"");
+				}
 			}
 			else{
 				winner[Utils.getMax($rootScope.match.players, "points")] = true;
@@ -157,12 +160,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 		}
 		return play;
 	}
-
-
-
-
-
-
 
 
 

@@ -70,9 +70,9 @@ angular.module("play")
 			}
 
 			obj.showPopup = function(ev, user_pk, string, additional_field) {
-			  boardgame = additional_field? additional_field : -1;
 			  $mdDialog.show({
-				locals:{user_pk : user_pk, boardgame: boardgame, additional_field:additional_field},
+			  	cache: false,
+				locals:{user_pk : user_pk, additional_field:additional_field},
 				controller: string+'DialogController',
 				controllerAs: string.substring(0,1)+'dCtrl',
 				templateUrl: 'templates/'+string+'dialog.html',
@@ -180,9 +180,9 @@ angular.module("play")
 									
 									//get finished, won and played matches
 									if(match.completed){
-										match_finished++; 
-										if($rootScope.user.uid in match.winner)
-										  match_won++;
+										match_finished++;
+										if(match.winner != "" && $rootScope.user.uid in match.winner)
+											match_won++;
 								}
 								match_played++;
 

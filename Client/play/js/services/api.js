@@ -232,44 +232,74 @@
 					return ref;
 				},
 
-		playerdelete:	function(match, player){
+		playerdelete:	function(match, players, player, team){
 					var ref = firebase.database().ref()
-					
 					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).remove()
 					
-					var plays_ref = ref.child("matches").child(""+match.$id).child("plays");
-					plays_ref.once('value').then(function(snapshot) {
-						plays = snapshot.val();
-					  for(play in plays){
-							if(plays[play].user == player.uid){
-								ref.child("matches").child(""+match.$id).child("plays").child(play).remove()
-							}
-						}
-					});
-
-					var players_ref = ref.child("matches").child(""+match.$id).child("players");
+					if(team != ""){
+						if(Object.keys(match.teams[team]["players"]).length > 1){
+							var matches_ref = ref.child("matches").child(""+match.$id).child("teams").child(team).child("players").child(player.uid).remove()
+							var players_ref = ref.child("matches").child(""+match.$id).child("players");
 						
-					players_ref.once('value').then(function(snapshot) {
-						players = snapshot.val();
-						console.log(players)
-					  	for(p in players){
-							var user_played_matches_ref = ref.child("user_played_matches")
-																.child(""+players[p].uid)
-																.child(""+match.boardgame.bggId)
-																.child("matches")
-																.child(""+match.$id)
-																.child("players")
-																.child(player.uid)
-																.remove();
+							players_ref.once('value').then(function(snapshot) {
+								players = snapshot.val();
+								console.log(players)
+							  	for(p in players){
+									var user_played_matches_ref = 	ref.child("user_played_matches")
+																	.child(""+players[p].uid)
+																	.child(""+match.boardgame.bggId)
+																	.child("matches")
+																	.child(""+match.$id)
+																	.child("players")
+																	.child(player.uid)
+																	.remove();
+								}
+							});
+							var user_played_matches_ref = 	ref.child("user_played_matches")
+															.child(""+player.uid)
+															.child(""+match.boardgame.bggId)
+															.child("matches")
+															.child(""+match.$id).
+															remove();
 						}
-					});
-					var user_played_matches_ref = ref.child("user_played_matches")
-																.child(""+player.uid)
-																.child(""+match.boardgame.bggId)
-																.child("matches")
-																.child(""+match.$id).
-																remove();
-					return $firebaseObject(plays_ref);
+						else{
+							console.log("cannot empty a team");
+						}
+					}
+					else{
+						var plays_ref = ref.child("matches").child(""+match.$id).child("plays");
+						plays_ref.once('value').then(function(snapshot) {
+							plays = snapshot.val();
+						  for(play in plays){
+								if(plays[play].user == player.uid){
+									ref.child("matches").child(""+match.$id).child("plays").child(play).remove()
+								}
+							}
+						});
+						var players_ref = ref.child("matches").child(""+match.$id).child("players");
+						
+						players_ref.once('value').then(function(snapshot) {
+							players = snapshot.val();
+							console.log(players)
+						  	for(p in players){
+								var user_played_matches_ref = ref.child("user_played_matches")
+																	.child(""+players[p].uid)
+																	.child(""+match.boardgame.bggId)
+																	.child("matches")
+																	.child(""+match.$id)
+																	.child("players")
+																	.child(player.uid)
+																	.remove();
+							}
+						});
+						var user_played_matches_ref = ref.child("user_played_matches")
+																	.child(""+player.uid)
+																	.child(""+match.boardgame.bggId)
+																	.child("matches")
+																	.child(""+match.$id).
+																	remove();
+					}
+					return $firebaseObject(ref);
 				},
 		
 		templates:	function(boardgame){
