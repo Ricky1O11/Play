@@ -1,4 +1,4 @@
- angular.module('play')
+  angular.module('play')
 .factory('Api', function ApiFactory($firebaseObject, $firebaseArray){
 	return{
 		user:	function(user_id){
@@ -196,13 +196,13 @@
 					return syncObject;
 				},
 
-		playerpost:	function(match, simpleObject, player){
-				 	delete simpleObject["$id"]
-					delete simpleObject["$priority"]
-
-					var ref = firebase.database().ref()
-					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).set(player);
-					
+		playerpost:	function(match, simpleObject, player, team){
+				var ref = firebase.database().ref()
+				var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).set(player);
+				if(team != ""){
+					var matches_ref = ref.child("matches").child(""+match.$id).child("teams").child(team).child("players").child(player.uid).set(player);
+				}
+				
 					var players_ref = ref.child("matches").child(""+match.$id).child("players");
 
 					players_ref.once('value').then(function(snapshot) {
@@ -229,30 +229,38 @@
 						}
 					});
 
-					return ref;
+
+				return ref;
 				},
 
 		playerdelete:	function(match, players, player, team){
+
+
 					var ref = firebase.database().ref()
-					var matches_ref = ref.child("matches").child(""+match.$id).child("players").child(player.uid).remove()
+					
+					var match_ref = ref.child("matches").child(""+match.$id);
+					//delete player from players list inside match
+					var remove_player = match_ref.child("players").child(player.uid).remove()
 					
 					if(team != ""){
 						if(Object.keys(match.teams[team]["players"]).length > 1){
-							var matches_ref = ref.child("matches").child(""+match.$id).child("teams").child(team).child("players").child(player.uid).remove()
-							var players_ref = ref.child("matches").child(""+match.$id).child("players");
+
+							//delete player from team list inside match
+							var remove_team = match_ref.child("teams").child(team).child("players").child(player.uid).remove()
+							var players_ref = match_ref.child("players");
 						
 							players_ref.once('value').then(function(snapshot) {
 								players = snapshot.val();
-								console.log(players)
+								//for each player in the match, update his match entry in "user_played_matches"
 							  	for(p in players){
 									var user_played_matches_ref = 	ref.child("user_played_matches")
 																	.child(""+players[p].uid)
 																	.child(""+match.boardgame.bggId)
 																	.child("matches")
-																	.child(""+match.$id)
-																	.child("players")
-																	.child(player.uid)
-																	.remove();
+																	.child(""+match.$id);
+
+									var remove_player = user_played_matches_ref.child("players").child(player.uid).remove();
+									var remove_team = user_played_matches_ref.child("teams").child(team).child("players").child(player.uid).remove()
 								}
 							});
 							var user_played_matches_ref = 	ref.child("user_played_matches")

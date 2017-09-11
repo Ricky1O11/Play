@@ -163,7 +163,7 @@
 								ng-repeat="player in match.players | orderObjectBy:'points':true"
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column" ng-if="player.image == ''">
-										<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
+										<md-button 	ng-click="goTo('users/'+player.key)" class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
 										</md-button>
 									</div>
@@ -185,7 +185,7 @@
 								ng-repeat="team in match.teams | orderObjectBy:'points':true"
 								ng-click="mCtrl.setLeaderboardVisible(details.pk)">
 									<div layout="column" ng-if="team.image == ''">
-										<md-button class="md-fab md-mini" ng-style="randomColors[team.key] || getRandomColor(team.key)" >
+										<md-button class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[team.key] || getRandomColor(team.key)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{team.key.substring(0,1).toUpperCase()}}</div >
 										</md-button>
 									</div>
@@ -204,9 +204,6 @@
 								</md-list-item>
 							</md-list>
 						</div>
-						<div layout="row" flex>	
-							<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
-						</div>
 					</md-content>
 				</md-tab>
 			</md-tabs>
@@ -223,14 +220,14 @@
 								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 								ng-click="mCtrl.setVisible(play.key)">
 									<div layout="column" ng-if="match.players[play.user].image == ''">
-										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
+										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{match.players[play.user].username.substring(0,1).toUpperCase()}}</div>
 										</md-button>
 									</div>
 									<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
 									<div layout="column" flex="95">
 										<div layout="row">
-											<h3>{{match.players[play.user].username}}</h3>
+											<h3>{{match.players[play.user].username}} {{mCtrl.plays_visibility}}</h3>
 										</div>
 									</div>
 									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'points based'">
@@ -241,9 +238,8 @@
 											Winner
 										</md-checkbox>
 									</div>
-									
 								</md-list-item>
-								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
+								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="mCtrl.plays_visibility[play.key] && play.round == round"
 								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
 										<div layout="column"  flex="100">
 											<div layout="row">
@@ -254,7 +250,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
+													<md-slider md-discrete ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
@@ -266,13 +262,12 @@
 								</md-list-item>
 							</md-list>
 							<md-list flex ng-if="match.template.playersOrganization == 'team based'">
-								<!-- | filter:{round:round} | orderBy:'-points' -->
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
 								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 								ng-click="mCtrl.setVisible(play.key)">
 									<div layout="column" ng-if="match.teams[play.user].image == ''">
-										<md-button  class="md-fab md-mini" ng-style="randomColors[play.user] || getRandomColor(play.user)" >
+										<md-button  class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[play.user] || getRandomColor(play.user)" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{play.user.substring(0,1).toUpperCase()}}</div>
 										</md-button>
 									</div>
@@ -295,7 +290,7 @@
 									</div>
 									
 								</md-list-item>
-								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="play.visible && play.round == round"
+								<md-list-item layout="row" ng-repeat-end ng-repeat="(key,value) in play.detailed_points" ng-if="mCtrl.plays_visibility[play.key] && play.round == round"
 								class="md-1-line animate-repeat whiteBg mrg5r shadowed-box">
 										<div layout="column"  flex="100">
 											<div layout="row">
@@ -306,7 +301,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'teams')"></md-slider>
+													<md-slider md-discrete ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'teams')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
@@ -328,6 +323,9 @@
 					</md-content>
 				</md-tab>
 			</md-tabs>
+			<div layout="row" layout-align="end end">	
+				<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
+			</div>
 		</div>
 	</div>
 	<div ng-if="!mCtrl.allowed" class="container-fluid pad20l pad20t pad20r" layout="column" flex="auto" ng-cloak >

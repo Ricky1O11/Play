@@ -170,7 +170,12 @@
 									class="mrg20t">
 										<md-item-template>
 											<md-list-item class="item-title">
-												<img ng-src="{{player.image}}" class="md-avatar" alt="{{player.username}}" />
+												<img  ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar" alt="{{player.username}}" />
+												<div layout="column" ng-if="player.image == ''">
+													<md-button 	class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
+														<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
+													</md-button>
+												</div>
 												<span  md-highlight-text="mdCtrl.playerSearchText" md-highlight-flags="^i">{{player.username}}</span>
 											</md-list-item>
 										</md-item-template>
@@ -189,11 +194,12 @@
 								dnd-moved="mdCtrl.togglePlayer('assign', player, '', $index)"
 								dnd-effect-allowed="move"
 								class="md-1-line contact-item">
-									<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+									<div class="imgProfileMini circleBase borderWhite" layout-align="center center" ng-if="player.image == ''">
 										<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}" >
 											<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 										</div>
 									</div>
+									<div class="circleBase imgProfileMini" layout-align="center center" alt="profile image" back-img="{{player.image}}" ng-if="player.image != ''" ng-click="goTo('users/'+player.key)"></div>
 									<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
 									<div class="md-list-item-text compact">
 										<h4>{{player.username}}</h4>
@@ -205,7 +211,7 @@
 							</div>
 						</md-list>
 						<div layout="row">
-							<div layout="column" flex ng-repeat="team in mdCtrl.selectedValues.template.teams" class="md-body-2" >
+							<div layout="column" flex ng-repeat="team in mdCtrl.selectedValues.template.teams" class="md-body-2"  ng-if="team.name[lang] != 'The game'">
 								<div layout="row" layout-align="center center">
 									{{team.name[lang].toUpperCase()}}
 								</div>
@@ -216,11 +222,12 @@
 										dnd-moved="mdCtrl.togglePlayer('move', player, team.name[lang], $index)"
 										dnd-effect-allowed="move"
 										class="md-1-line" ng-repeat="player in mdCtrl.teams[team.name[lang]]">
-											<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+											<div class="imgProfileMini circleBase borderWhite" layout-align="center center" ng-if="player.image == ''">
 												<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}">
 													<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 												</div>
 											</div>
+											<div class="circleBase imgProfileMini" layout-align="center center" alt="profile image" back-img="{{player.image}}" ng-if="player.image != ''" ng-click="goTo('users/'+player.key)"></div>
 											<div class="md-list-item-text compact">
 											  <h4>{{player.username}}</h4>
 											</div>

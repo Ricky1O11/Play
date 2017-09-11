@@ -10,6 +10,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	controller=this;
 
 	this.timer;
+	this.plays_visibility = {};
 
 	this.plays = {};
 	this.dbMatch = Api.match(controller.params.id);
@@ -45,9 +46,9 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 		else{
 			let prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 			update = val-prev;
-			
-			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
+
 			controller.plays[play_id]["points"] += update;
+			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 			$rootScope.match.plays[play_id]["points"] += update;
 			$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] += update;
 		}
@@ -61,10 +62,13 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 
 
 	this.setVisible = function(i){
-		if(controller.plays[i].visible)
-			controller.plays[i].visible = !controller.plays[i].visible;
-		else
-			controller.plays[i].visible = true;
+		if(i in controller.plays_visibility){
+			controller.plays_visibility[i] = !controller.plays_visibility[i];
+		}
+		else{
+			console.log(i)
+			controller.plays_visibility[i] = true;
+		}
 	}
 
 
@@ -115,8 +119,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	this.range = Utils.range
 
 	this.postPlay = function(){
-		console.log($rootScope.match.players);
-
 		round = controller.total_rounds+1;
 		if($rootScope.match.template.playersOrganization == "all vs all"){
 			for(player in $rootScope.match.players){
@@ -166,17 +168,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 	this.managePlayers = function(){
 		dialog = $rootScope.showPopup("", $rootScope.user.uid, 'manageplayers', {'match': $rootScope.match, 'rounds': controller.total_rounds});
 	}
-
-
-
-
-
-
-
-
-
-
-
 
 
 

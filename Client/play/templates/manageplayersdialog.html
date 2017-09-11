@@ -1,6 +1,6 @@
 <md-dialog aria-label="Add Match" flex="50" id="dialog">
   <form ng-cloak>
-	<md-dialog-content>
+	<md-dialog-content  class="md-padding">
 		<div layout="row">
 			<div layout="column" flex>
 				<md-autocomplete
@@ -14,7 +14,12 @@
 					class="mrg20t">
 						<md-item-template>
 							<md-list-item class="item-title">
-								<img ng-src="{{player.image}}" class="md-avatar" alt="{{player.username}}" />
+								<img  ng-if="player.image != ''" ng-src="{{player.image}}" class="md-avatar" alt="{{player.username}}" />
+								<div layout="column" ng-if="player.image == ''">
+									<md-button 	class="md-fab md-mini" ng-style="randomColors[player.key] || getRandomColor(player.key)" >
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div >
+									</md-button>
+								</div>
 								<span  md-highlight-text="mdCtrl.playerSearchText" md-highlight-flags="^i">{{player.username}}</span>
 							</md-list-item>
 						</md-item-template>
@@ -25,7 +30,7 @@
 			</div>
 		</div>
 		<md-list class="fixedRows pad0">
-			<md-subheader class="md-no-sticky">Players</md-subheader>
+			<div layout="row" class="md-body-2 mrg10t blueGrey">Players</div>
 			<div class="minHeight50 overflowScroll" dnd-list="mdCtrl.players">
 				<md-list-item
 				ng-repeat="player in mdCtrl.players"
@@ -33,23 +38,23 @@
 				dnd-moved="mdCtrl.togglePlayer('assign', player, '', $index)"
 				dnd-effect-allowed="move"
 				class="md-1-line contact-item">
-					<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+					<div class="imgProfileMini circleBase borderWhite" layout-align="center center" ng-if="player.image == ''">
 						<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}" >
 							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 						</div>
 					</div>
-					<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
+					<div class="circleBase imgProfileMini" layout-align="center center" alt="profile image" back-img="{{player.image}}" ng-if="player.image != ''" ng-click="goTo('users/'+player.key)"></div>
 					<div class="md-list-item-text compact">
 						<h4>{{player.username}}</h4>
 					</div>
-					<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player)">
+					<div class="md-secondary" ng-click="mdCtrl.togglePlayer('remove', player, '', $index)">
 					  <i class="icon-close-round" ></i>
 					</div>
 				</md-list-item>
 			</div>
 		</md-list>
 		<div layout="row">
-			<div layout="column" flex ng-repeat="team in mdCtrl.selValues.template.teams" class="md-body-2" >
+			<div layout="column" flex ng-repeat="team in mdCtrl.selValues.template.teams" class="md-body-2" ng-if="team.name[lang] != 'The game'">
 				<div layout="row" layout-align="center center">
 					{{team.name[lang].toUpperCase()}}
 				</div>
@@ -60,11 +65,12 @@
 						dnd-moved="mdCtrl.togglePlayer('move', player, team.name[lang], $index)"
 						dnd-effect-allowed="move"
 						class="md-1-line" ng-repeat="player in mdCtrl.teams[team.name[lang]]">
-							<div class="imgProfileMini circleBase borderWhite" layout-align="center center">
+							<div class="imgProfileMini circleBase borderWhite" layout-align="center center" ng-if="player.image == ''">
 								<div class="circleBase" layout-align="center center" " ng-style="randomColors[player.uid] || getRandomColor(player.uid)" alt="{{player.username}}">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{player.username.substring(0,1).toUpperCase()}}</div>
 								</div>
 							</div>
+							<div class="circleBase imgProfileMini" layout-align="center center" alt="profile image" back-img="{{player.image}}" ng-if="player.image != ''" ng-click="goTo('users/'+player.key)"></div>
 							<div class="md-list-item-text compact">
 							  <h4>{{player.username}}</h4>
 							</div>
