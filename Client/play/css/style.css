@@ -109,6 +109,9 @@ md-card{
 .height50perc{
 	height:50%;
 }
+.height45perc{
+	height:45%;
+}
 .height40perc{
 	height:40%;
 }
@@ -412,6 +415,11 @@ md-card{
 .mrg50l{
 	margin-left: 50px;
 }
+
+
+.line-height-24{
+	line-height: 24px;
+}
 /*end PADDING MANAGEMENT*/
 
 
@@ -454,7 +462,7 @@ md-card{
 
 /*SCROLL BAR MANAGEMENT*/
 ::-webkit-scrollbar {  
-    width: 12px;  
+    width: 6px;  
 }  
 ::-webkit-scrollbar-track {  
     background-color: rgba(255, 158, 128, 0.4);
@@ -475,6 +483,10 @@ md-card{
 }
 .overflowYHidden{
 	overflow-y:hidden;
+}
+
+.ellipsed{
+	text-overflow: ellipsis;
 }
 /*end SCROLL BAR MANAGEMENT*/
 

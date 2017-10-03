@@ -1,5 +1,4 @@
   <md-dialog aria-label="Add Match" flex="50" id="dialog">
-  <form ng-cloak>
 	<md-toolbar class="md-accent">
 	  <div class="md-toolbar-tools">
 		<h3>{{fdCtrl.title}}</h3>
@@ -9,10 +8,57 @@
 		</md-button>
 	  </div>
 	</md-toolbar>
-	<md-dialog-content>
-	  <md-tabs md-dynamic-height md-selected="fdCtrl.currentTab">
-		<md-tab label="add friends">
-		  <md-content class="md-padding">
+	<md-dialog-content  class="md-padding">
+		<div layout="row">
+			<div layout="column" flex>
+				<md-autocomplete
+					md-selected-item="fdCtrl.selectedFriend"
+					md-selected-item-change="fdCtrl.toggleFriend('select', friend, $index)"
+					md-search-text="fdCtrl.friendSearchText"
+					md-items="friend in fdCtrl.querySearchFriends(fdCtrl.friendSearchText)"
+					md-item-text="friend.username"
+					md-min-length="2"
+					placeholder="Find friend"
+					class="mrg20t">
+						<md-item-template>
+							<md-list-item class="item-title">
+								<img  ng-if="friend.image != ''" ng-src="{{friend.image}}" class="md-avatar" alt="{{friend.username}}" />
+								<div layout="column" ng-if="friend.image == ''">
+									<md-button 	class="md-fab md-mini" ng-style="randomColors[friend.key] || getRandomColor(friend.key)" >
+										<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div >
+									</md-button>
+								</div>
+								<span  md-highlight-text="fdCtrl.friendSearchText" md-highlight-flags="^i">{{friend.username}}</span>
+							</md-list-item>
+						</md-item-template>
+						<md-not-found>
+							No friend matching "{{fdCtrl.friendSearchText}}" were found.
+						</md-not-found>
+				</md-autocomplete>
+			</div>
+		</div>
+		<md-list class="fixedRows pad0">
+			<div class="minHeight50 overflowScroll">
+				<md-list-item
+				ng-repeat="friend in fdCtrl.friends"
+				class="md-1-line contact-item">
+					<div class="imgProfileMini circleBase borderWhite" layout-align="center center" ng-if="friend.image == ''">
+						<div class="circleBase" layout-align="center center" " ng-style="randomColors[friend.uid] || getRandomColor(friend.uid)" alt="{{friend.username}}" >
+							<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div>
+						</div>
+					</div>
+					<div class="circleBase imgProfileMini" layout-align="center center" alt="profile image" back-img="{{friend.image}}" ng-if="friend.image != ''" ng-click="goTo('users/'+friend.key)"></div>
+					<!--<img ng-src="{{friend.img}}" class="md-avatar shadowed-box" ng-style="randomColors[friend.id] || getRandomColor(friend.id)" alt="{{friend.display}}" />-->
+					<div class="md-list-item-text compact">
+						<h4>{{friend.username}}</h4>
+					</div>
+					<div class="md-secondary" ng-click="fdCtrl.toggleFriend('remove', friend, $index)">
+					  <i class="icon-close-round" ></i>
+					</div>
+				</md-list-item>
+			</div>
+		</md-list>
+		<!--
 				<div class="md-dialog-content">
 					<md-list class="fixedRows pad0">
 					  <md-subheader class="md-no-sticky">Friends</md-subheader>
@@ -25,11 +71,10 @@
 										<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{friend.username.substring(0,1).toUpperCase()}}</div>
 									</div>
 								</div>
-								<!--<img ng-src="{{player.img}}" class="md-avatar shadowed-box" ng-style="randomColors[player.id] || getRandomColor(player.id)" alt="{{player.display}}" />-->
 								<div class="md-list-item-text compact">
 								  <h4>{{friend.username}}</h4>
 								</div>
-								<div class="md-secondary" ng-click="fdCtrl.togglePlayer('remove', friend, $index)">
+								<div class="md-secondary" ng-click="fdCtrl.togglefriend('remove', friend, $index)">
 								  <i class="icon-close-round" ></i>
 								</div>
 						  </md-list-item>
@@ -40,14 +85,13 @@
 					  <md-subheader class="md-no-sticky">All users</md-subheader>
 					  <div class="maxHeight200 overflowScroll">
 						  <md-list-item class="md-1-line contact-item" ng-repeat="user in fdCtrl.users"
-						  ng-click="fdCtrl.togglePlayer('select', user, $index)" 
+						  ng-click="fdCtrl.togglefriend('select', user, $index)" 
 						  >
 						 	 <div class="imgProfileMini circleBase borderWhite" layout-align="center center">
 								<div class="circleBase" layout-align="center center" " ng-style="randomColors[user.$id] || getRandomColor(user.$id)" alt="{{user.username}}">
 									<div layout="column" layout-align="center center" class="height100perc white80perc size-18">{{user.username.substring(0,1).toUpperCase()}}</div>
 								</div>
 							</div>
-							<!--<img ng-src="{{user.img}}" class="md-avatar shadowed-box" ng-style="randomColors[user.id] || getRandomColor(user.id)" alt="{{user.display}}" />-->
 							<div class="md-list-item-text compact">
 							  <h4>{{user.username}}</h4>
 							</div>
@@ -56,7 +100,7 @@
 					</md-list>
 
 				</div>
-				 
+-->
 				<div layout="column" flex class="clear">
 					<div layout="row" layout-align="end center">
 						<md-button aria-label="next" class="md-fab size-24" ng-click="fdCtrl.saveFriends()">
@@ -68,11 +112,6 @@
 						
 					</div>
 				</div>
-		  </md-content>
-		</md-tab>
-		
-	  </md-tabs>
+
 	</md-dialog-content>
-	  
-  </form>
 </md-dialog>

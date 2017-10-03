@@ -217,7 +217,7 @@
 								<!-- | filter:{round:round} | orderBy:'-points' -->
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
+								ng-repeat-start="play in match.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 								ng-click="mCtrl.setVisible(play.key)">
 									<div layout="column" ng-if="match.players[play.user].image == ''">
 										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
@@ -250,7 +250,7 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider md-discrete ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
+													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >

@@ -34,7 +34,7 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 		else
 			controller.total_rounds = $filter('keylength')(controller.plays)/$filter('keylength')(m.teams);
 	}
- 
+
 	this.updateScore = function(howToScore, play_id, detailed_point_id, val, bonus, field){
 		if(howToScore == "win/lose"){
 			$rootScope.match.plays[play_id]["round_winner"] = val;
@@ -47,7 +47,6 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 			let prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
 			update = val-prev;
 
-			controller.plays[play_id]["points"] += update;
 			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 			$rootScope.match.plays[play_id]["points"] += update;
 			$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] += update;

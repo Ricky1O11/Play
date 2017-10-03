@@ -33,8 +33,8 @@
 
 		friendspost:	function(user,friend){
 					date = new Date();
-					var ref = firebase.database().ref().child("friends").child(user.uid).child("outbound").child(friend.$id).set({"username":friend.username, "image":friend.image, "accepted":false, "inserted_at":date.getTime()});
-					var ref = firebase.database().ref().child("friends").child(friend.$id).child("inbound").child(user.uid).set({"username":user.profile_details.username, "image":user.profile_details.image, "accepted":false, "inserted_at":date.getTime()});
+					var ref = firebase.database().ref().child("friends").child(user.uid).child("outbound").child(friend.uid).set({"username":friend.username, "image":friend.image, "accepted":false, "inserted_at":date.getTime()});
+					var ref = firebase.database().ref().child("friends").child(friend.uid).child("inbound").child(user.uid).set({"username":user.profile_details.username, "image":user.profile_details.image, "accepted":false, "inserted_at":date.getTime()});
 					
 					return ref;
 				},

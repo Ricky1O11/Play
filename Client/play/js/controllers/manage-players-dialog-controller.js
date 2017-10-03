@@ -17,7 +17,6 @@ angular.module("play").controller('manageplayersDialogController', function(Util
 
 		return Api.users(query, 20, "search_username", mp_controller.endAt, "").$loaded().then(function(response){
 			mp_controller.users = [];
-			console.log(response);
 			for (i=0; i<response.length; i++){
 				if(response[i].search_username.indexOf(query.toLowerCase()) !== -1){
 					mp_controller.users[i] = 
@@ -64,7 +63,6 @@ angular.module("play").controller('manageplayersDialogController', function(Util
 
 
 	this.postPlayers = function(){
-
 		//add players
 		if(mp_controller.selValues.template.playersOrganization == "all vs all"){
 			for(player in mp_controller.players){
@@ -76,10 +74,7 @@ angular.module("play").controller('manageplayersDialogController', function(Util
 		else{
 			for(let te in mp_controller.teams){
 				team = mp_controller.teams[te];
-				for(player of team){					
-					console.log(player.username)
-					console.log(te)
-					console.log(team)
+				for(player of team){
 					if(!(player.uid in mp_controller.selValues.teams[te]["players"])){
 						mp_controller.addPlayer(player, te);
 					}
