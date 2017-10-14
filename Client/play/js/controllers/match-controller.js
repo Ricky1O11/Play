@@ -1,5 +1,6 @@
- //controller for the single match page
+//controller for the single match page
 angular.module("play").controller('matchController', function(Api, Utils, $window, $timeout, $filter, $routeParams, $location, $mdDialog, $rootScope, $rootScope) {
+	$rootScope.parseInt = parseInt;
 	this.fabOpen = false;
 	this.editMode = false;
 	this.anim = "md-scale";
@@ -45,11 +46,11 @@ angular.module("play").controller('matchController', function(Api, Utils, $windo
 		}
 		else{
 			let prev = $rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"];
-			update = val-prev;
-
+			update = (val-prev)*bonus;
 			$rootScope.match.plays[play_id]["detailed_points"][detailed_point_id]["points"] = val;
 			$rootScope.match.plays[play_id]["points"] += update;
 			$rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"] += update;
+			console.log($rootScope.match[field][$rootScope.match.plays[play_id]["user"]]["points"]);
 		}
 	}
 

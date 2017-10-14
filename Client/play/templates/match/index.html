@@ -1,4 +1,7 @@
 <div ng-if="mCtrl.loaded" class="container-fluid" layout="column" ng-cloak >
+	
+	<!-- MATCH HEADER -->
+
 	<div id="boardgameImg" layout="row" layout-xs="column" flex="noshrink" back-img-boardgame="{{match.boardgame.image}}"" class="height150 relative shadowed-box borderAccent">
 		<div id="shade" layout="column" flex>
 			<div class="absolute9">
@@ -144,13 +147,14 @@
 			</div>
 		</div>
 	</div>
-
-
+	<!--END MATCH HEADER -->
 
 
 
 
 	<div ng-if="mCtrl.allowed" class="container-fluid" layout="row" flex="grow" ng-cloak >
+		
+		<!--MULTIPLE ROUNDS - REQUIRE LEADERBOARD -->
 		<div layout="column" flex="30" class="pad20r" ng-if="match.template.roundOrganization != 'single round'">
 			<md-tabs
 			md-stretch-tabs="always" flex-gt-xs flex-xs>
@@ -208,16 +212,20 @@
 				</md-tab>
 			</md-tabs>
 		</div>
+
+		<!--POINTS AREA BOTH FOR SINGLE AND MULTIPLE ROUNDS -->
 		<div layout="column" flex class="pad20l pad20r">
 			<md-tabs  md-selected="mCtrl.currentTab" md-stretch-tabs="always" flex>
 				<md-tab label="{{(match.template.roundOrganization == 'single round')? 'Leaderboard':'Round ' + round}}" ng-repeat="round in mCtrl.range(1,mCtrl.total_rounds)">
 					<md-content class="pad5l pad10t">
 						<div layout="row">
+
+							<!--ALL VS ALL-->
 							<md-list flex ng-if="match.template.playersOrganization == 'all vs all'">
 								<!-- | filter:{round:round} | orderBy:'-points' -->
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
-								ng-repeat-start="play in match.plays | orderObjectBy:'points':true" ng-if="play.round == round"
+								ng-repeat-start="play in mCtrl.plays | orderObjectBy:'points':true" ng-if="play.round == round"
 								ng-click="mCtrl.setVisible(play.key)">
 									<div layout="column" ng-if="match.players[play.user].image == ''">
 										<md-button 	ng-click="goTo('users/'+match.players[play.user].key)" class="md-fab md-mini mrg0l mrg8t mrg8b mrg16r" ng-style="randomColors[match.players[play.user].key] || getRandomColor(match.players[play.user].key)" >
@@ -227,7 +235,7 @@
 									<img ng-if="match.players[play.user].image != ''" ng-src="{{match.players[play.user].image}}" class="md-avatar shadowed-box" alt="{{match.players[play.user].username}}" 	ng-click="goTo('users/'+match.players[play.user].key)"/>
 									<div layout="column" flex="95">
 										<div layout="row">
-											<h3>{{match.players[play.user].username}} {{mCtrl.plays_visibility}}</h3>
+											<h3>{{match.players[play.user].username}}</h3>
 										</div>
 									</div>
 									<div layout="column" flex="5" layout-align="center end" ng-if="match.template.howToScore == 'points based'">
@@ -250,17 +258,22 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
+													<md-slider ng-model="value.points" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
-															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
+															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')">
 													</md-input-container>
+												</div>
+												<div layout="column" flex="10" layout-align="center end">
+													<strong>{{value.points*value.bonus}}<strong>
 												</div>
 											</div>
 										</div>
 								</md-list-item>
 							</md-list>
+
+							<!-- TEAM BASED -->
 							<md-list flex ng-if="match.template.playersOrganization == 'team based'">
 								<md-list-item
 								class=" md-2-line animate-repeat whiteBg mrg5t mrg5r shadowed-box" 
@@ -301,12 +314,15 @@
 											</div>
 											<div layout="row">
 												<div layout="column" flex="90">
-													<md-slider md-discrete ng-model="value.points" min="-100" max="100" ng-mouseup="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'teams')"></md-slider>
+													<md-slider ng-model="value.points" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')"></md-slider>
 												</div>
 												<div layout="column" flex="10">
 													<md-input-container class="detailedPointsContainer md-block" >
-															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider">
+															<input type="number" ng-model="value.points" aria-label="red" aria-controls="red-slider" ng-change="mCtrl.updateScore(match.template.howToScore, play.key, key, value.points, value.bonus, 'players')">
 													</md-input-container>
+												</div>
+												<div layout="column" flex="10" layout-align="center end">
+													<strong>{{value.points*value.bonus}}<strong>
 												</div>
 											</div>
 										</div>
@@ -315,6 +331,8 @@
 						</div>
 					</md-content>
 				</md-tab>
+
+				<!--ADD ROUND-->
 				<md-tab ng-click="mCtrl.postPlay()" ng-if="match.template.roundOrganization == 'round based'">
 					<ng-template md-tab-label>
 						<i class="icon-plus-1"></i>
@@ -323,11 +341,15 @@
 					</md-content>
 				</md-tab>
 			</md-tabs>
+
+			<!--MANAGE PLAYERS-->
 			<div layout="row" layout-align="end end">	
 				<md-button class="md-accent" ng-click="mCtrl.managePlayers()">Manage players</md-button>
 			</div>
 		</div>
 	</div>
+
+	<!-- NOT ALLOWED SECTION -->
 	<div ng-if="!mCtrl.allowed" class="container-fluid pad20l pad20t pad20r" layout="column" flex="auto" ng-cloak >
 		<md-content class="md-padding pad50">
 			<div layout="row" class="mrg50t">
