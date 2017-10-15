@@ -78,42 +78,41 @@
 			<md-tab label="Stats">
 				<md-content>
 					<div layout="row">
-						<div layout="column" flex="50" class="pad100">
+						<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
 							<div layout="row" class="pad10" layout-align="center center">
-								<h2>PLAYED MATCHES</h2>
+								<h2 class="md-title">COMPLETED MATCHES</h2>
 							</div>
-							<div layout="row">
+							<div layout="row"  class="pad64">
 								<canvas class="chart chart-bar height100perc" chart-data="chart.games.values" chart-labels="chart.games.labels" 
-								chart-series="series" chart-click="onClick"></canvas>
+								chart-click="onClick"></canvas>
 							</div>
 						</div>
 						
-						<div layout="column" flex="50" class="pad100">
+						<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
 							<div layout="row" class="pad10" layout-align="center center">
-								<h2>MINUTES SPENT</h2>
+								<h2 class="md-title">WON MATCHES</h2>
 							</div>
-							<div layout="row">
-								<canvas  id="pie" class="chart chart-pie height100perc" chart-data="chart.companions.values.played" chart-labels="chart.companions.labels"></canvas>
+							<div layout="row" class="pad64">
+								<canvas  class="chart chart-bar height100perc" chart-data="chart.winned_games.values" chart-labels="chart.winned_games.labels"></canvas>
 							</div>
-							
 						</div>
 					</div>
 					<div layout="row">
-						<div layout="column" flex="50" class="pad100">
+						<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
 							<div layout="row" class="pad10" layout-align="center center">
-								<h2>PLAYED MATCHES</h2>
+								<h2 class="md-title">MATCHES STATUS</h2>
 							</div>
-							<div layout="row">
-								<canvas class="chart chart-bar height100perc" chart-data="chart.games.values" chart-labels="chart.games.labels" 
+							<div layout="row"  class="pad64">
+								<canvas  class="chart chart-pie height100perc" chart-data="chart.match_status.values" chart-labels="chart.match_status.labels" 
 								chart-series="series" chart-click="onClick"></canvas>
 							</div>
 						</div>
 						
-						<div layout="column" flex="50" class="pad100">
+						<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
 							<div layout="row" class="pad10" layout-align="center center">
-								<h2>MINUTES SPENT</h2>
+								<h2 class="md-title">MOST FREQUENT FRIENDS</h2>
 							</div>
-							<div layout="row">
+							<div layout="row"  class="pad64">
 								<canvas  id="pie" class="chart chart-pie height100perc" chart-data="chart.companions.values.played" chart-labels="chart.companions.labels"></canvas>
 							</div>
 							

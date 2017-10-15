@@ -9,6 +9,4 @@ angular.module("play").controller('profileController', function(Api, Utils, $roo
 		controller.currT = 0
 	}
 	controllerSidebar=this;
-
-	console.log($rootScope);
 });

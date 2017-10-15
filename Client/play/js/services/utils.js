@@ -150,23 +150,35 @@ angular.module("play")
                 $rootScope.chart.games = {};
                 $rootScope.chart.games["labels"] = [];
                 $rootScope.chart.games["values"] = [];
+                $rootScope.chart.winned_games = {};
+                $rootScope.chart.winned_games["labels"] = [];
+                $rootScope.chart.winned_games["values"] = [];
                 $rootScope.chart.companions = {}
 				$rootScope.chart.companions["labels"] = []
 				$rootScope.chart.companions["values"] = {}
 				$rootScope.chart.companions["values"]["won"] = []
 				$rootScope.chart.companions["values"]["played"] = []
-                if($rootScope.games){
 
-                    for(i in $rootScope.games){
+				$rootScope.chart.match_status = {};
+                $rootScope.chart.match_status["labels"] = ["completed", "pending"];
+                $rootScope.chart.match_status["values"] = [];
+
+                if($rootScope.games){ //if there are played games
+                    for(i in $rootScope.games){ //loop over them
 						game = $rootScope.games[i];
 						if(game){
 							game.visible = false;
 							game.lastMatchTime = 0;
-							if(game.matches){
+							if(game.matches){ //if a game has recorded matches
 								played_matches = Object.keys(game.matches);
 
+								//populate the chart object
 		                		$rootScope.chart.games["labels"].push(game.name);
 		                		$rootScope.chart.games["values"].push(played_matches.length);
+		                		$rootScope.chart.winned_games["labels"].push(game.name);
+		                		$rootScope.chart.winned_games["values"].push(0);
+
+		                		let game_id_in_winned_games = $rootScope.chart.winned_games["labels"].indexOf(game.name);
 								
 								//get most played game
 								if(played_matches.length > most_played_game_amount){
@@ -183,7 +195,12 @@ angular.module("play")
 										match_finished++;
 										if(match.winner != "" && $rootScope.user.uid in match.winner)
 											match_won++;
+
+									if(Object.keys(match.winner)[0] == $rootScope.user.uid){
+		                				$rootScope.chart.winned_games["values"][game_id_in_winned_games] +=1;
+									}
 								}
+
 								match_played++;
 
 								for(p in match.players){
@@ -215,6 +232,7 @@ angular.module("play")
 						}
 					}
                 }
+                $rootScope.chart.match_status["values"] = [match_finished,match_played-match_finished];
                 for(c in companions){
                 	$rootScope.chart.companions["labels"].push(companions[c].username);
                 	$rootScope.chart.companions["values"]["played"].push(companions[c].amount);

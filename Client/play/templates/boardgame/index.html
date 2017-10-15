@@ -3,7 +3,7 @@
 		<div id="shade" layout="column" flex>
 			<div class="pad10l absolute9-1">
 				<div layout="row" class="height100perc">
-					<div layout="column" class="size-30 whiteTxt" flex="100" layout-align="center end" >
+					<div layout="column" class="size-30 clickable whiteTxt" flex="100" layout-align="center end" ng-href="#/boardgames/{{bCtrl.boardgame.bggId}}">
 						{{bCtrl.boardgame.name}}
 					</div>
 				</div> 
@@ -25,7 +25,7 @@
 									<div layout="column" flex="80">
 										<div layout="row" flex>
 											<div layout="column" flex="10" layout-align="center start">
-												<h3>{{games[bCtrl.boardgame.bggId].matches|keylength}}</h3>
+												<h3>{{bCtrl.match_played}}</h3>
 											</div>
 											<div layout="column"  flex="90" layout-align="center start">
 												<h3>Match played</h3>
@@ -44,13 +44,13 @@
 								<div layout="row" class="height100perc">
 									<div layout="column" flex="20" layout-align="center center" >
 										<i class="size-21 icon-trophy-2">
-											<md-tooltip md-direction="top" md-delay="200">Minute played</md-tooltip>
+											<md-tooltip md-direction="top" md-delay="200">Match won</md-tooltip>
 										</i>
 									</div>
 									<div layout="column" flex="80">
 										<div layout="row" flex>
 											<div layout="column" flex="10" layout-align="center start">
-												<h3>{{games[bCtrl.boardgame.bggId].matches|countObjectByProperty:'winner':user.uid}} </h3>
+												<h3>{{bCtrl.match_won}} </h3>
 											</div>
 											<div layout="column"  flex="90" layout-align="center start">
 												<h3>Match won</h3>
@@ -315,6 +315,54 @@
 									<div layout="row" class="blue-grey clickable decoNone" ng-click="showPopup($event, user_pk, 'matches', {display:bCtrl.boardgame.name, value:bCtrl.boardgame.name.toLowerCase(), id:bCtrl.boardgame.pk, thumbnail:bCtrl.boardgame.thumbnail, expansions:bCtrl.boardgame.expansions})"><h2><i class="fa fa-plus mrg10r"></i> Add your first match</h2></div>
 								</div>
 							</div>
+					</md-content>
+				</md-tab>
+
+				<md-tab label="Stats">
+					<md-content>
+						<div layout="row">
+							<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
+								<div layout="row" class="pad10" layout-align="center center">
+									<h2 class="md-title">PERFORMANCES</h2>
+								</div>
+								<div layout="row"  class="pad64" ng-if="bCtrl.match_finished > 0">
+									<canvas  class="chart chart-pie height100perc" chart-data="bCtrl.chart.winned_games.values" chart-labels="bCtrl.chart.winned_games.labels" chart-series="series" chart-click="onClick"></canvas>
+								</div>
+								<div layout="row"  class="pad64 md-body-2" ng-if="bCtrl.match_finished == 0" layout-align="center center">
+									You didn' t completed any match yet
+								</div>
+							</div>
+							
+							<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
+								<div layout="row" class="pad10" layout-align="center center">
+									<h2 class="md-title">MOST FREQUENT FRIENDS</h2>
+								</div>
+								<div layout="row"  class="pad64">
+									<canvas  id="pie" class="chart chart-pie height100perc" chart-data="bCtrl.chart.companions.values.played" chart-labels="bCtrl.chart.companions.labels"></canvas>
+								</div>
+								
+							</div>
+						</div>
+						<div layout="row">
+							<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
+								<div layout="row" class="pad10" layout-align="center center">
+									<h2 class="md-title">MATCHES STATUS</h2>
+								</div>
+								<div layout="row"  class="pad64">
+									<canvas  class="chart chart-pie height100perc" chart-data="bCtrl.chart.match_status.values" chart-labels="bCtrl.chart.match_status.labels" chart-series="series" chart-click="onClick"></canvas>
+								</div>
+							</div>
+							
+							<div layout="column" flex="45" class="mrg30 height500 whiteBg shadowed-box">
+								<div layout="row" class="pad10" layout-align="center center">
+									<h2 class="md-title">MOST FREQUENT FRIENDS</h2>
+								</div>
+								<div layout="row"  class="pad64">
+									<canvas  id="pie" class="chart chart-pie height100perc" chart-data="bCtrl.chart.companions.values.played" chart-labels="bCtrl.chart.companions.labels"></canvas>
+								</div>
+								
+							</div>
+						</div>
 					</md-content>
 				</md-tab>
 			</md-tabs>

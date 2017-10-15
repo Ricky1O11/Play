@@ -88,7 +88,7 @@
 									</div>
 									<div layout="column" flex="80">
 										<div layout="row" flex>
-											<div layout="column" layout-align="center start">
+											<div layout="column" class="clickable" layout-align="center start" ng-click="goTo('boardgames', match.boardgame.bggId)">
 												<h3>{{match.duration | secondsToTime | date:'HH:mm'}}</h3>
 											</div>
 										</div>

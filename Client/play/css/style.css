@@ -321,6 +321,9 @@ md-card{
 .pad50{
 	padding: 50px !important;
 }
+.pad64{
+	padding: 64px !important;
+}
 .pad100{
 	padding: 100px !important;
 }
@@ -345,6 +348,15 @@ md-card{
 }
 .mrg20{
 	margin: 20px;
+}
+.mrg30{
+	margin: 30px !important;
+}
+.mrg50{
+	margin: 50px !important;
+}
+.mrg64{
+	margin: 64px !important;
 }
 
 .mrg0b{
@@ -403,9 +415,7 @@ md-card{
 .mrg30b{
 	margin-bottom: 30px;
 }
-.mrg50{
-	margin: 50px !important;
-}
+
 .mrg50t{
 	margin-top: 50px !important;
 }

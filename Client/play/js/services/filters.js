@@ -70,8 +70,10 @@ angular.module("play")
 	return function(obj, query, value){
 		count = 0;
 		for(o in obj){
-			if(obj[o][query] == value)
-			count++;
+			if(query == "winner" && value in obj[o][query])
+				count++;
+			else if(query == "accepted" && obj[o][query] == value)
+				count++;
 		};
 		return count;
 	};
